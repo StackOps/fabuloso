@@ -286,7 +286,7 @@ __apt_get_noinput() {
 
 install_ubuntu_1204() {
     apt-get update
-    __apt_get_noinput open-ssh
+    __apt_get_noinput openssh-server
 }
 
 conf_ubuntu_1204() {
