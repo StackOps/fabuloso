@@ -17,3 +17,13 @@ wget -O - https://raw.github.com/StackOps/fabuloso/master/bootstrap/init.sh | su
 
 Depending on the component type, you will have to configure the network with different number of interfaces and
 configurations.
+
+
+3.- How to mimic the StackOps discovery agent
+
+If you want to perform a manual discovery of your existing agents you can follow these steps:
+
+The fake discovery script works for StackOps Distro and Ubuntu 12.04 Server OS. Login as root and execute:
+
+wget -O - https://raw.github.com/StackOps/fabuloso/master/bootstrap/fake-discovery.sh | sudo sh
+
