@@ -290,8 +290,14 @@ install_ubuntu_1204() {
 }
 
 conf_ubuntu_1204() {
-    adduser stackops sudo
-    echo 'stackops:stackops'|chpasswd
+
+    if id -u stackops >/dev/null 2>&1; then
+        echo "stackops user exists"
+    else
+        useradd -p 'stackops' -m stackops
+        adduser stackops sudo
+    fi
+
     su stackops -c 'rm -fR ~/.ssh'
     su stackops -c 'mkdir ~/.ssh'
     su stackops -c 'chmod 700 ~/.ssh'
