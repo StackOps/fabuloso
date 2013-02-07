@@ -13,6 +13,11 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+echo "deb http://mirror/ubuntu precise main" > /etc/apt/sources.list
+echo "deb http://mirror/ubuntu precise extras" >>  /etc/apt/sources.list
+apt-get update
+apt-get install stackops-agent
+
 head=stackops-head
 headport=3001
 
