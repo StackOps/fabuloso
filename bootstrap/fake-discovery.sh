@@ -45,6 +45,7 @@ echo "blacklist vga16fb" >> /etc/modprobe.d/blacklist-framebuffer.conf
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet"/GRUB_CMDLINE_LINUX_DEFAULT="quiet elevator=noop"/g' /etc/default/grub
 update-grub
 
+wget -O - http://packages.stackops.net/stackops.gpg | apt-key add -
 echo "deb http://mirror/ubuntu precise main" > /etc/apt/sources.list
 echo "deb http://mirror/ubuntu precise extras" >>  /etc/apt/sources.list
 apt-get update
