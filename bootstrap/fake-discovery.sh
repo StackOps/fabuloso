@@ -16,7 +16,7 @@
 echo "deb http://mirror/ubuntu precise main" > /etc/apt/sources.list
 echo "deb http://mirror/ubuntu precise extras" >>  /etc/apt/sources.list
 apt-get update
-apt-get install stackops-agent
+apt-get -y install stackops-agent
 
 head=stackops-head
 headport=3001
