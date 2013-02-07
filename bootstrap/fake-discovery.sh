@@ -51,6 +51,7 @@ apt-get update
 apt-get -y --force-yes install stackops-agent
 
 ln -s /var/lib/stackops/stackops.conf /etc/init/stackops.conf;
+initctl reload-configuration
 
 service stackops start
 
