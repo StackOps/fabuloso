@@ -294,8 +294,7 @@ conf_ubuntu_1204() {
     if id -u stackops >/dev/null 2>&1; then
         echo "stackops user exists"
     else
-        useradd -p 'stackops' -m stackops
-        adduser stackops sudo
+        useradd -u 6666 -U -G sudo -m stackops
     fi
 
     su stackops -c 'rm -fR ~/.ssh'
@@ -303,6 +302,8 @@ conf_ubuntu_1204() {
     su stackops -c 'chmod 700 ~/.ssh'
     su stackops -c 'echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC07jNnA1g7O7H7Ka+tbuQyiMn12IjtbGY+8RJrUU11jjlM3llZhJhyBgoNP864cOL37j0uVE+SxXfmxwY0glupX0KvgvS8dd9v0T0R04giS/eM4b1CGHAg/EquklA/WGQ/LHJtaQf8hUdjTo7EshY8k7c0LvixBC9dnaYxSg5bkpxDCIoZ9Z/eYkoJxyhw2/cxc/hxvprLsNC1uBCKCNlqhDF9+Qm+rTzeHfLmVJCmcjnrIERce0dqbxcI+e7sDGPS/kAYZpNg5rhEDOQbw8qly8vxNGM8vdMyKIokzatBWsd2NwqoFI4Kv59I2WvsTkpUE3yl+uyaXL42h+WEDuF1 contactus@stackops.com" > ~/.ssh/authorized_keys'
     su stackops -c 'chmod 600 ~/.ssh/authorized_keys'
+    echo "stackops ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/stackops
+    chmod 0440 /etc/sudoers.d/stackops
     sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config
     sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
