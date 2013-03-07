@@ -1,7 +1,86 @@
 FABULOSO - Scripts to deploy Openstack-based architectures
 ==========================================================
 
-# Bootstrap the Operating System
+# What is FABULOSO?
+
+FABuloso is a set of lightweight Fabric scripts built to deploy Openstack like always should be: easy.
+
+## What is Fabric?
+
+## What is Vagrant?
+
+## How do I install Vagrant?
+
+## How do I install Fabric in my compute?
+
+## Another deployment tool for Openstack???? AGGGGHHHHH!!!!!
+
+Relax. This is how StackOps deploys and manages Openstack clouds. There are really cool tools our there, but we
+think we have to focus in doing things simpler and easier.
+
+We think the Openstack community suffers of the 'Golden Hammer' syndrome about all these nice deployment toos.
+FABuloso only does what it does, and it does it very well.
+
+## What license do you use?
+
+Apache 2.0 license, of course.
+
+## This looks cool! Can I colaborate?
+
+Sure, just push it.
+
+## What version of Openstack is supported?
+
+Right now folsom stable. Just check the branches to see different versions. Obvioulsy this will change.
+
+
+# Deployment example of a single node on Vagrant
+
+
+## Install fabric
+
+If you are using Ubuntu 12.04 LTS or newer.
+```shell
+       sudo apt-get install fabric
+```
+
+## Vagrant
+
+Create the  directory where you want to create your vagrant environment. for example:
+
+```shell
+       mkdir fabuloso
+```
+
+## Download our test box
+
+Go to the directory that you have crated and download the stackops box
+
+```shell
+       cd fabuloso/
+       vagrant box add stackops-distro-base-v2 https://dl.dropbox.com/u/527582/stackops-distro-base-v2.box
+```
+
+## Download the FABuloso repository in the same directory
+
+```shell
+       git clone git@github.com:StackOps/fabuloso.git
+```
+
+## Run the box stackops-distro-base-v2
+
+```shell
+       vagrant up
+```
+
+## Execute singlenode.sh file to configurate your box.
+
+This can take a while.
+```shell
+       ./singlenode.sh
+```
+
+# Running FABuloso in other operating Systems. Bootstrapping
 
 ## Installation script
 The scripts needs some basic configuration to work:
