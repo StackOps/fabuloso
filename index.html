@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Fabuloso by StackOps</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Fabuloso</h1>
+        <p>Scripts to deploy Openstack-based architectures using fabric</p>
+
+        <p class="view"><a href="https://github.com/StackOps/fabuloso">View the Project on GitHub <small>StackOps/fabuloso</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/StackOps/fabuloso/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/StackOps/fabuloso/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/StackOps/fabuloso">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>FABULOSO - Scripts to deploy Openstack-based architectures</h1>
+
+<h1>What is FABULOSO?</h1>
+
+<p>FABuloso is a set of lightweight Fabric scripts built to deploy Openstack like always should be: easy.</p>
+
+<h2>What is Fabric?</h2>
+
+<h2>What is Vagrant?</h2>
+
+<h2>How do I install Vagrant?</h2>
+
+<h2>How do I install Fabric in my compute?</h2>
+
+<h2>Another deployment tool for Openstack???? AGGGGHHHHH!!!!!</h2>
+
+<p>Relax. This is how StackOps deploys and manages Openstack clouds. There are really cool tools our there, but we
+think we have to focus in doing things simpler and easier.</p>
+
+<p>We think the Openstack community suffers of the 'Golden Hammer' syndrome about all these nice deployment toos.
+FABuloso only does what it does, and it does it very well.</p>
+
+<h2>What license do you use?</h2>
+
+<p>Apache 2.0 license, of course.</p>
+
+<h2>This looks cool! Can I colaborate?</h2>
+
+<p>Sure, just push it.</p>
+
+<h2>What version of Openstack is supported?</h2>
+
+<p>Right now folsom stable. Just check the branches to see different versions. Obvioulsy this will change.</p>
+
+<h1>Deployment example of a single node on Vagrant</h1>
+
+<h2>Install fabric</h2>
+
+<p>If you are using Ubuntu 12.04 LTS or newer.</p>
+
+<pre lang="shell"><code>       sudo apt-get install fabric
+</code></pre>
+
+<h2>Vagrant</h2>
+
+<p>Create the  directory where you want to create your vagrant environment. for example:</p>
+
+<pre lang="shell"><code>       mkdir fabuloso
+</code></pre>
+
+<h2>Download our test box</h2>
+
+<p>Go to the directory that you have crated and download the stackops box</p>
+
+<pre lang="shell"><code>       cd fabuloso/
+       vagrant box add stackops-distro-base-v2 https://dl.dropbox.com/u/527582/stackops-distro-base-v2.box
+</code></pre>
+
+<h2>Download the FABuloso repository in the same directory</h2>
+
+<pre lang="shell"><code>       git clone git@github.com:StackOps/fabuloso.git
+</code></pre>
+
+<h2>Run the box stackops-distro-base-v2</h2>
+
+<pre lang="shell"><code>       vagrant up
+</code></pre>
+
+<h2>Execute singlenode.sh file to configurate your box.</h2>
+
+<p>This can take a while.</p>
+
+<pre lang="shell"><code>       ./singlenode.sh
+</code></pre>
+
+<h1>Running FABuloso in other operating Systems. Bootstrapping</h1>
+
+<h2>Installation script</h2>
+
+<p>The scripts needs some basic configuration to work:</p>
+
+<ul>
+<li>An openssh-server installed</li>
+<li>The stackops user without password and member of the sudo group</li>
+<li>A public key. With the scripts comes a non secure private/public key combo for default installation. Please change it
+asap.</li>
+</ul><p>The bootstrap script for any OS with a Bourne shell is very simple. You can use it like this:</p>
+
+<pre lang="shell"><code>wget -O - https://raw.github.com/StackOps/fabuloso/master/bootstrap/init.sh | sudo sh
+</code></pre>
+
+<h2>Configuring the network</h2>
+
+<p>Depending on the component type, you will have to configure the network with different number of interfaces and
+configurations.</p>
+
+<h1>How to mimic the StackOps discovery agent</h1>
+
+<h2>Why you need it</h2>
+
+<p>Sometimes you will need to perform a manual installation of a node without the discovery process. You need to perform
+the following steps:</p>
+
+<p>If you want to perform a manual discovery of your existing nodes you can follow these steps:</p>
+
+<h2>Install the StackOps Community Distro in the node</h2>
+
+<p>And configure the network manually during the installation.</p>
+
+<h2>Change the network configuration</h2>
+
+<p>Perform the following steps:</p>
+
+<ol>
+<li>Log into the server as root, and modify the /etc/network/interfaces file. The eth0 interface must be in dhcp mode.</li>
+<li>Delete the entries in /etc/hosts referencing the old network configuration</li>
+<li>Reboot the server</li>
+</ol><h1>Execute the fake discovery script</h1>
+
+<p>The fake discovery script works for StackOps Distro and Ubuntu 12.04 Server OS. Login as root and execute:</p>
+
+<pre lang="shell"><code>wget -O - https://raw.github.com/StackOps/fabuloso/master/bootstrap/fake-discovery.sh | sudo sh
+</code></pre>
+
+<p>After a few seconds you will see the server in the Head-Manager Pool. The server is 'hot spare' spare server.</p>
+
+<h2>Configure IPMI parameters of the servers</h2>
+
+<p>It's a good practice to configure the IPMI IP for management of the new node:</p>
+
+<pre lang="shell"><code>head-manage pool modify MAC lom_ip IPMI_IP
+</code></pre>
+
+<p>Remember that the username and password are stored in the parameters of the zone.</p>
+
+<h2>Active the hot spare server in the zone.</h2>
+
+<p>ACtive the hot spare server following the same process used for standard discovered nodes in the pool. The 
+configuration process will start.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/StackOps">StackOps</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-21651960-4");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
