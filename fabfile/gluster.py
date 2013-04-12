@@ -83,7 +83,7 @@ def format_xfs(dev):
     sudo("mkfs.xfs -f %s" % dev)
 
 @task
-def fstab_client_add(dev, mount_point,mount_params='defaults,_netdev'):
+def fstab_client_add(dev, mount_point,mount_params='_netdev,nobootwait,defaults'):
     sudo('sed -i "#%s#d" /etc/fstab' % dev)
     sudo('mkdir -p %s' % mount_point)
     mpoint = '%s %s glusterfs %s 0 0' % (dev, mount_point, mount_params)
