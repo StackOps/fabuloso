@@ -211,6 +211,7 @@ def create_base_configuration(management_ip, mysql_username='nova',
     set_property('quantum_admin_password','stackops')
     set_property('quantum_admin_tenant_name','service')
     set_property('libvirt_vif_driver','nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver')
+    set_property('libvirt_volume_drivers','"iscsi=nova.virt.libvirt.volume.LibvirtISCSIVolumeDriver,local=nova.virt.libvirt.volume.LibvirtVolumeDriver,fake=nova.virt.libvirt.volume.LibvirtFakeVolumeDriver,rbd=nova.virt.libvirt.volume.LibvirtNetVolumeDriver,sheepdog=nova.virt.libvirt.volume.LibvirtNetVolumeDriver,nfs=nova.virt.libvirt.volume_nfs.NfsVolumeDriver"')
     set_property('linuxnet_interface_driver','nova.network.linux_net.LinuxOVSInterfaceDriver')
     set_property('firewall_driver','nova.virt.libvirt.firewall.IptablesFirewallDriver')
     set_property('volume_api_class','nova.volume.cinder.API')

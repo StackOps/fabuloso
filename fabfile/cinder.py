@@ -78,7 +78,7 @@ def configure(cluster=False):
 @task
 def configure_files(rabbit_password='guest',rabbit_host='localhost',mysql_username='cinder',
                       mysql_password='stackops', mysql_host='127.0.0.1', mysql_port='3306', mysql_schema='cinder', service_user='cinder', service_tenant_name='service', service_pass='stackops',auth_host='127.0.0.1',
-                      auth_port='35357', auth_protocol='http'):
+                      auth_port='35357', auth_protocol='http',storage_type='lvm',nfs_shares=None,nfs_sparsed_volumes=True ):
     utils.set_option(CINDER_CONF,'rootwrap_config','/etc/cinder/rootwrap.conf')
     utils.set_option(CINDER_CONF,'auth_strategy','keystone')
     utils.set_option(CINDER_CONF,'iscsi_helper','tgtadm')
@@ -91,6 +91,20 @@ def configure_files(rabbit_password='guest',rabbit_host='localhost',mysql_userna
     utils.set_option(CINDER_CONF,'notification_driver', 'nova.openstack.common.notifier.rabbit_notifier')
     utils.set_option(CINDER_CONF,'notification_topics', 'notifications,monitor')
     utils.set_option(CINDER_CONF,'default_notification_level', 'INFO')
+`'''Check storage types, TODO: Add more storages types   '''
+
+    if storage_type=="nfs":
+	''' Write the list with nfs storage list '''
+	shared_nfs_list=nfs_shares.strip(',')
+	for nfs_share in shared_nfs_list:
+		sudo("echo \"%s\" >> %s" %(nfs_share,nfs_shares_config))
+	sudo("chown cinder:cinder %s" %(nfs_shares_config))
+	utils.set_option(CINDER_CONF,'volume_driver', 'cinder.volume.nfs.NfsDriver')
+	utils.set_option(CINDER_CONF,'nfs_shares_config', '/var/lib/cinder/nfsshare.conf')
+	utils.set_option(CINDER_CONF,'nfs_mount_point_base', '/var/lib/cinder/volumes/')
+	utils.set_option(CINDER_CONF,'nfs_disk_util', 'df')
+	utils.set_option(CINDER_CONF,'nfs_sparsed_volumes', nfs_sparsed_volumes)
+
     utils.set_option(CINDER_API_PASTE_CONF,'admin_tenant_name',service_tenant_name,section='filter:authtoken')
     utils.set_option(CINDER_API_PASTE_CONF,'admin_user',service_user,section='filter:authtoken')
     utils.set_option(CINDER_API_PASTE_CONF,'admin_password',service_pass,section='filter:authtoken')
