@@ -201,8 +201,9 @@ def configure_l3_agent(service_user='quantum', service_tenant_name='service', se
     utils.set_option(L3_AGENT_CONF,'use_namespaces','False')
 
 @task
-def configure_dhcp_agent():
+def configure_dhcp_agent(name_server='8.8.8.8'):
     utils.set_option(DHCP_AGENT_CONF,'use_namespaces','False')
+    utils.set_option(DHCP_AGENT_CONF,'dnsmasq_dns_server',name_server)
 
 @task
 def configure_files(service_user='quantum', service_tenant_name='service', service_pass='stackops',auth_host='127.0.0.1',
