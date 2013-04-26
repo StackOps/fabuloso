@@ -95,7 +95,7 @@ def configure_files(rabbit_password='guest',rabbit_host='localhost',mysql_userna
 
     if storage_type=="nfs":
 	''' Write the list with nfs storage list '''
-	shared_nfs_list=nfs_shares.strip(',')
+	shared_nfs_list=nfs_shares.split(',')
 	for nfs_share in shared_nfs_list:
 		sudo("echo \"%s\" >> %s" %(nfs_share,nfs_shares_config))
 	sudo("chown cinder:cinder %s" %(nfs_shares_config))
