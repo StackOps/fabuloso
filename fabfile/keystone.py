@@ -135,7 +135,7 @@ def configure_users(endpoint, admin_token="password", admin_pass="stackops"):
     activity_user_role = create_role(endpoint, admin_token, 'ROLE_ACTIVITY_USER')
     chargeback_admin_role = create_role(endpoint, admin_token, 'ROLE_CHARGEBACK_ADMIN')
     chargeback_user_role = create_role(endpoint, admin_token, 'ROLE_CHARGEBACK_USER')
-    accounting_user_role = create_role(endpoint, admin_token, 'ROLE_ACCOUTING')
+    accounting_user_role = create_role(endpoint, admin_token, 'ROLE_ACCOUNTING')
     admin_user = create_user(endpoint, admin_token, 'admin', admin_pass, admin_tenant)
     link_user_role(endpoint, admin_token, admin_user, keystone_admin_role, admin_tenant)
     link_user_role(endpoint, admin_token, admin_user, keystone_service_admin_role, admin_tenant)
