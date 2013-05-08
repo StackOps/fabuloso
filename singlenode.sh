@@ -113,7 +113,7 @@ PORT=${PORT:-2222}
 HOSTNAME=controller
 
 # Bootstrap script
-fab -H $HOST:$PORT -u stackops -p stackops baseos.execute_bootstrap
+# fab -H $HOST:$PORT -u stackops -p stackops baseos.execute_bootstrap
 
 # Configure MySQL and RabbitMQ
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa baseos.add_repos
@@ -175,6 +175,9 @@ fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.conf
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure_l3_agent:service_user="$SERVICE_QUANTUM_USER",service_tenant_name="$SERVICE_TENANT_NAME",service_pass="$SERVICE_QUANTUM_PASS",auth_url="$ADMIN_AUTH_URL",metadata_ip="$CONTROLLER_HOST",region="$REGION"
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure_dhcp_agent
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.start
+fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum.configure
+fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum.configure_files
+fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum.start
 
 # Configure CINDER
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure_cinder:root_pass="$MYSQL_ROOT_PASSWORD",drop_schema=False,schema="$MYSQL_CINDER_SCHEMA",username="$MYSQL_CINDER_USERNAME",password="$MYSQL_CINDER_PASSWORD"
