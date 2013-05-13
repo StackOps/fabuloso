@@ -16,10 +16,12 @@
 from fabric.api import *
 from cuisine import *
 
+
 @task
 def stop():
     with settings(warn_only=True):
         sudo("service keystone stop")
+
 
 @task
 def start():
@@ -35,6 +37,7 @@ def configure_ubuntu_packages():
     package_ensure('python-keystoneclient')
     package_ensure('python-mysqldb')
 
+
 @task
 def uninstall_ubuntu_packages():
     """Uninstall keystone packages"""
@@ -42,6 +45,7 @@ def uninstall_ubuntu_packages():
     package_clean('python-keystone')
     package_clean('python-keystoneclient')
     package_clean('python-mysqldb')
+
 
 @task
 def configure(cluster=False):
@@ -51,8 +55,10 @@ def configure(cluster=False):
         stop()
         sudo('echo "manual" >> /etc/init/keystone.override')
         sudo('mkdir -p /usr/lib/ocf/resource.d/openstack')
-        put('./ocf/keystone', '/usr/lib/ocf/resource.d/openstack/keystone', use_sudo=True)
+        put('./ocf/keystone', '/usr/lib/ocf/resource.d/openstack/keystone',
+            use_sudo=True)
         sudo('chmod +x /usr/lib/ocf/resource.d/openstack/keystone')
+
 
 def get_id(str):
     stdout = local("echo '%s' | awk '/ id / { print $4 }'" % str, capture=True)
@@ -64,8 +70,11 @@ def sql_connect_string(host, password, port, schema, username):
     sql_connection = 'mysql://%s:%s@%s:%s/%s' % (username, password, host, port, schema)
     return sql_connection
 
+
 @task
-def configure_files(admin_token='password', mysql_username='keystone', mysql_password='stackops', mysql_host='127.0.0.1', mysql_port='3306', mysql_schema='keystone'):
+def configure_files(admin_token='password', mysql_username='keystone',
+                    mysql_password='stackops', mysql_host='127.0.0.1',
+                    mysql_port='3306', mysql_schema='keystone'):
     """Configure keystone to use the database and set the default admin token password"""
     bind_host='0.0.0.0'
     public_port='5000'

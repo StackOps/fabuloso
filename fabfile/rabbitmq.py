@@ -12,9 +12,10 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.from fabric.api import *
+from fabric.api import task, sudo, settings
+from printutils import printfast
+from cuisine import package_ensure
 
-from fabric.api import *
-from cuisine import *
 
 @task
 def stop():
@@ -23,6 +24,7 @@ def stop():
 
 
 @task
+@printfast("Starting RabbitMQ broker service")
 def start():
     stop()
     sudo("nohup service rabbitmq-server start")
@@ -35,6 +37,7 @@ def configure_ubuntu_packages():
 
 
 @task
+@printfast("Configuing RabbitMQ broker")
 def configure(cluster=False, password='guest'):
     """Generate rabbitmq configuration. Execute on both servers"""
     configure_ubuntu_packages()
@@ -45,4 +48,3 @@ def configure(cluster=False, password='guest'):
         sudo('chmod -R og=rxw /var/lib/rabbitmq')
         sudo('chown -R rabbitmq:rabbitmq /var/lib/rabbitmq')
         sudo('chmod 700 /var/lib/rabbitmq/.erlang.cookie')
-

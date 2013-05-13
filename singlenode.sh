@@ -109,7 +109,7 @@ export ACTIVITY_PROXY_URL=http://127.0.0.1
 export CHARGEBACK_PROXY_URL=http://127.0.0.1
 
 HOST=127.0.0.1
-PORT=${PORT:-2222}
+PORT=${PORT:-2223}
 HOSTNAME=controller
 
 # Bootstrap script
