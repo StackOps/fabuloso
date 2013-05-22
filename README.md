@@ -1,147 +1,125 @@
-FABULOSO - Scripts to deploy Openstack-based architectures
-==========================================================
+Command line shell and API remote executor
+=====================================================
 
-# What is FABULOSO?
+## What is FABULOSO?
 
-FABuloso is a set of lightweight Fabric scripts built to deploy Openstack like always should be: easy.
+Fabuloso is a script executor that handles plugable components
+inside a catalog and configurable remote environments using
+providers. In StackOps we use FABULOSO mainly to manage OpenStack
+deployments.
 
-## What is Fabric?
+### What is a component
 
-## What is Vagrant?
+A component is just a directory that holds a python module and
+ a configuration file. Configuration file defines which functions of
+ the module are exposed to fabuloso and the name of the component. For
+ instance, the embedded 'mysql' configuration file is:
 
-## How do I install Vagrant?
+```ini
+[component]
 
-## How do I install Fabric in my compute?
-
-## Another deployment tool for Openstack???? AGGGGHHHHH!!!!!
-
-Relax. This is how StackOps deploys and manages Openstack clouds. There are really cool tools our there, but we
-think we have to focus in doing things simpler and easier.
-
-We think the Openstack community suffers of the 'Golden Hammer' syndrome about all these nice deployment toos.
-FABuloso only does what it does, and it does it very well.
-
-## What license do you use?
-
-Apache 2.0 license, of course.
-
-## This looks cool! Can I colaborate?
-
-Sure, just push it.
-
-## What version of Openstack is supported?
-
-Right now folsom stable. Just check the branches to see different versions. Obvioulsy this will change.
-
-
-# Deployment example of a single node on Vagrant
-
-
-## Install fabric
-
-If you are using Ubuntu 12.04 LTS or newer.
-```shell
-       sudo apt-get install fabric
+name = mysql
+file = mysql.py
+provider = fabric
+methods = 
+    configure
+    start
+    stop
 ```
 
-## Vagrant
+Then, the file mysql.py is the module that holds the methods 'configure',
+'start' and 'stop'.
 
-Create the  directory where you want to create your vagrant environment. for example:
+### What is a catalog
 
-```shell
-       mkdir fabuloso
+The catalog is the list of directories where fabuloso searches into
+to look for components. These components are loaded dynamically in each
+fabuloso execution.
+
+### What is an environment
+
+Environments are a set properties to define a remote connection. All the 
+executions that fabuloso performs run in that remote connection. The configuration
+file (in your $HOME/.config/fabuloso/config.py) defines a couple of remote
+executions. If you don't specify anything (via shell or via API, fabuloso
+will use the 'default' one). 
+
+You can switch between environments as many times as you wish (TODO!)
+
+### What is a provider
+
+Provider is the actual executor of the scripts. Currently we only support
+the 'fabric' provider
+
+## Getting Started
+
+### Installation
+
+Download the source code an perform:
+
+```python
+python setup.py install
 ```
 
-## Download our test box
+Fabuloso is in deep development, so we recommend to use it into a virtual environment.
 
-Go to the directory that you have crated and download the stackops box
 
-```shell
-       cd fabuloso/
-       vagrant box add stackops-distro-base-v2 https://dl.dropbox.com/u/527582/stackops-distro-base-v2.box
+### Configuration
+
+After install it, check out your ($HOME/.config/fabuloso/config.py) and set the
+environments you wish giving to each of them a different name. Modify as well the
+list of catalog directories.
+
+
+### Run it
+
+#### Shell
+
+To run fabuloso in shell just type:
+
+```bash
+$ fabuloso
+``` 
+
+in the command line. (User $ fabuloso -e 'environment_name' if you don't wish to start with the default environment)
+
+Check out the component using help:
+
+```
+fabuloso > help
+
+Documented commands (type help <topic>):
+========================================
+help  mysql  quit
+
+fabuloso >
 ```
 
-## Download the FABuloso repository in the same directory
+and execute them!
 
-```shell
-       git clone git@github.com:StackOps/fabuloso.git
+#### API
+
+Fabuloso provides a simple API as well. A simple program would be:
+
+```python
+
+import fabuloso.fabuloso as fabuloso
+import fabuloso.environment as environment
+
+
+env_dict = {
+    "host": "localhost",
+    "port": 2223,
+    "username": "stackops",
+    "ssh_key_file": "~/.ssh/nonsecureid_rsa"
+}
+
+env = environment.RemoteEnvironment(env_dict)
+
+fab = fabuloso.Fabuloso(env)
+fab.execute("mysql", "start")
 ```
 
-## Run the box stackops-distro-base-v2
+### What license do you use?
 
-```shell
-       vagrant up
-```
-
-## Execute singlenode.sh file to configurate your box.
-
-This can take a while.
-```shell
-       ./singlenode.sh
-```
-
-# Running FABuloso in other operating Systems. Bootstrapping
-
-## Installation script
-The scripts needs some basic configuration to work:
-- An openssh-server installed
-- The stackops user without password and member of the sudo group
-- A public key. With the scripts comes a non secure private/public key combo for default installation. Please change it
-  asap.
-
-The bootstrap script for any OS with a Bourne shell is very simple. You can use it like this:
-
-```shell
-wget -O - https://raw.github.com/StackOps/fabuloso/master/bootstrap/init.sh | sudo sh
-```
-
-##  Configuring the network
-
-Depending on the component type, you will have to configure the network with different number of interfaces and
-configurations.
-
-
-# How to mimic the StackOps discovery agent
-
-## Why you need it
-Sometimes you will need to perform a manual installation of a node without the discovery process. You need to perform
-the following steps:
-
-If you want to perform a manual discovery of your existing nodes you can follow these steps:
-
-## Install the StackOps Community Distro in the node
-
-And configure the network manually during the installation.
-
-## Change the network configuration
-
-Perform the following steps:
-
-1. Log into the server as root, and modify the /etc/network/interfaces file. The eth0 interface must be in dhcp mode.
-2. Delete the entries in /etc/hosts referencing the old network configuration
-3. Reboot the server
-
-# Execute the fake discovery script
-
-The fake discovery script works for StackOps Distro and Ubuntu 12.04 Server OS. Login as root and execute:
-
-````shell
-wget -O - https://raw.github.com/StackOps/fabuloso/master/bootstrap/fake-discovery.sh | sudo sh
-```
-
-After a few seconds you will see the server in the Head-Manager Pool. The server is 'hot spare' spare server.
-
-## Configure IPMI parameters of the servers
-
-It's a good practice to configure the IPMI IP for management of the new node:
-
-```shell
-head-manage pool modify MAC lom_ip IPMI_IP
-```
-
-Remember that the username and password are stored in the parameters of the zone.
-
-## Active the hot spare server in the zone.
-
-ACtive the hot spare server following the same process used for standard discovered nodes in the pool. The 
-configuration process will start.
+Apache 2.0 license, of course. (TO CHANGE)

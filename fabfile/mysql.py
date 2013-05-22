@@ -14,7 +14,6 @@
 #   limitations under the License.from fabric.api import *
 from fabric.api import settings, sudo, task
 from cuisine import package_ensure
-from printutils import printfast
 
 
 @task
@@ -24,7 +23,6 @@ def stop():
 
 
 @task
-@printfast("Start mysql service")
 def start():
     stop()
     sudo("nohup service mysql start")
@@ -44,7 +42,6 @@ def configure_ubuntu_packages(root_pass):
 
 
 @task
-@printfast("Generate mysql configuration and grant access")
 def configure(root_pass='stackops', cluster=False):
     """Generate mysql configuration. Execute on both servers"""
     configure_ubuntu_packages(root_pass)

@@ -1,4 +1,5 @@
 include README.md
 include COPYING.txt
 include fabuloso/data/easter_egg.txt
+include fabuloso/data/fabulosorc
 recursive-include fabuloso/catalog *.*
