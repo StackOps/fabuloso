@@ -17,20 +17,20 @@
 # This file is just a config template file used for configuration purposes
 # Once the 'fabuloso' is installed, this file is copied into the path
 # $HOME/.config/fabuloso/config.py and used when fabuloso runs
-catalogues = ['catalog']
-
-# Fabric environment variables
+# Fabuloso environment variables
 environments = {
     "default": {
         "host": "localhost",
         "port": 2223,
         "username": "stackops",
-        "ssh_key_file": "~/.ssh/nonsecureid_rsa"
+        "ssh_key_file": "~/.ssh/nonsecureid_rsa",
+        "catalog": ['catalog']
     },
     "example_remote": {
         "host": "remotehost",
         "port": 2223,
         "username": "stackops",
-        "ssh_key_file": "~/.ssh/nonsecureid_rsa"
+        "ssh_key_file": "~/.ssh/nonsecureid_rsa",
+        "catalog": ['catalog']
     }
 }

@@ -103,9 +103,7 @@ Fabuloso provides a simple API as well. A simple program would be:
 
 ```python
 
-import fabuloso.fabuloso as fabuloso
-import fabuloso.environment as environment
-
+import fabuloso
 
 env_dict = {
     "host": "localhost",
@@ -114,7 +112,7 @@ env_dict = {
     "ssh_key_file": "~/.ssh/nonsecureid_rsa"
 }
 
-env = environment.RemoteEnvironment(env_dict)
+env = fabuloso.RemoteEnvironment(env_dict)
 
 fab = fabuloso.Fabuloso(env)
 fab.execute("mysql", "start")

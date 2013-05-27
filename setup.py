@@ -20,7 +20,7 @@ import subprocess
 import sys
 import unittest
 
-requirements = ['pep8', 'cuisine']
+requirements = ['pep8', 'cuisine', 'pyyaml']
 
 if sys.version_info < (2, 7):
     requirements.append('argparse')
@@ -104,8 +104,8 @@ setuptools.setup(name='fabuloso',
                  install_requires=requirements,
                  entry_points={
                      'console_scripts': [
-                         'fabuloso = fabuloso.fabuloso:main',
-                         'fabulosamente = fabuloso.fabuloso:ee'
+                         'fabuloso = fabuloso.main:main',
+                         'fabulosamente = fabuloso.main:ee'
                      ]
                  },
                  data_files=[
@@ -114,7 +114,21 @@ setuptools.setup(name='fabuloso',
                       ['fabuloso/data/config.py'])
                  ],
                  version='0.1',
+                 license='Apache License 2.0',
                  cmdclass={
                      'test': TestCommand,
                      'pep8': Pep8Command
-                 })
+                 },
+                 classifiers=[
+                     "Development Status :: 2 - Pre-Alpha",
+                     "Environment :: Console",
+                     "Intended Audience :: Developers",
+                     "Intended Audience :: Information Technology",
+                     "License :: OSI Approved :: Apache Software License",
+                     "Natural Language :: English",
+                     "Operating System :: POSIX :: Linux",
+                     "Programming Language :: Python",
+                     "Programming Language :: Python :: 2",
+                     "Programming Language :: Python :: 2.7",
+                     "Topic :: System"
+                 ])

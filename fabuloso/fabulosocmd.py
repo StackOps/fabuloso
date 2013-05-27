@@ -49,3 +49,50 @@ class FabulosoCmd(cmd.Cmd):
         inserted.
         """
         return dir(self)
+
+    def do_help(self, arg):
+        """Override the help in a prettier way"""
+        HEADER = '\033[95m'
+        ENDC = '\033[0m'
+        if arg:
+            try:
+                func = getattr(self, 'help_' + arg)
+            except AttributeError:
+                try:
+                    doc = getattr(self, 'do_' + arg).__doc__
+                    if doc:
+                        self.stdout.write("%s\n" % str(doc))
+                        return
+                except AttributeError:
+                    pass
+                self.stdout.write("%s\n" % str(self.nohelp % (arg,)))
+                return
+            func()
+        else:
+            names = self.get_names()
+            cmds_doc = []
+            cmds_undoc = []
+            help = {}
+            for name in names:
+                if name[:5] == 'help_':
+                    help[name[5:]] = 1
+            names.sort()
+            # There can be duplicates if routines overridden
+            prevname = ''
+            for name in names:
+                if name[:3] == 'do_':
+                    if name == prevname:
+                        continue
+                    prevname = name
+                    cmd = name[3:]
+                    if cmd in help:
+                        cmds_doc.append(cmd)
+                        del help[cmd]
+                    elif getattr(self, name).__doc__:
+                        cmds_doc.append(cmd)
+                    else:
+                        cmds_undoc.append(cmd)
+            print("Available components are:\n")
+            for doc in cmds_doc:
+                if doc not in ['help', 'quit']:
+                    print "* %s%s%s" % (HEADER, doc, ENDC)

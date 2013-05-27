@@ -1,0 +1,28 @@
+name: os
+file: os.py
+description: Basic operations over remote os
+provider: fabric
+
+Methods:
+    - name: nameservers
+      description: Returns the DNS info of the remote machine
+    - name: block_devices
+      description: Returns the remote machine's disk partitions
+    - name: mounts
+      description: Mounted file systems
+    - name: iface_list
+      description: Return the Network Interfaces
+    - name: add_repos
+      description: Adds the StackOps repos to the target machine
+
+Services:
+    - name: info
+      description: Return as machine info as it can collect
+      methods:
+          - nameservers
+          - block_devices
+          - mounts
+    - name: setup_os
+      description: Sets all the actions to prepare a StackOps deployment
+      methods:
+          - add_repos

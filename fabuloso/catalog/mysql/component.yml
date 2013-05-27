@@ -1,0 +1,26 @@
+name: mysql
+file: mysql.py
+description: MySQL database component
+provider: fabric
+
+Methods:
+    - name: configure
+      description: Prepares a mysql service and sets its root password
+      params:
+        - name: root_pass
+          description: Admin password
+    - name: start
+      description: Starts the mysql service
+    - name: stop
+      description: Stop the mysql service
+
+Services:
+    - name: setup
+      description: Installs a mysql service and runs it
+      methods:
+          - configure
+          - start
+    - name: teardown
+      description: Stops the mysql service
+      methods:
+          - stop

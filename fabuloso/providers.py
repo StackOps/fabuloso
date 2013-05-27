@@ -16,19 +16,38 @@
 from fabric.context_managers import settings, hide
 
 
-class FabricProvider(object):
-    """Fabric Provider that wraps any call setting environment variables"""
-
+class Provider(object):
+    """Base provider class"""
     def __init__(self, env):
         """Receives a L{environment.RemoteEnvironment} object."""
         self.env = env
 
-    def execute_method(self, func):
-        def environment_func(**kwargs):
-            with settings(hide('stdout', 'status', 'running'),
-                          host_string=self.env['host'],
-                          key_filename=self.env['ssh_key_file'],
-                          port=self.env['port'], user=self.env['username']):
-                return func(**kwargs)
+    def execute_method(self, method, **kwargs):
+        raise NotImplementedError("Provider base class does not implement"
+                                  " this method")
 
-        return environment_func
+
+class FabricProvider(Provider):
+    """Fabric Provider that wraps any call setting environment variables"""
+    def __init__(self, env):
+        super(FabricProvider, self).__init__(env)
+
+    def execute_method(self, method, **kwargs):
+        with settings(hide('stdout', 'status', 'running'),
+                      host_string=self.env['host'],
+                      key_filename=self.env['ssh_key_file'],
+                      port=self.env['port'], user=self.env['username']):
+            return method(**kwargs)
+
+
+class DummyProvider(Provider):
+    """Dummy Provider.
+
+    This provider does not actually do nothing and it is just developed for
+    test purposes.
+    """
+    def __init__(self, env):
+        super(DummyProvider, self).__init__(env)
+
+    def execute_method(self, method, **kwargs):
+        pass

@@ -13,41 +13,10 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-# import argparse
-import ConfigParser
-import imp
-import itertools
-import pkgutil
 import os
 
-import environment
-import fabulosocmd
+import component
 import providers
-
-
-def main():
-    """ Execute the script remotely.
-
-    Those are the input parameters:
-    """
-    def load_environment(config_module):
-        environments = getattr(config_module, 'environments')
-        return environment.RemoteEnvironment(environments['default'])
-
-    def print_doc(module):
-        def delegate_print():
-            print module.__doc__
-        return delegate_print
-
-    config_module = Utils.load_config_module()
-    env = load_environment(config_module)
-    catalog = Utils.load_catalog(config_module)
-    cmd = fabulosocmd.FabulosoCmd()
-    for key, value in catalog.items():
-        services, module = value
-        setattr(cmd, 'do_' + key, Utils.delegate_method(env, services, module))
-        setattr(cmd, 'help_' + key, print_doc(module))
-    cmd.cmdloop()
 
 
 class Fabuloso(object):
@@ -55,27 +24,38 @@ class Fabuloso(object):
     def __init__(self, env):
         """ Init with environment"""
         self.env = env
-        config_module = Utils.load_config_module()
-        self.catalog = Utils.load_catalog(config_module)
+        self.catalog = self._load_catalog(self.env)
 
-    def execute(self, command, service, **kwargs):
-        service_empty, module = self.catalog.get(command)
-        method = Utils.delegate_method(self.env, service, module)
-        method(service, **kwargs)
+    def list_components(self):
+        """ Return the catalog in a string/json way."""
+        return self.catalog.values()
 
+    def execute_service(self, comp_name, service, **kwargs):
+        comp = self.catalog.get(comp_name)
+        self.provider = providers.FabricProvider(self.env)
+        description, methods = comp.services[service]
+        for method in methods:
+            service_args = self.__build_args(comp, method, kwargs)
+            self.provider.execute_method(getattr(comp.module, method),
+                                         **service_args)
 
-class Utils(object):
+    def __build_args(self, comp, method, kwargs):
+        """ Build appropiate args depending on the method
 
-    @staticmethod
-    def load_config_module():
-        config_file = os.path.join(os.path.expanduser('~'), '.config',
-                                   'fabuloso', 'config.py')
-        return imp.load_source('config', config_file)
+        The execute service receives a list of arguments that may be
+        useful for one or more methods. This function filters only
+        the ones that are needed for the current 'method'
+        """
+        method_args = {}
+        parameters = comp.methods[method]
+        for parameter in parameters:
+            param_name, description = parameter
+            method_args[param_name] = kwargs[param_name]
+        return method_args
 
-    @staticmethod
-    def load_catalog(config_module):
+    def _load_catalog(self, env):
         """Returns a dict that maps the component name with the module."""
-        catalogues = getattr(config_module, 'catalogues')
+        catalogues = env['catalog']
         catalog_dict = {}
         for catalogue in catalogues:
             cat_dir = os.path.join(os.path.dirname(__file__), catalogue)
@@ -84,66 +64,8 @@ class Utils(object):
             for dirname, subdirnames, filenames in os.walk(cat_dir):
                 for subdirname in subdirnames:
                     comp_dir = os.path.join(cat_dir, subdirname)
-                    config_path = os.path.join(comp_dir, 'component.cfg')
-                    comp_name, comp_file, methods = \
-                        Utils.load_component_config_info(config_path)
+                    comp = component.Component(comp_dir)
 
-                    comp_module = imp.load_source(comp_name,
-                                                  os.path.join(comp_dir,
-                                                               comp_file))
-                    module_methods = []
-                    for obj in dir(comp_module):
-                        if obj in methods:
-                            a = getattr(comp_module, obj)
-                            module_methods.append(a)
-                    catalog_dict[comp_name] = (methods, comp_module)
+                    catalog_dict[comp.name] = comp
 
         return catalog_dict
-
-    @staticmethod
-    def load_component_config_info(config_path):
-        component_config = ConfigParser.ConfigParser()
-        component_config.read(config_path)
-
-        comp_name = component_config.get('component', 'name')
-        comp_file = component_config.get('component', 'file')
-        methods = component_config.get('component', 'methods').split()
-        return comp_name, comp_file, methods
-
-    @staticmethod
-    def delegate_method(env, available_services, module):
-        def delegator(args):
-            list_args = args.split()
-            service = list_args[0]
-            parameters = {}
-            if len(list_args) > 1:
-                parameters = Utils.__parse_parameters_into_dict(list_args[1:])
-
-            fabric = providers.FabricProvider(env)
-            module_function = getattr(module, service)
-            method = fabric.execute_method(module_function)
-            method(**parameters)
-
-        return delegator
-
-    def __parse_parameters_into_dict(parameters):
-        """ Parse service parameters into dictionary.
-
-        Parameters must be informed in the way: parameter_name:parameter_value
-        and it can be as many parameters as the user need. This funtions turns
-        it into a dictionary in the way: dict['parameter_name']:
-        'parameter_value'
-        """
-
-        # Split each parameter_name:parameter_value in the list and flat
-        # the list
-        flat = list(itertools.chain(*map(lambda x: x.split(':'), parameters)))
-
-        # Zip the list into two: the even values are the 'keys' and the odds
-        # are the 'values'
-        return dict(zip(flat[0::2], flat[1::2]))
-
-
-def ee():
-    print(pkgutil.get_data('fabuloso', 'data/easter_egg.txt'))
-    print("This is the way we deploy OpenStack in StackOps!")

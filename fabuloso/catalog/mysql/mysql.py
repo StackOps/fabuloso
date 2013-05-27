@@ -25,9 +25,9 @@ from fabric.api import sudo, settings
 from cuisine import package_ensure
 
 
-def configure(root_pass=''):
+def configure(root_pass):
     """Generate mysql configuration. Execute on both servers"""
-    __configure_ubuntu_packages()
+    __configure_ubuntu_packages(root_pass)
     stop()
 
     sudo('echo "manual" >> /etc/init/mysql.override')
@@ -45,7 +45,7 @@ def start():
     sudo("nohup service mysql start")
 
 
-def __configure_ubuntu_packages(root_pass=''):
+def __configure_ubuntu_packages(root_pass):
     """Configure mysql ubuntu packages"""
     sudo('echo mysql-server-5.5 mysql-server/root_password password %s'
          ' | debconf-set-selections' % root_pass)
