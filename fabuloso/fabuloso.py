@@ -64,8 +64,11 @@ class Fabuloso(object):
             for dirname, subdirnames, filenames in os.walk(cat_dir):
                 for subdirname in subdirnames:
                     comp_dir = os.path.join(cat_dir, subdirname)
-                    comp = component.Component(comp_dir)
-
-                    catalog_dict[comp.name] = comp
+                    try:
+                        comp = component.Component(comp_dir)
+                        catalog_dict[comp.name] = comp
+                    except IOError:
+                        # Skip the failing components
+                        continue
 
         return catalog_dict
