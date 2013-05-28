@@ -17,6 +17,8 @@ import imp
 import json
 import os
 
+import providers
+
 import yaml
 
 
@@ -30,13 +32,18 @@ class Component(object):
     def __init__(self, comp_dir):
         self._comp_dir = comp_dir
         self._config_path = os.path.join(comp_dir, 'component.yml')
+        self.provider = providers.FabricProvider()
         with open(self._config_path) as f:
             self._config = yaml.load(f.read())
 
         self._check_component_coherency()
-        self._load_services()
         self._load_methods()
+        self._load_services()
         self._load_module()
+        self._set_attributes()
+
+    def set_environment(self, env):
+        self.provider.set_environment(env)
 
     @property
     def name(self):
@@ -45,6 +52,11 @@ class Component(object):
     @property
     def path(self):
         return os.path.join(self._comp_dir, self._config['file'])
+
+    def _set_attributes(self):
+        for service, tup in self.services.items():
+            description, methods = tup
+            setattr(self, service, self._execute_service(service))
 
     def __repr__(self):
         return json.dumps(self._config, indent=4)
@@ -80,3 +92,27 @@ class Component(object):
         checks if the component has coherency.
         """
         pass
+
+    def _execute_service(self, service_name):
+        def wrapper_method(**kwargs):
+            description, methods = self.services[service_name]
+            for method in methods:
+                service_args = self._build_args(method, kwargs)
+                self.provider.execute_method(getattr(self.module, method),
+                                             **service_args)
+
+        return wrapper_method
+
+    def _build_args(self, method, kwargs):
+        """ Build appropiate args depending on the method
+
+        The execute service receives a list of arguments that may be
+        useful for one or more methods. This function filters only
+        the ones that are needed for the current 'method'
+        """
+        method_args = {}
+        parameters = self.methods[method]
+        for parameter in parameters:
+            param_name, description = parameter
+            method_args[param_name] = kwargs[param_name]
+        return method_args

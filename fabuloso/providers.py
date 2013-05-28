@@ -18,8 +18,7 @@ from fabric.context_managers import settings, hide
 
 class Provider(object):
     """Base provider class"""
-    def __init__(self, env):
-        """Receives a L{environment.RemoteEnvironment} object."""
+    def set_environment(self, env):
         self.env = env
 
     def execute_method(self, method, **kwargs):
@@ -29,8 +28,8 @@ class Provider(object):
 
 class FabricProvider(Provider):
     """Fabric Provider that wraps any call setting environment variables"""
-    def __init__(self, env):
-        super(FabricProvider, self).__init__(env)
+    def __init__(self):
+        super(FabricProvider, self).__init__()
 
     def execute_method(self, method, **kwargs):
         with settings(hide('stdout', 'status', 'running'),
@@ -47,7 +46,7 @@ class DummyProvider(Provider):
     test purposes.
     """
     def __init__(self, env):
-        super(DummyProvider, self).__init__(env)
+        super(DummyProvider, self).__init__()
 
     def execute_method(self, method, **kwargs):
         pass

@@ -16,7 +16,6 @@
 import os
 
 import component
-import providers
 
 
 class Fabuloso(object):
@@ -26,32 +25,19 @@ class Fabuloso(object):
         self.env = env
         self.catalog = self._load_catalog(self.env)
 
+    def get_component(self, component_name):
+        comp = self.catalog[component_name]
+        comp.set_environment(self.env)
+        return comp
+
     def list_components(self):
         """ Return the catalog in a string/json way."""
         return self.catalog.values()
 
     def execute_service(self, comp_name, service, **kwargs):
-        comp = self.catalog.get(comp_name)
-        self.provider = providers.FabricProvider(self.env)
-        description, methods = comp.services[service]
-        for method in methods:
-            service_args = self.__build_args(comp, method, kwargs)
-            self.provider.execute_method(getattr(comp.module, method),
-                                         **service_args)
-
-    def __build_args(self, comp, method, kwargs):
-        """ Build appropiate args depending on the method
-
-        The execute service receives a list of arguments that may be
-        useful for one or more methods. This function filters only
-        the ones that are needed for the current 'method'
-        """
-        method_args = {}
-        parameters = comp.methods[method]
-        for parameter in parameters:
-            param_name, description = parameter
-            method_args[param_name] = kwargs[param_name]
-        return method_args
+        comp = self.get_component(comp_name)
+        method = getattr(comp, service)
+        method(**kwargs)
 
     def _load_catalog(self, env):
         """Returns a dict that maps the component name with the module."""
