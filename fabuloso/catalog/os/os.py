@@ -201,14 +201,18 @@ def change_hostname(new_hostname):
     sudo("hostname %s" % new_hostname)
 
 
-@task
-def add_users():
+def add_nova_user():
     """Add nova and glance users and groups if they don't exists in the
        operating system"""
     group_ensure('nova', 201)
-    group_ensure('glance', 202)
     user_ensure('nova', home='/var/lib/nova', uid=201, gid=201,
                 shell='/bin/false')
+
+
+def add_glance_user():
+    """Add nova and glance users and groups if they don't exists in the
+       operating system"""
+    group_ensure('glance', 202)
     user_ensure('glance', home='/var/lib/glance', uid=202, gid=202,
                 shell='/bin/false')
 

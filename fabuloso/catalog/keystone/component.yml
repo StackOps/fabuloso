@@ -1,0 +1,25 @@
+name: keystone
+file: keystone.py
+description: Operations over OpenStack Keystone module
+
+Methods:
+    - name: change_hostname
+      descriptions: Change the hostname of the remote machine
+      params:
+          - name: new_hostname
+            description: New hostname of the machine
+
+Services:
+    - name: info
+      description: Return as machine info as it can collect
+      methods:
+          - nameservers
+          - block_devices
+          - mounts
+    - name: setup_singlenode
+      description: Sets all the previous actions to prepare a StackOps deployment
+      methods:
+          - add_repos
+          - add_nova_user
+          - add_glance_user
+          - change_hostname

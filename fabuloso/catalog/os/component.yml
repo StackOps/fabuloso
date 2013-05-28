@@ -14,6 +14,15 @@ Methods:
       description: Return the Network Interfaces
     - name: add_repos
       description: Adds the StackOps repos to the target machine
+    - name: add_nova_user
+      description: Add Nova User in the target machine
+    - name: add_glance_user
+      description: Add Glance User in the target machine
+    - name: change_hostname
+      descriptions: Change the hostname of the remote machine
+      params:
+          - name: new_hostname
+            description: New hostname of the machine
 
 Services:
     - name: info
@@ -22,7 +31,10 @@ Services:
           - nameservers
           - block_devices
           - mounts
-    - name: setup_os
-      description: Sets all the actions to prepare a StackOps deployment
+    - name: setup_singlenode
+      description: Sets all the previous actions to prepare a StackOps deployment
       methods:
           - add_repos
+          - add_nova_user
+          - add_glance_user
+          - change_hostname

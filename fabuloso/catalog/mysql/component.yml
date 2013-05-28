@@ -13,6 +13,8 @@ Methods:
       description: Starts the mysql service
     - name: stop
       description: Stop the mysql service
+    - name: configure_schema
+      description: Prepares a schema for a given OpenStack component
 
 Services:
     - name: setup

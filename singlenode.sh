@@ -116,14 +116,6 @@ HOSTNAME=controller
 # fab -H $HOST:$PORT -u stackops -p stackops baseos.execute_bootstrap
 
 # Configure MySQL and RabbitMQ
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa baseos.add_repos
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa baseos.add_users
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa baseos.change_hostname:new_hostname=$HOSTNAME
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa rabbitmq.configure
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa rabbitmq.start
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.start
-
 # Configure Keystone
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure_keystone:root_pass="$MYSQL_ROOT_PASSWORD",drop_schema=False,schema="$MYSQL_KEYSTONE_SCHEMA",username="$MYSQL_KEYSTONE_USERNAME",password="$MYSQL_KEYSTONE_PASSWORD"
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure
