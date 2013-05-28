@@ -1,55 +1,72 @@
-Command line shell and API remote executor
-=====================================================
+FABric scripts with steroids
+============================
 
-## What is FABULOSO?
+## What is FABuloso?
 
-Fabuloso is a script executor that handles plugable components
-inside a catalog and configurable remote environments using
-providers. In StackOps we use FABULOSO mainly to manage OpenStack
+Fabuloso is a fabric script executor that handles plugable components
+inside a catalog and configurable remote environments. 
+In StackOps we use FABuloso mainly to manage OpenStack
 deployments.
 
-### What is a component
+### What is a Component
 
 A component is just a directory that holds a python module and
- a configuration file. Configuration file defines which functions of
- the module are exposed to fabuloso and the name of the component. For
+ a configuration file. Configuration file defines which services of
+ the module are exposed to be executed. For
  instance, the embedded 'mysql' configuration file is:
 
-```ini
-[component]
+```yaml
+name: mysql
+file: mysql.py
+description: MySQL database component
 
-name = mysql
-file = mysql.py
-provider = fabric
-methods = 
-    configure
-    start
-    stop
+Methods:
+    - name: configure
+      description: Prepares a mysql service and sets its root password
+      params:
+        - name: root_pass
+          description: Admin password
+    - name: start
+      description: Starts the mysql service
+    - name: stop
+      description: Stop the mysql service
+
+Services:
+    - name: setup
+      description: Installs a mysql service and runs it
+      methods:
+          - configure
+          - start
+    - name: teardown
+      description: Stops the mysql service
+      methods:
+          - stop
 ```
 
-Then, the file mysql.py is the module that holds the methods 'configure',
-'start' and 'stop'.
+The *component* name is 'mysql' and exposes the services 'setup' and 'teardown'.
+Each *service* wraps one or more module *methods*. These methods are actually
+fabric scripts.
+
+These components are loaded dynamically when a Fabuloso instance is created.
 
 ### What is a catalog
 
 The catalog is the list of directories where fabuloso searches into
-to look for components. These components are loaded dynamically in each
-fabuloso execution.
+to look for components. You can define as many as directories as you wish in 
+the [config](TODO) file.
 
 ### What is an environment
 
 Environments are a set properties to define a remote connection. All the 
-executions that fabuloso performs run in that remote connection. The configuration
-file (in your $HOME/.config/fabuloso/config.py) defines a couple of remote
-executions. If you don't specify anything (via shell or via API, fabuloso
+executions that fabuloso performs run in that remote connection. The [configuration
+file](TODO) define the remote executions in the [shell way](TODO). You
+can also create your own environment programatically and use it to instance
+a new Fabuloso instance in the [API way].
+
+If you don't specify anything (via shell or via API, fabuloso
 will use the 'default' one). 
 
-You can switch between environments as many times as you wish (TODO!)
-
-### What is a provider
-
-Provider is the actual executor of the scripts. Currently we only support
-the 'fabric' provider
+You can switch between environments as many times as you wish (Not ready!)
 
 ## Getting Started
 
@@ -85,25 +102,37 @@ in the command line. (User $ fabuloso -e 'environment_name' if you don't wish to
 
 Check out the component using help:
 
-```
+```bash
 fabuloso > help
+Available components are:
 
-Documented commands (type help <topic>):
-========================================
-help  mysql  quit
+* mysql
+* os
 
 fabuloso >
 ```
+
+Then you can chek the services available per component:
+
+```bash
+fabuloso > help os
+Available services for this component are:
+
+* info: Return as machine info as it can collect
+        - No params
+* setup_os: Sets all the actions to prepare a StackOps deployment
+        - No params
+fabuloso > 
+```
+
 
 and execute them!
 
 #### API
 
-Fabuloso provides a simple API as well. A simple program would be:
+Fabuloso provides a simple API to execute the services. A simple program would be:
 
 ```python
-
-import fabuloso
 
 env_dict = {
     "host": "localhost",
@@ -113,11 +142,13 @@ env_dict = {
 }
 
 env = fabuloso.RemoteEnvironment(env_dict)
-
 fab = fabuloso.Fabuloso(env)
 fab.execute("mysql", "start")
 ```
 
+Where the first parameters is the 'component', the second parameters is the 'services'
+and then you can provide a list of **named** parameters related to the service.
+
 ### What license do you use?
 
-Apache 2.0 license, of course. (TO CHANGE)
+Apache 2.0 license.
