@@ -1,0 +1,53 @@
+name: glance
+file: glance.py
+description: Operations over OpenStack Glance module
+
+Methods:
+    - name: install
+      description:  Install OpenStack Glance from ubuntu packages
+    - name: set_config_file
+      description: Modify the /etc/glance/glance.conf
+      params:
+          - name: user
+            description: Username of the Glance Service
+          - name: tenant
+            description: Name of the user's tenant
+          - name: password
+            description: Password of the user
+          - name: mysql_schema
+            description: Glance mysql schema name
+          - name: mysql_username
+            description: Glance mysql user name
+          - name: mysql_password
+            description: Glance mysql password
+          - name: mysql_host
+            description: Connection host.
+            optional: True
+          - name: mysql_port
+            description: Connection port
+            optional: True
+          - name: auth_protocol
+            description: Authorization service (keystone) protocol
+          - name: auth_host
+            description: Authorizatoin service (keystone) host
+          - name: auth_port
+            description: Authorization service (keystone) port value
+    - name: publish_ttylinux
+      description: Downloads an image from amazon and publishes it into glance
+      params:
+          - name: auth_uri
+            description: Keystone token uri
+    - name: configure_local_storage
+      description: Configure local storage for glance
+     
+Services:
+    - name: install_and_configure
+      description: Installs and Configure OpenStack Keystone
+      methods:
+          - install
+          - set_config_file
+    - name: prepare_image
+      description: Register and image and prepare the storage repo
+      methods:
+          - publish_ttylinux
+          - configure_local_storage

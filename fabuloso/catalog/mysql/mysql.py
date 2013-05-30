@@ -60,3 +60,23 @@ def __configure_ubuntu_packages(root_pass):
 def stop():
     with settings(warn_only=True):
         sudo("nohup service mysql stop")
+
+
+def setup_schema(root_pass, username, password, schema_name,
+                 host=None, drop_previous=False):
+    if drop_previous:
+        sudo('mysql -uroot -p%s -e "DROP DATABASE IF EXISTS %s;"'
+             % (root_pass, schema_name))
+    sudo('mysql -uroot -p%s -e "CREATE DATABASE %s;"' % (root_pass,
+                                                         schema_name))
+    sudo("""mysql -uroot -p%s -e "GRANT ALL PRIVILEGES ON %s.* TO
+            '%s'@'localhost' IDENTIFIED BY '%s';" """
+         % (root_pass, schema_name, username, password))
+    if host is not None:
+        sudo("""mysql -uroot -p%s -e "GRANT ALL PRIVILEGES ON %s.* TO
+                '%s'@'%s' IDENTIFIED BY '%s';" """
+             % (root_pass, schema_name, username, host, password))
+    else:
+        sudo("""mysql -uroot -p%s -e "GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%'
+                IDENTIFIED BY '%s';" """
+             % (root_pass, schema_name, username, password))

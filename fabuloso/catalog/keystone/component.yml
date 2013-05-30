@@ -3,23 +3,83 @@ file: keystone.py
 description: Operations over OpenStack Keystone module
 
 Methods:
-    - name: change_hostname
-      descriptions: Change the hostname of the remote machine
+    - name: install
+      description:  Install OpenStack Keystone from ubuntu packages
+    - name: set_config_file
+      description: Modify the /etc/keystone/keystone.conf
       params:
-          - name: new_hostname
-            description: New hostname of the machine
-
+          - name: admin_token
+            description: Administration access token/password
+          - name: mysql_schema
+            description: Keystone mysql schema name
+          - name: mysql_username
+            description: Keystone mysql user name
+          - name: mysql_password
+            description: Keystone mysql password
+          - name: mysql_host
+            description: Connection host.
+            optional: True
+          - name: mysql_port
+            description: Connection port
+            optional: True
+    - name: configure_users
+      description: Prepare the basic Admin user and the StackOps roles
+      params:
+          - name: admin_token
+            description: Administration access token/password
+          - name: admin_pass
+            description: The password the admin will authenticate through the API
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: tenant_name
+            description: Name of the tenant of the services
+    - name: create_service
+      description: Register a new service in keystone
+      params:
+          - name: admin_token
+            description: Administration access token/password
+          - name: service_name
+            description: Name of the service to register
+          - name: service_type
+            description: Type of the service to register
+          - name: description
+            description: Description of the service to register
+          - name: region
+            description: Region where the service will be used
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: public_url
+            description: Exposed URI to access to this service
+          - name: admin_url
+            description: Exposed URI to admin_url
+          - name: internal_url
+            description: Internal URI of this service
+    - name: create_user_for_service
+      description: the service is a user itself. This methods creates one
+      params:
+          - name: service_user_name
+            description: User of the service
+          - name: service_user_pass
+            description: Password where the user of the service authenticates to others
+          - name: tenant
+            description: Name of the tenant for the service
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: admin_token
+            description: Admin password token for authenticate through Keystone
+     
 Services:
-    - name: info
-      description: Return as machine info as it can collect
+    - name: install_and_configure
+      description: Installs and Configure OpenStack Keystone
       methods:
-          - nameservers
-          - block_devices
-          - mounts
-    - name: setup_singlenode
-      description: Sets all the previous actions to prepare a StackOps deployment
+          - install
+          - set_config_file
+          - configure_users
+    - name: register_service
+      description: Register a new service in keystone
+      methods: 
+          - create_service
+    - name: register_service_user
+      description: Registers a new user for the service
       methods:
-          - add_repos
-          - add_nova_user
-          - add_glance_user
-          - change_hostname
+          - create_user_for_service

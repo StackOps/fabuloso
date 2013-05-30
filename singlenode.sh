@@ -15,24 +15,6 @@
 
 #!/bin/bash
 
-export RABBITMQ_HOST=127.0.0.1
-export MYSQL_HOST=127.0.0.1
-export KEYSTONE_HOST=127.0.0.1
-export GLANCE_HOST=127.0.0.1
-export GLANCE_PORT=9292
-export CONTROLLER_HOST=127.0.0.1
-export CINDER_HOST=127.0.0.1
-export QUANTUMAPI_HOST=127.0.0.1
-export HORIZON_HOST=127.0.0.1
-export PORTAL_HOST=127.0.0.1
-export ACTIVITY_HOST=127.0.0.1
-export CHARGEBACK_HOST=127.0.0.1
-export QUANTUM_HOST=127.0.0.1
-export COMPUTE1_HOST=127.0.0.1
-export VNCPROXY_HOST=127.0.0.1
-export VNCPROXY_PORT=6080
-export PUBLIC_IP=127.0.0.1
-
 export MYSQL_ROOT_PASSWORD=stackops
 export MYSQL_HOST=$CONTROLLER_HOST
 export MYSQL_PORT=3306
@@ -111,53 +93,11 @@ HOST=127.0.0.1
 PORT=${PORT:-2223}
 HOSTNAME=controller
 
-# Bootstrap script
-# fab -H $HOST:$PORT -u stackops -p stackops baseos.execute_bootstrap
-
-# Configure MySQL and RabbitMQ
-# Configure Keystone
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure_keystone:root_pass="$MYSQL_ROOT_PASSWORD",drop_schema=False,schema="$MYSQL_KEYSTONE_SCHEMA",username="$MYSQL_KEYSTONE_USERNAME",password="$MYSQL_KEYSTONE_PASSWORD"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure_files:admin_token="$ADMIN_TOKEN",mysql_username="$MYSQL_KEYSTONE_USERNAME",mysql_password="$MYSQL_KEYSTONE_PASSWORD",mysql_host="$MYSQL_HOST",mysql_port="$MYSQL_PORT",mysql_schema="$MYSQL_KEYSTONE_SCHEMA"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure_users:endpoint="$ADMIN_AUTH_URL",admin_token=$ADMIN_TOKEN,admin_pass=$ADMIN_USER_PASS
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.create_service:endpoint="$ADMIN_AUTH_URL",admin_token="$ADMIN_TOKEN",name="keystone",type="identity",description="Keystone Identity Service",region=$REGION,public_url=$KEYSTONE_PUBLIC_URL,admin_url=$KEYSTONE_ADMIN_URL,internal_url=$KEYSTONE_INTERNAL_URL
-
-# Configure Glance
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure_glance:root_pass="$MYSQL_ROOT_PASSWORD",drop_schema=False,schema="$MYSQL_GLANCE_SCHEMA",username="$MYSQL_GLANCE_USERNAME",password="$MYSQL_GLANCE_PASSWORD"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa  keystone.create_service:endpoint="$ADMIN_AUTH_URL",admin_token="$ADMIN_TOKEN",name="glance",type="image",description="Glance Image Services",region=$REGION,public_url=$GLANCE_PUBLIC_URL,admin_url=$GLANCE_ADMIN_URL,internal_url=$GLANCE_INTERNAL_URL
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure_service_user:endpoint="$ADMIN_AUTH_URL",user_name="$SERVICE_GLANCE_USER",admin_token="$ADMIN_TOKEN",user_pass="$SERVICE_GLANCE_PASS"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa glance.configure
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa  glance.configure_files:mysql_username="$MYSQL_GLANCE_USERNAME",mysql_password="$MYSQL_GLANCE_PASSWORD",mysql_host="$MYSQL_HOST",mysql_port="$MYSQL_PORT",mysql_schema="$MYSQL_GLANCE_SCHEMA",service_user="$SERVICE_GLANCE_USER",service_tenant_name="$SERVICE_TENANT_NAME",service_pass="$SERVICE_GLANCE_PASS",auth_host="$AUTH_HOST",auth_port="$AUTH_PORT",auth_protocol="$AUTH_PROTOCOL"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa  glance.publish_ttylinux:test_username="$TEST_USERNAME",test_password="$TEST_PASSWORD",test_tenant_name="$TEST_TENANT_NAME",auth_uri="$AUTH_URI"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa  glance.configure_local_storage
-
-# Configure NOVA API components
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure_nova:root_pass="$MYSQL_ROOT_PASSWORD",drop_schema=False,schema="$MYSQL_NOVA_SCHEMA",username="$MYSQL_NOVA_USERNAME",password="$MYSQL_NOVA_PASSWORD"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.create_service:endpoint="$ADMIN_AUTH_URL",admin_token="$ADMIN_TOKEN",name="nova",type="compute",description="Openstack Compute Service",region="$REGION",public_url=$COMPUTE_PUBLIC_URL,admin_url=$COMPUTE_ADMIN_URL,internal_url=$COMPUTE_INTERNAL_URL
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.create_service:endpoint="$ADMIN_AUTH_URL",admin_token="$ADMIN_TOKEN",name="ec2",type="ec2",description="EC2 Compatibility Layer",region="$REGION",public_url=$EC2_PUBLIC_URL,admin_url=$EC2_ADMIN_URL,internal_url=$EC2_INTERNAL_URL
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure_service_user:endpoint="$ADMIN_AUTH_URL",user_name="$SERVICE_NOVA_USER",admin_token="$ADMIN_TOKEN",user_pass="$SERVICE_NOVA_PASS"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.configure
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.configure_files:service_user="$SERVICE_NOVA_USER",service_tenant_name="$SERVICE_TENANT_NAME",service_pass="$SERVICE_NOVA_PASS",auth_host="$AUTH_HOST",auth_port="$AUTH_PORT",auth_protocol="$AUTH_PROTOCOL"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.create_base_configuration:management_ip=$HOST,mysql_username="$MYSQL_NOVA_USERNAME",mysql_password="$MYSQL_NOVA_PASSWORD",mysql_host="$MYSQL_HOST",mysql_port="$MYSQL_PORT",mysql_schema="$MYSQL_NOVA_SCHEMA"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=rabbit_host,value=$RABBITMQ_HOST
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=s3_host,value=$HOST
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=ec2_host,value=$HOST
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=ec2_dmz_host,value=$HOST
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=metadata_host,value=$HOST
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=nova_url,value=http://$HOST:8774/v1.1/
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=ec2_url,value=http://$HOST:8773/services/Cloud
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=keystone_ec2_url,value=http://$KEYSTONE_HOST:5000/v2.0/ec2tokens
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=quantum_url,value=http://$QUANTUMAPI_HOST:9696
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=quantum_admin_auth_url,value=http://$KEYSTONE_HOST:35357/v2.0
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=glance_api_servers,value=$GLANCE_HOST:9292
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=novncproxy_base_url,value=$NOVNCPROXY_URL
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.set_property:name=vncserver_proxyclient_address,value=$HOST
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa nova.start
-
 # Configure QUANTUM Server
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure_quantum:root_pass="$MYSQL_ROOT_PASSWORD",drop_schema=False,schema="$MYSQL_QUANTUM_SCHEMA",username="$MYSQL_QUANTUM_USERNAME",password="$MYSQL_QUANTUM_PASSWORD"
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa  keystone.create_service:endpoint="$ADMIN_AUTH_URL",admin_token="$ADMIN_TOKEN",name="quantum",type="network",description="Openstack Quantum Services",region="$REGION",public_url=$QUANTUM_PUBLIC_URL,admin_url=$QUANTUM_ADMIN_URL,internal_url=$QUANTUM_INTERNAL_URL
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure_service_user:endpoint="$ADMIN_AUTH_URL",user_name="$SERVICE_QUANTUM_USER",admin_token="$ADMIN_TOKEN",user_pass="$SERVICE_QUANTUM_PASS"
+
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.compile_datapath
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure:iface_ex=$IFACE_EXT
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure_files:service_user="$SERVICE_QUANTUM_USER",service_tenant_name="$SERVICE_TENANT_NAME",service_pass="$SERVICE_QUANTUM_PASS",auth_host="$AUTH_HOST",auth_port="$AUTH_PORT",auth_protocol="$AUTH_PROTOCOL"

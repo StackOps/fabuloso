@@ -114,5 +114,6 @@ class Component(object):
         parameters = self.methods[method]
         for parameter in parameters:
             param_name, description = parameter
-            method_args[param_name] = kwargs[param_name]
+            if param_name in kwargs:
+                method_args[param_name] = kwargs[param_name]
         return method_args

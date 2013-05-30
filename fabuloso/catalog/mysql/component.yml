@@ -13,8 +13,24 @@ Methods:
       description: Starts the mysql service
     - name: stop
       description: Stop the mysql service
-    - name: configure_schema
+    - name: setup_schema
       description: Prepares a schema for a given OpenStack component
+      params:
+        - name: root_pass
+          description: Admin password
+        - name: schema_name
+          description: Set name for the new schema
+        - name: drop_previous
+          description: Whether script shoud drop previous schema with the same name
+          optional: True
+        - name: username
+          description: User with privileges over this schema
+        - name: password
+          description: Password for the user
+        - name: host
+          description: Specify from which host the user will have permissions
+          optional: True
+
 
 Services:
     - name: setup
@@ -26,3 +42,7 @@ Services:
       description: Stops the mysql service
       methods:
           - stop
+    - name: set_schema
+      description: Set a new schema in the database
+      methods:
+          - setup_schema
