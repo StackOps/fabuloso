@@ -270,7 +270,7 @@ def set_property(name, value, comment=None):
 
 
 def set_properties(props):
-    for key, value in props:
+    for key, value in props.items():
         set_property(key, value)
 
 

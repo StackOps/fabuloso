@@ -6,14 +6,14 @@ DATABASE_ADMIN_PASSWORD = 'stackops'
 ADMIN_TOKEN = 'stackops_token'
 ADMIN_PASSWORD = 'stackops'
 KEYSTONE_PROTOCOL = 'http'
-KEYSTONE_HOST = 'localhost'
+KEYSTONE_HOST = '127.0.0.1'
 KEYSTONE_AUTH_PORT = '35357'
 KEYSTONE_ENDPOINT = (KEYSTONE_PROTOCOL + '://' + KEYSTONE_HOST + ':'
                      + KEYSTONE_AUTH_PORT + '/v2.0')
 SERVICE_TENANT_NAME = 'service'
 
 env_dict = {
-    'host': 'localhost',
+    'host': '127.0.0.1',
     'port': 2223,
     'username': 'stackops',
     'ssh_key_file': '~/.ssh/nonsecureid_rsa',
@@ -47,8 +47,8 @@ rabbit.configure()
 KEYSTONE_SCHEMA_NAME = 'keystone'
 KEYSTONE_MYSQL_USERNAME = 'keystone'
 KEYSTONE_MYSQL_PASSWORD = 'stackops'
-KEYSTONE_PUBLIC_URI = 'http://localhost/keystone/v2.0'
-KEYSTONE_INTERNAL_URI = 'http://localhost:5000/v2.0'
+KEYSTONE_PUBLIC_URI = 'http://127.0.0.1/keystone/v2.0'
+KEYSTONE_INTERNAL_URI = 'http://127.0.0.1:5000/v2.0'
 keys_db = {
     'root_pass': DATABASE_ADMIN_PASSWORD,
     'schema_name': KEYSTONE_SCHEMA_NAME,
@@ -85,9 +85,9 @@ keystone.register_service(**keys_serv)
 GLANCE_SCHEMA_NAME = 'glance'
 GLANCE_MYSQL_USERNAME = 'glance'
 GLANCE_MYSQL_PASSWORD = 'stackops'
-GLANCE_PUBLIC_URI = 'http://localhost/glance/v1'
+GLANCE_PUBLIC_URI = 'http://127.0.0.1/glance/v1'
 GLANCE_PORT = '9292'
-GLANCE_HOST = 'localhost'
+GLANCE_HOST = '127.0.0.1'
 GLANCE_INTERNAL_URI = 'http://' + GLANCE_HOST + ':' + GLANCE_PORT + '/v1'
 GLANCE_USER = 'glance'
 GLANCE_PASSWORD = 'stackops'
@@ -139,14 +139,16 @@ glance.prepare_image(auth_uri=KEYSTONE_INTERNAL_URI)
 NOVA_SCHEMA_NAME = 'nova'
 NOVA_MYSQL_USERNAME = 'nova'
 NOVA_MYSQL_PASSWORD = 'stackops'
-NOVA_PUBLIC_URI = 'http://localhost/compute/v1.1/\$\(tenant_id\)s'
-NOVA_INTERNAL_URI = 'http://localhost:8774/v1'
+NOVA_PUBLIC_CONFIG = 'http://127.0.0.1/compute/v1.1'
+NOVA_PUBLIC_URI = NOVA_PUBLIC_CONFIG + '/$(tenant_id)s'
+NOVA_INTERNAL_CONFIG = 'http://127.0.0.1:8774/v1.1'
+NOVA_INTERNAL_URI = NOVA_INTERNAL_CONFIG + '/$(tenant_id)s'
 NOVA_USER = 'nova'
 NOVA_PASSWORD = 'stackops'
-EC2_PUBLIC_URL = 'http://localhost/services/Cloud'
-EC2_ADMIN_URL = 'http://localhost:8773/services/Admin'
-EC2_INTERNAL_URL = 'http://localhost:8773/services/Cloud'
-EC2_PROXY_URL = 'http://localhost:8773/services'
+EC2_PUBLIC_URL = 'http://127.0.0.1/services/Cloud'
+EC2_ADMIN_URL = 'http://127.0.0.1:8773/services/Admin'
+EC2_INTERNAL_URL = 'http://127.0.0.1:8773/services/Cloud'
+EC2_PROXY_URL = 'http://127.0.0.1:8773/services'
 
 nova_db = {
     'root_pass': DATABASE_ADMIN_PASSWORD,
@@ -193,31 +195,34 @@ nova_service = {
     'auth_port': KEYSTONE_AUTH_PORT,
     'auth_protocol': KEYSTONE_PROTOCOL,
     'auth_host': KEYSTONE_HOST,
-    'management_ip': 'localhost'
+    'management_ip': '127.0.0.1'
 }
 
-NOVNCPROXY_URL = 'http://localhost:6080/vnc_auto.html'
+NOVNCPROXY_URL = 'http://127.0.0.1:6080/vnc_auto.html'
 
 nova_properties = {
-    'rabbit_host': 'localhost',
-    's3_host': 'localhost',
-    'ec2_host': 'localhost',
-    'ec2_dmz_host': 'localhost',
-    'metadata_host': 'localhost',
-    'nova_url': NOVA_INTERNAL_URI,
-    'ec2_url': EC2_INTERNAL_URL,
-    'keystone_ec2_url': KEYSTONE_INTERNAL_URI + '/ec2tokens',
-    'quantum_url': 'http://localhost:9696',
-    'quantum_admin_auth_url': KEYSTONE_ENDPOINT,
-    'glance_api_servers': GLANCE_INTERNAL_URI,
-    'novncproxy_base_url': NOVNCPROXY_URL,
-    'vncserver_proxyclient_address': 'localhost'
+    'props': {
+        'rabbit_host': '127.0.0.1',
+        's3_host': '127.0.0.1',
+        'ec2_host': '127.0.0.1',
+        'ec2_dmz_host': '127.0.0.1',
+        'metadata_host': '127.0.0.1',
+        'nova_url': NOVA_INTERNAL_URI,
+        'ec2_url': EC2_INTERNAL_URL,
+        'keystone_ec2_url': KEYSTONE_INTERNAL_URI + '/ec2tokens',
+        'quantum_url': 'http://127.0.0.1:9696',
+        'quantum_admin_auth_url': KEYSTONE_ENDPOINT,
+        'glance_api_servers': GLANCE_INTERNAL_URI,
+        'novncproxy_base_url': NOVNCPROXY_URL,
+        'vncserver_proxyclient_address': '127.0.0.1'
+    }
 }
 mysql.set_schema(**nova_db)
 keystone.register_service(**nova_register)
 keystone.register_service(**ec2_register)
 keystone.register_service_user(**nova_user)
 nova.install_and_configure(**nova_service)
+nova.set_properties(**nova_properties)
 nova.start()
 
 # -----------------------------------------------------
@@ -226,8 +231,8 @@ nova.start()
 QUANTUM_SCHEMA_NAME = 'quantum'
 QUANTUM_MYSQL_USERNAME = 'quantum'
 QUANTUM_MYSQL_PASSWORD = 'stackops'
-QUANTUM_PUBLIC_URI = 'http://localhost/network'
-QUANTUM_INTERNAL_URI = 'http://localhost:9696'
+QUANTUM_PUBLIC_URI = 'http://127.0.0.1/network'
+QUANTUM_INTERNAL_URI = 'http://127.0.0.1:9696'
 QUANTUM_USER = 'quantum'
 QUANTUM_PASSWORD = 'stackops'
 
@@ -269,7 +274,7 @@ quantum_service = {
     'auth_port': KEYSTONE_AUTH_PORT,
     'auth_protocol': KEYSTONE_PROTOCOL,
     'auth_host': KEYSTONE_HOST,
-    'management_ip': 'localhost',
+    'management_ip': '127.0.0.1',
     'auth_url': KEYSTONE_ENDPOINT,
     'region': 'RegionOne'
 }
@@ -287,8 +292,9 @@ quantum.start()
 CINDER_SCHEMA_NAME = 'cinder'
 CINDER_MYSQL_USERNAME = 'cinder'
 CINDER_MYSQL_PASSWORD = 'stackops'
-CINDER_PUBLIC_URI = 'http://localhost/volume/v1/\$\(tenant_id\)s'
-CINDER_INTERNAL_URI = 'http://localhost:8776/v1/\$\(tenant_id\)s'
+CINDER_PUBLIC_URI = 'http://127.0.0.1/volume/v1/$(tenant_id)s'
+CINDER_INTERNAL_CONFIG = 'http://127.0.0.1:8776/v1'
+CINDER_INTERNAL_URI = CINDER_INTERNAL_CONFIG + '/$(tenant_id)s'
 CINDER_USER = 'cinder'
 CINDER_PASSWORD = 'stackops'
 
@@ -302,8 +308,8 @@ cinder_register = {
     'endpoint': KEYSTONE_ENDPOINT,
     'admin_token': ADMIN_TOKEN,
     'service_name': 'cinder',
-    'service_type': 'network',
-    'description': 'OpenStack Network Service',
+    'service_type': 'volume',
+    'description': 'OpenStack Volume Service',
     'region': 'RegionOne',
     'public_url': CINDER_PUBLIC_URI,
     'admin_url': CINDER_INTERNAL_URI,
@@ -348,8 +354,8 @@ compute_service = {
     'auth_port': KEYSTONE_AUTH_PORT,
     'auth_protocol': KEYSTONE_PROTOCOL,
     'auth_host': KEYSTONE_HOST,
-    'management_ip': 'localhost',
-    'hostname': 'localhost',
+    'management_ip': '127.0.0.1',
+    'hostname': '127.0.0.1',
     'admin_auth_url': KEYSTONE_ENDPOINT,
     'quantum_url': QUANTUM_INTERNAL_URI,
     'glance_host': GLANCE_HOST,
@@ -365,10 +371,10 @@ compute.start()
 apache_config = {
     'keystone_host': KEYSTONE_HOST,
     'ec2_internal_url': EC2_INTERNAL_URL,
-    'compute_internal_url': NOVA_INTERNAL_URI,
+    'compute_internal_url': NOVA_INTERNAL_CONFIG,
     'keystone_internal_url': KEYSTONE_INTERNAL_URI,
     'glance_internal_url': GLANCE_INTERNAL_URI,
-    'cinder_internal_url': CINDER_INTERNAL_URI,
+    'cinder_internal_url': CINDER_INTERNAL_CONFIG,
     'quantum_internal_url': QUANTUM_INTERNAL_URI
 }
 apache.install(**apache_config)
