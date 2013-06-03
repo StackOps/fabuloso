@@ -1,0 +1,36 @@
+name: apache
+file: apache.py
+description: Operations over Apache HTTP server
+
+Methods:
+    - name: configure
+      description: Install cinder plugins
+      params:
+          - name: keystone_host
+            description: Keystone host
+          - name: ec2_internal_url
+            description: EC2 service url
+          - name: compute_internal_url
+            description: Compute Internal Url
+          - name: keystone_internal_url
+            description: Keystone internal Url
+          - name: glance_internal_url
+            description: Glance internal url
+          - name: cinder_internal_url
+            description: Cinder internal url
+          - name: quantum_internal_url
+            description: Quantum internal url
+    - name: start
+      description: Start Nova-compute service
+        
+      
+     
+Services:
+    - name: install
+      description: Installs and Configure OpenStack cinder
+      methods:
+          - configure
+    - name: start 
+      description: start nova-compute service
+      methods: 
+          - start

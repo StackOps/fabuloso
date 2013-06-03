@@ -30,6 +30,11 @@ rabbit = fab.get_component("rabbitmq")
 keystone = fab.get_component("keystone")
 glance = fab.get_component("glance")
 nova = fab.get_component("nova")
+quantum_plugins = fab.get_component("quantum_plugins")
+quantum = fab.get_component("quantum")
+cinder = fab.get_component("cinder")
+compute = fab.get_component("compute")
+apache = fab.get_component("apache")
 
 # Setup basic components
 os.setup_singlenode(new_hostname=HOSTNAME)
@@ -81,7 +86,9 @@ GLANCE_SCHEMA_NAME = 'glance'
 GLANCE_MYSQL_USERNAME = 'glance'
 GLANCE_MYSQL_PASSWORD = 'stackops'
 GLANCE_PUBLIC_URI = 'http://localhost/glance/v1'
-GLANCE_INTERNAL_URI = 'http://localhost:9292/v1'
+GLANCE_PORT = '9292'
+GLANCE_HOST = 'localhost'
+GLANCE_INTERNAL_URI = 'http://' + GLANCE_HOST + ':' + GLANCE_PORT + '/v1'
 GLANCE_USER = 'glance'
 GLANCE_PASSWORD = 'stackops'
 
@@ -248,6 +255,121 @@ quantum_user = {
     'endpoint': KEYSTONE_ENDPOINT,
     'admin_token': ADMIN_TOKEN
 }
+quantum_service = {
+    'iface_ex': 'eth2',
+    'iface_bridge': 'eth1',
+    'br_postfix': 'eth1',
+    'vlan_start': 1,
+    'user': QUANTUM_USER,
+    'tenant': SERVICE_TENANT_NAME,
+    'password': QUANTUM_PASSWORD,
+    'mysql_username': QUANTUM_MYSQL_USERNAME,
+    'mysql_password': QUANTUM_MYSQL_PASSWORD,
+    'mysql_schema': QUANTUM_SCHEMA_NAME,
+    'auth_port': KEYSTONE_AUTH_PORT,
+    'auth_protocol': KEYSTONE_PROTOCOL,
+    'auth_host': KEYSTONE_HOST,
+    'management_ip': 'localhost',
+    'auth_url': KEYSTONE_ENDPOINT,
+    'region': 'RegionOne'
+}
 mysql.set_schema(**quantum_db)
 keystone.register_service(**quantum_register)
 keystone.register_service_user(**quantum_user)
+quantum_plugins.install_and_configure(**quantum_service)
+quantum_plugins.start()
+quantum.install_and_configure(**quantum_service)
+quantum.start()
+
+# -----------------------------------------------------
+# Set CINDER
+# -----------------------------------------------------
+CINDER_SCHEMA_NAME = 'cinder'
+CINDER_MYSQL_USERNAME = 'cinder'
+CINDER_MYSQL_PASSWORD = 'stackops'
+CINDER_PUBLIC_URI = 'http://localhost/volume/v1/\$\(tenant_id\)s'
+CINDER_INTERNAL_URI = 'http://localhost:8776/v1/\$\(tenant_id\)s'
+CINDER_USER = 'cinder'
+CINDER_PASSWORD = 'stackops'
+
+cinder_db = {
+    'root_pass': DATABASE_ADMIN_PASSWORD,
+    'schema_name': CINDER_SCHEMA_NAME,
+    'username': CINDER_MYSQL_USERNAME,
+    'password': CINDER_MYSQL_PASSWORD
+}
+cinder_register = {
+    'endpoint': KEYSTONE_ENDPOINT,
+    'admin_token': ADMIN_TOKEN,
+    'service_name': 'cinder',
+    'service_type': 'network',
+    'description': 'OpenStack Network Service',
+    'region': 'RegionOne',
+    'public_url': CINDER_PUBLIC_URI,
+    'admin_url': CINDER_INTERNAL_URI,
+    'internal_url': CINDER_INTERNAL_URI
+}
+cinder_user = {
+    'tenant': SERVICE_TENANT_NAME,
+    'service_user_name': CINDER_USER,
+    'service_user_pass': CINDER_PASSWORD,
+    'endpoint': KEYSTONE_ENDPOINT,
+    'admin_token': ADMIN_TOKEN
+}
+cinder_service = {
+    'user': CINDER_USER,
+    'tenant': SERVICE_TENANT_NAME,
+    'password': CINDER_PASSWORD,
+    'mysql_username': CINDER_MYSQL_USERNAME,
+    'mysql_password': CINDER_MYSQL_PASSWORD,
+    'mysql_schema': CINDER_SCHEMA_NAME,
+    'auth_port': KEYSTONE_AUTH_PORT,
+    'auth_protocol': KEYSTONE_PROTOCOL,
+    'auth_host': KEYSTONE_HOST,
+}
+mysql.set_schema(**cinder_db)
+keystone.register_service(**cinder_register)
+keystone.register_service_user(**cinder_user)
+cinder.install_and_configure(**cinder_service)
+# os.parted()
+# cinder.create_volume()
+cinder.start()
+
+# -----------------------------------------------------
+# Set Compute
+# -----------------------------------------------------
+compute_service = {
+    'user': NOVA_USER,
+    'tenant': SERVICE_TENANT_NAME,
+    'password': NOVA_PASSWORD,
+    'mysql_username': NOVA_MYSQL_USERNAME,
+    'mysql_password': NOVA_MYSQL_PASSWORD,
+    'mysql_schema': NOVA_SCHEMA_NAME,
+    'auth_port': KEYSTONE_AUTH_PORT,
+    'auth_protocol': KEYSTONE_PROTOCOL,
+    'auth_host': KEYSTONE_HOST,
+    'management_ip': 'localhost',
+    'hostname': 'localhost',
+    'admin_auth_url': KEYSTONE_ENDPOINT,
+    'quantum_url': QUANTUM_INTERNAL_URI,
+    'glance_host': GLANCE_HOST,
+    'glance_port': GLANCE_PORT
+}
+compute.install_and_configure(**compute_service)
+compute.start()
+
+
+# -----------------------------------------------
+# Set APACHE
+# -----------------------------------------------
+apache_config = {
+    'keystone_host': KEYSTONE_HOST,
+    'ec2_internal_url': EC2_INTERNAL_URL,
+    'compute_internal_url': NOVA_INTERNAL_URI,
+    'keystone_internal_url': KEYSTONE_INTERNAL_URI,
+    'glance_internal_url': GLANCE_INTERNAL_URI,
+    'cinder_internal_url': CINDER_INTERNAL_URI,
+    'quantum_internal_url': QUANTUM_INTERNAL_URI
+}
+apache.install(**apache_config)
+apache.start()

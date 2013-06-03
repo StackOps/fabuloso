@@ -1,0 +1,84 @@
+name: quantum_plugins 
+file: quantum_plugins.py
+description: Operations over Quantum Plugins
+
+Methods:
+    - name: compile_datapath
+      description:  Installs and compiles openvswitch datapath
+    - name: install
+      description: Install quantum plugins
+      params: 
+          - name: iface_ex
+            description: Host interface
+    - name: set_config_file
+      description: Configure the quantum plugin
+      params:
+          - name: user
+            description: Quantum User 
+          - name: password
+            description: Quantum Password
+          - name: tenant
+            description: Tenant name
+          - name: auth_protocol
+            description: Authorization service (keystone) protocol
+          - name: auth_host
+            description: Authorization service (keystone) host
+          - name: auth_port
+            description: Authorization service (keystone) port value
+    - name: configure_ovs_plugin_vlan
+      description: Configure the vlan
+      params:
+          - name: iface_bridge
+            description: interface bridge
+          - name: br_postfix
+            description: dunno
+          - name: vlan_start
+            description: first vlan tag
+          - name: vlan_end
+            description: last vlan tag
+          - name: mysql_schema
+            description: Quantum mysql schema name
+          - name: mysql_username
+            description: Quantum mysql user name
+          - name: mysql_password
+            description: Quantum mysql password
+          - name: mysql_host
+            description: Connection host.
+            optional: True
+          - name: mysql_port
+            description: Connection port
+            optional: True
+    - name: configure_l3_agent
+      description: Configures the router agent
+      params:
+          - name: user
+            description: Quantum User 
+          - name: password
+            description: Quantum Password
+          - name: tenant
+            description: Tenant name
+          - name: auth_url
+            description: Keystone authentication endpoint
+          - name: management_ip
+            description: Management ip
+          - name: region
+            description: Region where the service is available
+    - name: configure_dhcp_agent
+      description: Configure DHCP
+    - name: start
+      description: Starts the plugin
+     
+Services:
+    - name: install_and_configure
+      description: Installs and Configure OpenStack Keystone
+      methods:
+          - compile_datapath
+          - install
+          - set_config_file
+          - configure_ovs_plugin_vlan
+          - configure_l3_agent
+          - configure_dhcp_agent
+    - name: start
+      description: Starts the plugin
+      methods: 
+          - start

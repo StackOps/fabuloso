@@ -1,4 +1,4 @@
-#   Copyright 2012-2013 STACKOPS TECHNOLOGIES S.L.
+#, puts, local   Copyright 2012-2013 STACKOPS TECHNOLOGIES S.L.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -93,47 +93,7 @@ HOST=127.0.0.1
 PORT=${PORT:-2223}
 HOSTNAME=controller
 
-# Configure QUANTUM Server
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure_quantum:root_pass="$MYSQL_ROOT_PASSWORD",drop_schema=False,schema="$MYSQL_QUANTUM_SCHEMA",username="$MYSQL_QUANTUM_USERNAME",password="$MYSQL_QUANTUM_PASSWORD"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa  keystone.create_service:endpoint="$ADMIN_AUTH_URL",admin_token="$ADMIN_TOKEN",name="quantum",type="network",description="Openstack Quantum Services",region="$REGION",public_url=$QUANTUM_PUBLIC_URL,admin_url=$QUANTUM_ADMIN_URL,internal_url=$QUANTUM_INTERNAL_URL
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure_service_user:endpoint="$ADMIN_AUTH_URL",user_name="$SERVICE_QUANTUM_USER",admin_token="$ADMIN_TOKEN",user_pass="$SERVICE_QUANTUM_PASS"
-
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.compile_datapath
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure:iface_ex=$IFACE_EXT
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure_files:service_user="$SERVICE_QUANTUM_USER",service_tenant_name="$SERVICE_TENANT_NAME",service_pass="$SERVICE_QUANTUM_PASS",auth_host="$AUTH_HOST",auth_port="$AUTH_PORT",auth_protocol="$AUTH_PROTOCOL"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure_quantum:rabbit_host="$RABBITMQ_HOST"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure_ovs_plugin_vlan:iface_bridge=$IFACE_BRIDGE,vlan_start=$VLAN_START,vlan_end=$VLAN_END,mysql_username="$MYSQL_QUANTUM_USERNAME",mysql_password="$MYSQL_QUANTUM_PASSWORD",mysql_host="$MYSQL_HOST",mysql_port="$MYSQL_PORT",mysql_schema="$MYSQL_QUANTUM_SCHEMA"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure_l3_agent:service_user="$SERVICE_QUANTUM_USER",service_tenant_name="$SERVICE_TENANT_NAME",service_pass="$SERVICE_QUANTUM_PASS",auth_url="$ADMIN_AUTH_URL",metadata_ip="$CONTROLLER_HOST",region="$REGION"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.configure_dhcp_agent
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum_plugins.start
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum.configure
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum.configure_files
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa quantum.start
-
-# Configure CINDER
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa mysql.configure_cinder:root_pass="$MYSQL_ROOT_PASSWORD",drop_schema=False,schema="$MYSQL_CINDER_SCHEMA",username="$MYSQL_CINDER_USERNAME",password="$MYSQL_CINDER_PASSWORD"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.create_service:endpoint="$ADMIN_AUTH_URL",admin_token="$ADMIN_TOKEN",name="cinder",type="volume",description="Openstack Volume Services",region="$REGION",public_url=$CINDER_PUBLIC_URL,admin_url=$CINDER_ADMIN_URL,internal_url=$CINDER_INTERNAL_URL
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa keystone.configure_service_user:endpoint="$ADMIN_AUTH_URL",user_name="$SERVICE_CINDER_USER",admin_token="$ADMIN_TOKEN",user_pass="$SERVICE_CINDER_PASS"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa cinder.configure
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa cinder.configure_files:rabbit_host="$RABBITMQ_HOST",mysql_username="$MYSQL_CINDER_USERNAME",mysql_password="$MYSQL_CINDER_PASSWORD",mysql_host="$MYSQL_HOST",mysql_port="$MYSQL_PORT",mysql_schema="$MYSQL_CINDER_SCHEMA",service_user="$SERVICE_CINDER_USER",service_tenant_name="$SERVICE_TENANT_NAME",service_pass="$SERVICE_CINDER_PASS",auth_host="$AUTH_HOST",auth_port="$AUTH_PORT",auth_protocol="$AUTH_PROTOCOL"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa baseos.parted_mklabel:disk=/dev/sdb
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa baseos.parted:disk=/dev/sdb,start=0,end=100
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa cinder.create_volume:partition=/dev/sdb1
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa cinder.iscsi_start
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa cinder.start
-
 # Configure Compute Node
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure_network
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure_ntp
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure_vhost_net
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure_libvirt:hostname=$HOSTNAME
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure_hugepages:is_enabled=True,percentage='70'
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure_files:management_ip="$HOST",quantum_url="$QUANTUM_INTERNAL_URL",admin_auth_url="$ADMIN_AUTH_URL",libvirt_type="$LIBVIRT_TYPE",rabbit_host="$RABBITMQ_HOST",mysql_username="$MYSQL_NOVA_USERNAME",mysql_password="$MYSQL_NOVA_PASSWORD",mysql_host="$MYSQL_HOST",mysql_port="$MYSQL_PORT",mysql_schema="$MYSQL_NOVA_SCHEMA",service_user="$SERVICE_NOVA_USER",service_tenant_name="$SERVICE_TENANT_NAME",service_pass="$SERVICE_NOVA_PASS",auth_host="$AUTH_HOST",auth_port="$AUTH_PORT",auth_protocol="$AUTH_PROTOCOL",vncproxy_host="$VNCPROXY_HOST",vncproxy_port="$VNCPROXY_PORT",glance_host="$GLANCE_HOST",glance_port="$GLANCE_PORT"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure_quantum:rabbit_host="$RABBITMQ_HOST"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.configure_ovs_plugin_vlan:iface_bridge="$IFACE_BRIDGE",vlan_start="$VLAN_START",vlan_end="$VLAN_END",mysql_username="$MYSQL_QUANTUM_USERNAME",mysql_password="$MYSQL_QUANTUM_PASSWORD",mysql_host="$MYSQL_HOST",mysql_port="$MYSQL_PORT",mysql_schema="$MYSQL_QUANTUM_SCHEMA"
-fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa compute.start
-
 # Configure Apache
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa apache.configure:keystone_host="$AUTH_HOST",ec2_internal_url="$EC2_PROXY_URL",compute_internal_url="$COMPUTE_PROXY_URL",keystone_internal_url="$KEYSTONE_PROXY_URL",glance_internal_url="$GLANCE_PROXY_URL",cinder_internal_url="$CINDER_PROXY_URL",quantum_internal_url="$QUANTUM_PROXY_URL",portal_internal_url="$PORTAL_PROXY_URL",activity_internal_url="$ACTIVITY_PROXY_URL",chargeback_internal_url="$CHARGEBACK_PROXY_URL"
 fab -H $HOST:$PORT -u stackops -i bootstrap/nonsecureid_rsa apache.start

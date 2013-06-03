@@ -547,12 +547,8 @@ def show_partitions(disk=None):
 
 
 @task
-def parted_mklabel(disk=None):
+def parted(disk='/dev/sdb', start=0, end=100):
     sudo('parted -s %s mklabel msdos' % disk)
-
-
-@task
-def parted(disk=None, start=None, end=None):
     sudo('parted -s %s unit %% mkpart primary %s%% %s%%' % (disk, start, end))
 
 

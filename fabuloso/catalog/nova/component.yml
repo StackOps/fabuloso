@@ -15,11 +15,11 @@ Methods:
           - name: password
             description: Password of the user
           - name: mysql_schema
-            description: Glance mysql schema name
+            description: Nova mysql schema name
           - name: mysql_username
-            description: Glance mysql user name
+            description: Nova mysql user name
           - name: mysql_password
-            description: Glance mysql password
+            description: Nova mysql password
           - name: mysql_host
             description: Connection host.
             optional: True

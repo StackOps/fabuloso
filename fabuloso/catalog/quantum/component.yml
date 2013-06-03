@@ -1,0 +1,36 @@
+name: quantum 
+file: quantum.py
+description: Operations over Quantum
+
+Methods:
+    - name: install
+      description: Install quantum plugins
+    - name: set_config_file
+      description: Configure Quantum file
+      params:
+          - name: user
+            description: Quantum User 
+          - name: password
+            description: Quantum Password
+          - name: tenant
+            description: Tenant name
+          - name: auth_protocol
+            description: Authorization service (keystone) protocol
+          - name: auth_host
+            description: Authorization service (keystone) host
+          - name: auth_port
+            description: Authorization service (keystone) port value
+    - name: start
+      description: Start the Quantum service
+      
+     
+Services:
+    - name: install_and_configure
+      description: Installs and Configure OpenStack Quantum
+      methods:
+          - install
+          - set_config_file
+    - name: start
+      description: Starts the plugin
+      methods: 
+          - start

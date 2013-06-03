@@ -12,39 +12,39 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+from fabric.api import task, settings, sudo
+from cuisine import package_ensure, package_clean, text_strip_margin
 
-from fabric.api import *
-from cuisine import *
-
-import utils
 
 @task
 def stop():
     with settings(warn_only=True):
         sudo("nohup service apache2 stop")
+
+
 @task
 def start():
     stop()
     sudo("nohup service apache2 start")
+
 
 @task
 def configure_ubuntu_packages():
     """Configure apache packages"""
     package_ensure('apache2')
 
+
 @task
 def uninstall_ubuntu_packages():
     """Uninstall apache packages"""
     package_clean('apache2')
 
+
 @task
-def configure(cluster=False,keystone_host="127.0.0.1",
-              ec2_internal_url="http://127.0.0.1:8773/services/Cloud",
-              compute_internal_url="http://127.0.0.1:8774/v1.1",
-              keystone_internal_url="http://127.0.0.1:5000/v2.0",
-              glance_internal_url="http://127.0.0.1:9292/v1",
-              cinder_internal_url="http://127.0.0.1:8776/v1",
-              quantum_internal_url="http://127.0.0.1:9696",
+def configure(keystone_host, ec2_internal_url,
+              compute_internal_url, keystone_internal_url,
+              glance_internal_url, cinder_internal_url,
+              quantum_internal_url, cluster=False,
               portal_internal_url="http://127.0.0.1:8080/portal",
               activity_internal_url="http://127.0.0.1:8080/activity",
               chargeback_internal_url="http://127.0.0.1:8080/chargeback"):
@@ -58,10 +58,16 @@ def configure(cluster=False,keystone_host="127.0.0.1",
     sudo('a2enmod ssl')
     sudo('a2enmod rewrite')
     sudo('a2ensite default-ssl')
-    configure_apache(ec2_internal_url,compute_internal_url,keystone_internal_url,glance_internal_url,cinder_internal_url,quantum_internal_url,
-                     portal_internal_url,activity_internal_url,chargeback_internal_url)
-    configure_apache_ssl(ec2_internal_url,compute_internal_url,keystone_internal_url,glance_internal_url,cinder_internal_url,quantum_internal_url,
-                         portal_internal_url,activity_internal_url,chargeback_internal_url)
+    configure_apache(ec2_internal_url, compute_internal_url,
+                     keystone_internal_url, glance_internal_url,
+                     cinder_internal_url, quantum_internal_url,
+                     portal_internal_url, activity_internal_url,
+                     chargeback_internal_url)
+    _configure_apache_ssl(ec2_internal_url, compute_internal_url,
+                          keystone_internal_url, glance_internal_url,
+                          cinder_internal_url, quantum_internal_url,
+                          portal_internal_url, activity_internal_url,
+                          chargeback_internal_url)
     cert = text_strip_margin('''
         |-----BEGIN CERTIFICATE-----
         |MIICijCCAfOgAwIBAgIJAKiCfzU5EVkeMA0GCSqGSIb3DQEBBQUAMF4xCzAJBgNV
@@ -97,8 +103,9 @@ def configure(cluster=False,keystone_host="127.0.0.1",
         |8CVOK2mxVUn75jScoflQ9m7+yORF2+EdQNugLAas1d9O
         |-----END RSA PRIVATE KEY-----
         |''')
-    configure_ssl(cert,key)
+    configure_ssl(cert, key)
     start()
+
 
 @task
 def configure_apache(ec2_internal_url="http://127.0.0.1:8773/services/Cloud",
@@ -109,7 +116,7 @@ def configure_apache(ec2_internal_url="http://127.0.0.1:8773/services/Cloud",
                      quantum_internal_url="http://127.0.0.1:9696",
                      portal_internal_url="http://127.0.0.1:8080/portal",
                      activity_internal_url="http://127.0.0.1:8080/activity",
-                     chargeback_internal_url="http://127.0.0.1:8080/chargeback",
+                     cb_internal_url="http://127.0.0.1:8080/chargeback",
                      apache_conf=None):
     if apache_conf is None:
         apache_conf = text_strip_margin('''
@@ -156,23 +163,23 @@ def configure_apache(ec2_internal_url="http://127.0.0.1:8773/services/Cloud",
         |   TransferLog /var/log/nova/apache-access.log
         |
         |</VirtualHost>
-        |''' % (ec2_internal_url,ec2_internal_url,compute_internal_url,compute_internal_url,keystone_internal_url,
-                keystone_internal_url,glance_internal_url,glance_internal_url,cinder_internal_url,cinder_internal_url,
-                quantum_internal_url,quantum_internal_url,portal_internal_url,portal_internal_url,
-                activity_internal_url,activity_internal_url,chargeback_internal_url,chargeback_internal_url))
+        |''' % (ec2_internal_url, ec2_internal_url, compute_internal_url,
+                compute_internal_url, keystone_internal_url,
+                keystone_internal_url, glance_internal_url,
+                glance_internal_url, cinder_internal_url, cinder_internal_url,
+                quantum_internal_url, quantum_internal_url,
+                portal_internal_url, portal_internal_url,
+                activity_internal_url, activity_internal_url,
+                cb_internal_url, cb_internal_url))
     sudo('echo "%s" > /etc/apache2/sites-available/default' % apache_conf)
 
-@task
-def configure_apache_ssl(ec2_internal_url="http://127.0.0.1:8773/services/Cloud",
-                         compute_internal_url="http://127.0.0.1:8774/v1.1",
-                         keystone_internal_url="http://127.0.0.1:5000/v2.0",
-                         glance_internal_url="http://127.0.0.1:9292/v1",
-                         cinder_internal_url="http://127.0.0.1:8776/v1",
-                         quantum_internal_url="http://127.0.0.1:9696",
-                         portal_internal_url="http://127.0.0.1:8080/portal",
-                         activity_internal_url="http://127.0.0.1:8080/activity",
-                         chargeback_internal_url="http://127.0.0.1:8080/chargeback",
-                         apache_conf=None):
+
+def _configure_apache_ssl(ec2_internal_url, compute_internal_url,
+                          keystone_internal_url, glance_internal_url,
+                          cinder_internal_url, quantum_internal_url,
+                          portal_internal_url, activity_internal_url,
+                          chargeback_internal_url,
+                          apache_conf=None):
     if apache_conf is None:
         apache_conf = text_strip_margin('''
         |
@@ -229,20 +236,27 @@ def configure_apache_ssl(ec2_internal_url="http://127.0.0.1:8773/services/Cloud"
         |       SSLOptions +StdEnvVars
         |   </Directory>
         |
-        |   BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
+        |   BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown %s
         |   # MSIE 7 and newer should be able to use keepalive
         |   BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
         |
         |</VirtualHost>
         |</IfModule>
-        |''' % (ec2_internal_url,ec2_internal_url,compute_internal_url,compute_internal_url,keystone_internal_url,
-                keystone_internal_url,glance_internal_url,glance_internal_url,cinder_internal_url,cinder_internal_url,
-                quantum_internal_url,quantum_internal_url,portal_internal_url,portal_internal_url,
-                activity_internal_url,activity_internal_url,chargeback_internal_url,chargeback_internal_url))
-    sudo('''echo '%s' > /etc/apache2/sites-available/default-ssl''' % apache_conf)
+        |''' % (ec2_internal_url, ec2_internal_url, compute_internal_url,
+                compute_internal_url, keystone_internal_url,
+                keystone_internal_url, glance_internal_url,
+                glance_internal_url, cinder_internal_url, cinder_internal_url,
+                quantum_internal_url, quantum_internal_url,
+                portal_internal_url, portal_internal_url,
+                activity_internal_url, activity_internal_url,
+                chargeback_internal_url, chargeback_internal_url,
+                "downgrade-1.0 force-response-1.0"))
+    sudo('''echo '%s' > /etc/apache2/sites-available/default-ssl'''
+         % apache_conf)
+
 
 @task
-def configure_ssl(cert,key):
+def configure_ssl(cert, key):
     """Upload .crt and .key files to server"""
     sudo('echo "%s" > /etc/ssl/certs/sslcert.crt' % cert)
     sudo('echo "%s" > /etc/ssl/private/sslcert.key' % key)

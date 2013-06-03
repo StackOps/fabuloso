@@ -23,6 +23,8 @@ Methods:
       params:
           - name: new_hostname
             description: New hostname of the machine
+    - name: parted
+      description: make partition
 
 Services:
     - name: info
@@ -38,3 +40,7 @@ Services:
           - add_nova_user
           - add_glance_user
           - change_hostname
+    - name: parted
+      description: make partition
+      methods:
+          - parted
