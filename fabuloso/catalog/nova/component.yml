@@ -40,19 +40,16 @@ Methods:
           - name: props
             description: just all the properties we want to set
     - name: start
-      descriptoin: Start Nova Service
+      description: Start Nova Service
      
 Services:
     - name: install_and_configure
-      description: Installs and Configure OpenStack Keystone
       methods:
           - install
           - set_config_file
     - name: set_properties
-      description: Set properties
       methods:
           - set_properties
     - name: start
-      description: Start nova service
       methods:
           - start

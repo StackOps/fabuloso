@@ -12,7 +12,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-from fabric.api import task, settings, sudo, puts
+from fabric.api import settings, sudo, puts
 from cuisine import package_ensure, package_clean, dir_exists, dir_remove
 
 import fabuloso.utils as utils
@@ -38,8 +38,9 @@ OVS_PLUGIN_CONF = '/etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini'
 
 QUANTUM_CONF = '/etc/quantum/quantum.conf'
 
+NOVA_INSTANCES = '/var/lib/nova/instances'
 
-@task
+
 def stop():
     with settings(warn_only=True):
         openvswitch_stop()
@@ -49,7 +50,6 @@ def stop():
         iscsi_initiator_stop()
 
 
-@task
 def start():
     stop()
     ntp_start()
@@ -59,49 +59,41 @@ def start():
     compute_start()
 
 
-@task
 def openvswitch_stop():
     with settings(warn_only=True):
         sudo("/etc/init.d/openvswitch-switch stop")
 
 
-@task
 def openvswitch_start():
     openvswitch_stop()
     sudo("/etc/init.d/openvswitch-switch start")
 
 
-@task
 def quantum_plugin_openvswitch_agent_stop():
     with settings(warn_only=True):
         sudo("service quantum-plugin-openvswitch-agent stop")
 
 
-@task
 def quantum_plugin_openvswitch_agent_start():
     quantum_plugin_openvswitch_agent_stop()
     sudo("service quantum-plugin-openvswitch-agent start")
 
 
-@task
 def ntp_stop():
     with settings(warn_only=True):
         sudo("service ntp stop")
 
 
-@task
 def ntp_start():
     ntp_stop()
     sudo("service ntp start")
 
 
-@task
 def iscsi_initiator_stop():
     with settings(warn_only=True):
         sudo("nohup service open-iscsi stop")
 
 
-@task
 def iscsi_initiator_start():
     iscsi_initiator_stop()
     sudo("nohup service open-iscsi start")
@@ -116,7 +108,6 @@ def compute_stop():
         sudo("nohup service nova-compute stop")
 
 
-@task
 def compute_start():
     compute_stop()
     with settings(warn_only=True):
@@ -125,7 +116,6 @@ def compute_start():
     sudo("nohup service nova-compute start")
 
 
-@task
 def configure_ubuntu_packages():
     """Configure compute packages"""
     package_ensure('python-software-properties')
@@ -138,7 +128,6 @@ def configure_ubuntu_packages():
     package_ensure('open-iscsi')
 
 
-@task
 def uninstall_ubuntu_packages():
     """Uninstall compute packages"""
     package_clean('python-software-properties')
@@ -151,7 +140,6 @@ def uninstall_ubuntu_packages():
     package_clean('open-iscsi')
 
 
-@task
 def install(cluster=False):
     """Generate compute configuration. Execute on both servers"""
     configure_ubuntu_packages()
@@ -161,19 +149,16 @@ def install(cluster=False):
     sudo('update-rc.d nova-compute defaults 98 02')
 
 
-@task
 def configure_network():
     sudo("sed -i -r 's/^\s*#(net\.ipv4\.ip_forward=1.*)/\\1/' "
          "/etc/sysctl.conf")
     sudo("echo 1 > /proc/sys/net/ipv4/ip_forward")
 
 
-@task
 def configure_ntp(host='ntp.ubuntu.com'):
     sudo('echo "server %s" > /etc/ntp.conf' % host)
 
 
-@task
 def configure_vhost_net():
     sudo('modprobe vhost-net')
     sudo("sed -i '/modprobe vhost-net/d' /etc/rc.local")
@@ -182,7 +167,6 @@ def configure_vhost_net():
     sudo("echo 'exit 0' >> /etc/rc.local")
 
 
-@task
 def configure_libvirt(hostname, shared_storage=False,
                       instances_path='/var/lib/nova/instances'):
     utils.uncomment_property(LIBVIRT_QEMU_CONF, 'cgroup_device_acl')
@@ -332,7 +316,6 @@ def set_config_file(user, tenant, password, auth_host, auth_port,
     start()
 
 
-@task
 def configure_quantum(rabbit_password='guest', rabbit_host='127.0.0.1'):
     utils.set_option(QUANTUM_CONF, 'core_plugin',
                      'quantum.plugins.openvswitch.ovs_quantum_plugin.'
@@ -350,7 +333,6 @@ def configure_quantum(rabbit_password='guest', rabbit_host='127.0.0.1'):
     openvswitch_start()
 
 
-@task
 def configure_ovs_plugin_gre(mysql_username='quantum',
                              mysql_password='stackops',
                              mysql_host='127.0.0.1', mysql_port='3306',
@@ -382,7 +364,6 @@ def configure_ovs_plugin_gre(mysql_username='quantum',
     quantum_plugin_openvswitch_agent_start()
 
 
-@task
 def configure_ovs_plugin_vlan(iface_bridge='eth1', br_postfix='eth1',
                               vlan_start='1',
                               vlan_end='4094', mysql_username='quantum',
@@ -421,7 +402,6 @@ def get_memory_available():
                            "sed 's/[^0-9\.]//g'"))
 
 
-@task
 def configure_hugepages(is_enabled=True, percentage='70'):
     ''' enable/disable huge pages in the system'''
     sudo("sed -i '/hugepages/d' /etc/apparmor.d/abstractions/libvirt-qemu")
@@ -449,3 +429,30 @@ def configure_hugepages(is_enabled=True, percentage='70'):
         sudo("sed -i 's#</domain>#\\t<memoryBacking><hugepages/>"
              "</memoryBacking>\\n</domain>#g' "
              "/usr/share/pyshared/nova/virt/libvirt.xml.template")
+
+
+def configure_nfs_storage(endpoint, delete_content=False, set_nova_owner=True,
+                          endpoint_params='defaults'):
+    package_ensure('nfs-common')
+    if delete_content:
+        sudo('rm -fr %s' % NOVA_INSTANCES)
+    stop()
+    sudo('mkdir -p %s' % NOVA_INSTANCES)
+    mpoint = '%s %s nfs %s 0 0' % (endpoint, NOVA_INSTANCES, endpoint_params)
+    sudo('sed -i "#%s#d" /etc/fstab' % NOVA_INSTANCES)
+    sudo('echo "\n%s" >> /etc/fstab' % mpoint)
+    sudo('mount -a')
+    if set_nova_owner:
+        sudo('chown nova:nova -R %s' % NOVA_INSTANCES)
+    start()
+
+
+def configure_local_storage(delete_content=False, set_nova_owner=True):
+    if delete_content:
+        sudo('rm -fr %s' % NOVA_INSTANCES)
+    stop()
+    sudo('sed -i "#%s#d" /etc/fstab' % NOVA_INSTANCES)
+    sudo('mkdir -p %s' % NOVA_INSTANCES)
+    if set_nova_owner:
+        sudo('chown nova:nova -R %s' % NOVA_INSTANCES)
+    start()

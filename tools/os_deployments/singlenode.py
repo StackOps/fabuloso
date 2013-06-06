@@ -133,9 +133,9 @@ keystone.register_service(**glance_register)
 keystone.register_service_user(**glance_user)
 glance.prepare_image(auth_uri=KEYSTONE_INTERNAL_URI)
 
-# -----------------------------------------------------
-# Set NOVA
-# -----------------------------------------------------
+# # -----------------------------------------------------
+# # Set NOVA
+# # -----------------------------------------------------
 NOVA_SCHEMA_NAME = 'nova'
 NOVA_MYSQL_USERNAME = 'nova'
 NOVA_MYSQL_PASSWORD = 'stackops'

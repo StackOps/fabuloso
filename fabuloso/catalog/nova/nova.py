@@ -12,7 +12,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.from fabric.api import *
-from fabric.api import task, settings, sudo, put, get, local, puts
+from fabric.api import settings, sudo, put, get, local, puts
 from cuisine import package_clean, package_ensure
 
 
@@ -21,79 +21,66 @@ import uuid
 CONFIG_FILE = '/etc/nova/nova.conf'
 
 
-@task
 def api_stop():
     with settings(warn_only=True):
         sudo("nohup service nova-api stop")
 
 
-@task
 def api_start():
     api_stop()
     sudo("nohup service nova-api start")
 
 
-@task
 def scheduler_stop():
     with settings(warn_only=True):
         sudo("nohup service nova-scheduler stop")
 
 
-@task
 def scheduler_start():
     scheduler_stop()
     sudo("nohup service nova-scheduler start")
 
 
-@task
 def cert_stop():
     with settings(warn_only=True):
         sudo("nohup service nova-cert stop")
 
 
-@task
 def cert_start():
     cert_stop()
     sudo("nohup service nova-cert start")
 
 
-@task
 def novncproxy_stop():
     with settings(warn_only=True):
         sudo("nohup service nova-novncproxy stop")
 
 
-@task
 def novncproxy_start():
     novncproxy_stop()
     sudo("nohup service nova-novncproxy start")
 
 
-@task
 def console_stop():
     with settings(warn_only=True):
         sudo("nohup service nova-console stop")
 
 
-@task
 def console_start():
     console_stop()
     sudo("nohup service nova-console start")
 
 
-@task
 def consoleauth_stop():
     with settings(warn_only=True):
         sudo("nohup service nova-consoleauth stop")
 
 
-@task
 def consoleauth_start():
     consoleauth_stop()
     sudo("nohup service nova-consoleauth start")
 
 
-@task
 def stop():
     api_stop()
     scheduler_stop()
@@ -103,7 +90,6 @@ def stop():
     consoleauth_stop()
 
 
-@task
 def start():
     api_start()
     scheduler_start()
@@ -113,7 +99,6 @@ def start():
     consoleauth_start()
 
 
-@task
 def uninstall_ubuntu_packages():
     """Uninstall nova packages"""
     package_clean('nova-api')
@@ -128,7 +113,6 @@ def uninstall_ubuntu_packages():
     package_clean('nova-novncproxy')
 
 
-@task
 def install(cluster=False):
     """Generate nova configuration. Execute on both servers"""
     package_ensure('nova-api')
@@ -170,7 +154,6 @@ def sql_connect_string(host, password, port, schema, username):
     return sql_connection
 
 
-@task
 def set_config_file(user, tenant, password, auth_host,
                     auth_port, auth_protocol, management_ip,
                     mysql_schema, mysql_username, mysql_password,
@@ -260,7 +243,6 @@ def set_config_file(user, tenant, password, auth_host,
     sudo('nova-manage db sync')
 
 
-@task
 def set_property(name, value, comment=None):
     delete_property(name)
     comm = ''
@@ -274,13 +256,11 @@ def set_properties(props):
         set_property(key, value)
 
 
-@task
 def get_property(name):
     sudo('''sed '/^\#/d' %s | grep "%s"  | tail -n 1 | sed 's/^.*=//' '''
          % (name, CONFIG_FILE))
 
 
-@task
 def get_properties():
     temp_file = "/tmp/%s" % uuid.uuid1()
     sudo("cp %s %s" % (CONFIG_FILE, temp_file))
@@ -301,6 +281,5 @@ def get_properties():
     puts(d)
 
 
-@task
 def delete_property(name):
     sudo('sed -i "/^%s=/d" %s' % (name, CONFIG_FILE))

@@ -3,34 +3,45 @@ file: apache.py
 description: Operations over Apache HTTP server
 
 Methods:
+    - name: install
+      description: Install Apache HTTP Server
     - name: configure
-      description: Install cinder plugins
+      description: Configure Apache redirections with OpenStack URLs
       params:
           - name: keystone_host
-            description: Keystone host
+            description: Keystone endpoint host
           - name: ec2_internal_url
-            description: EC2 service url
+            description: EC2 service URL
           - name: compute_internal_url
-            description: Compute Internal Url
+            description: Compute Internal URL
           - name: keystone_internal_url
-            description: Keystone internal Url
+            description: Keystone internal URL
           - name: glance_internal_url
-            description: Glance internal url
+            description: Glance internal URL
           - name: cinder_internal_url
-            description: Cinder internal url
+            description: Cinder internal URL
           - name: quantum_internal_url
-            description: Quantum internal url
+            description: Quantum internal URL
     - name: start
-      description: Start Nova-compute service
+      description: Start Apache HTTP service
+    - name: stop
+      description: Stop Apache HTTP service
+    - name: uninstall
+      description: Uninstall Apache HTTP Server
         
       
-     
 Services:
     - name: install
-      description: Installs and Configure OpenStack cinder
       methods:
+          - install
           - configure
+          - start
     - name: start 
-      description: start nova-compute service
       methods: 
           - start
+    - name: stop
+      methods:
+          - stop
+    - name: uninstall
+      methods:
+          - uninstall

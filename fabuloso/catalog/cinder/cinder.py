@@ -12,7 +12,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-from fabric.api import task, settings, sudo
+from fabric.api import settings, sudo
 from cuisine import package_clean, package_ensure
 
 import fabuloso.utils as utils
@@ -21,7 +21,6 @@ CINDER_CONF = '/etc/cinder/cinder.conf'
 CINDER_API_PASTE_CONF = '/etc/cinder/api-paste.ini'
 
 
-@task
 def stop():
     with settings(warn_only=True):
         sudo("nohup service cinder-api stop")
@@ -29,7 +28,6 @@ def stop():
         sudo("nohup service cinder-volume stop")
 
 
-@task
 def start():
     stop()
     sudo("nohup service cinder-api start")
@@ -37,20 +35,17 @@ def start():
     sudo("nohup service cinder-volume start")
 
 
-@task
 def iscsi_stop():
     with settings(warn_only=True):
         sudo("nohup service tgt stop")
 
 
-@task
 def iscsi_start():
     iscsi_stop()
     sudo("nohup service tgt start")
 
 
-@task
-def uninstall_ubuntu_packages():
+def uninstall():
     """Uninstall cinder packages"""
     package_clean('cinder-api')
     package_clean('cinder-scheduler')
@@ -60,8 +55,7 @@ def uninstall_ubuntu_packages():
     package_clean('python-mysqldb')
 
 
-@task
-def install(cluster=False):
+def install():
     """Generate cinder configuration. Execute on both servers"""
     """Configure cinder packages"""
     package_ensure('cinder-api')
@@ -70,14 +64,11 @@ def install(cluster=False):
     package_ensure('tgt')
     package_ensure('python-cinderclient')
     package_ensure('python-mysqldb')
-    if cluster:
-        stop()
     sudo("echo 'include /var/lib/cinder/volumes/*' > "
          "/etc/tgt/conf.d/cinder.conf")
     sudo("echo 'include /etc/tgt/conf.d/cinder.conf' > /etc/tgt/targets.conf")
 
 
-@task
 def set_config_file(user, tenant, password, auth_host,
                     auth_port, auth_protocol,
                     mysql_username, mysql_password,
@@ -87,6 +78,7 @@ def set_config_file(user, tenant, password, auth_host,
                     nfs_sparsed_volumes=True,
                     nfs_shares_config="/var/lib/cinder/nfsshare.conf",
                     rabbit_password='guest', rabbit_host='localhost'):
+
     utils.set_option(CINDER_CONF, 'rootwrap_config',
                      '/etc/cinder/rootwrap.conf')
     utils.set_option(CINDER_CONF, 'auth_strategy', 'keystone')
@@ -137,7 +129,6 @@ def set_config_file(user, tenant, password, auth_host,
     sudo('cinder-manage db sync')
 
 
-@task
 def create_volume(partition='/dev/sdb1'):
     sudo('pvcreate %s' % partition)
     sudo('vgcreate cinder-volumes %s' % partition)

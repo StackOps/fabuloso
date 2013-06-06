@@ -1,12 +1,12 @@
 name: cinder
 file: cinder.py
-description: Operations over cinder
+description: OpenStack Cinder Component
 
 Methods:
     - name: install
-      description: Install cinder plugins
+      description: Install Cinder plugins
     - name: set_config_file
-      description: Configure cinder file
+      description: Configure Cinder file
       params:
           - name: user
             description: cinder User 
@@ -21,31 +21,32 @@ Methods:
           - name: auth_port
             description: Authorization service (keystone) port value
           - name: mysql_schema
-            description: Nova mysql schema name
+            description: Cinder mysql schema name
           - name: mysql_username
-            description: Nova mysql user name
+            description: Cinder mysql user name
           - name: mysql_password
-            description: Nova mysql password
+            description: Cinder mysql password
     - name: start
       description: Start the cinder service
     - name: iscsi_start
       description: Start the iscsi service
+    - name: iscsi_stop
+      description: Stop the iscsi service
     - name: create_volume
-      description: create a volume with cinder
+      description: Create a volume with cinder
+    - name: uninstall
+      description: Uninstall Cinder
       
      
 Services:
     - name: install_and_configure
-      description: Installs and Configure OpenStack cinder
       methods:
           - install
           - set_config_file
     - name: start
-      description: Starts the plugin
       methods: 
           - iscsi_start
           - start
     - name: create_volume
-      description: Create a new volume
       methods:
           - create_volume

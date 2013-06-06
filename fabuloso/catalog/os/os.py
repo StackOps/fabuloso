@@ -126,16 +126,6 @@ def _bits2netmask(bits):
     return '.'.join(parts)
 
 
-def _get_ip_info(interface=''):
-    line = sudo('ip -f inet -o addr show %s' % interface).split()
-    if not line:
-        return None
-    order, name = line[0:2]
-    ip, netmask = line[3].split('/')
-    return {'id': int(order[:-1]), 'name': name, 'ip': ip,
-            'netmask': _bits2netmask(netmask), 'broadcast': line[5]}
-
-
 def _configureOnline(bond_name, bond_slaves, bond_options):
     sudo('modprobe bonding %s' % bond_options)
     ip_info = None
@@ -154,7 +144,6 @@ def _configureOnline(bond_name, bond_slaves, bond_options):
     sudo('ifenslave %s %s' % (bond_name, ' '.join(bond_slaves)))
 
 
-@task
 def vagrant():
     # change from the default user to 'vagrant'
     env.user = 'vagrant'
@@ -166,7 +155,6 @@ def vagrant():
     env.key_filename = result.split()[1]
 
 
-@task
 def check_base_os():
     """Check if the base Operating System is supported"""
     version = run('uname -a')
@@ -178,13 +166,11 @@ def check_base_os():
           version)
 
 
-@task
 def hostname():
     """Returns current hostname"""
     run('hostname')
 
 
-@task
 def no_framebuffer():
     """Disable vga16fb framebuffer to boost virtual console"""
     sudo('sed -i /vga16fb/d /etc/modprobe.d/blacklist-framebuffer.conf ')
@@ -192,7 +178,6 @@ def no_framebuffer():
             /etc/modprobe.d/blacklist-framebuffer.conf""")
 
 
-@task
 def change_hostname(new_hostname):
     """Modify the hostname of the server"""
     current_hostname = run('hostname')
@@ -217,7 +202,6 @@ def add_glance_user():
                 shell='/bin/false')
 
 
-@task
 def configure_ntp(ntpHost):
     """Change default ntp server to client choice"""
     sudo("sed -i 's/server ntp.ubuntu.com/server %s/g' /etc/ntp.conf" %
@@ -227,7 +211,6 @@ def configure_ntp(ntpHost):
     upstart_ensure('ntp')
 
 
-@task
 def remove_repos():
     """Remove existing repositories and updates"""
     sudo('sed -i /precise-updates/d /etc/apt/sources.list')
@@ -237,7 +220,6 @@ def remove_repos():
     sudo('apt-get -y update')
 
 
-@task
 def add_repos():
     """Clean and Add necessary repositories and updates"""
     sudo("sed -i /precise-updates/d /etc/apt/sources.list")
@@ -265,7 +247,6 @@ def add_repos():
     sudo('apt-get -y update')
 
 
-@task
 def configure_bond(bond_name=None, bond_slaves=None, bond_options='mode 1'):
     """Configure bond in the existing system"""
     package_ensure('ifenslave')
@@ -274,27 +255,6 @@ def configure_bond(bond_name=None, bond_slaves=None, bond_options='mode 1'):
     _configureOnline(bond_name, slaves, bond_options)
 
 
-@task
-def create_bond(bond_name=None, bond_slaves=None, bond_options='mode 1'):
-    """ TBD """
-
-
-@task
-def add_bond_slave(bond_name=None, bond_slave=None):
-    """ TBD """
-
-
-@task
-def destroy_bond(bond_name=None):
-    """ TBD """
-
-
-@task
-def remove_bond_slave(bond_name=None, bond_slave=None):
-    """ TBD """
-
-
-@task
 def add_iface(iface=None, dhcp=False, gateway=None):
     """Update /etc/network/interfaces with info for the current scheme"""
     fp = ""
@@ -330,7 +290,6 @@ def add_iface(iface=None, dhcp=False, gateway=None):
             puts(fp)
 
 
-@task
 def cpu():
     cpu = sudo("cat /proc/cpuinfo | grep 'model name' | sed 's/\(.*\): \
                //g'").splitlines()
@@ -338,14 +297,12 @@ def cpu():
     return cpu
 
 
-@task
 def cpu_count():
     count = len(cpu())
     puts(count)
     return count
 
 
-@task
 def cpu_speed():
     speed = sudo("cat /proc/cpuinfo | grep 'cpu MHz' | sed \
                  's/[^0-9\.]//g'").splitlines()
@@ -353,7 +310,6 @@ def cpu_speed():
     return speed
 
 
-@task
 def memory():
     mem = 1024 * int(sudo("cat /proc/meminfo | grep 'MemTotal' | sed \
                           's/[^0-9\.]//g'"))
@@ -361,7 +317,6 @@ def memory():
     return mem
 
 
-@task
 def is_virtual():
     virt = sudo("egrep '(vmx|svm)' /proc/cpuinfo")
     if len(virt) > 0:
@@ -370,7 +325,6 @@ def is_virtual():
         return "False"
 
 
-@task
 def iface_list():
     ifaces = sudo("cat /proc/net/dev | sed 's/:\(.*\)//g'").splitlines()
     del ifaces[0]
@@ -388,7 +342,6 @@ def iface_list():
     return ifaces_list
 
 
-@task
 def iface_vendor(iface):
     tmp = sudo("lshw -short -c network | grep '%s'" % iface).splitlines()
     vendor = tmp[len(tmp)-1][43:]
@@ -396,7 +349,6 @@ def iface_vendor(iface):
     return vendor
 
 
-@task
 def mounts():
     mnt = sudo("mount -v")
     lines = mnt.split('\n')
@@ -419,7 +371,6 @@ def mounts():
     return inf
 
 
-@task
 def block_devices():
     procfile = sudo("cat /proc/partitions").splitlines()
     procfile.pop(0)
@@ -453,7 +404,6 @@ def block_devices():
     return inf
 
 
-@task
 def nameservers():
     mnt = sudo("cat /etc/resolv.conf")
     lines = mnt.splitlines()
@@ -465,7 +415,6 @@ def nameservers():
     return inf
 
 
-@task
 def network_config():
     def getDhcpInfo(device):
         info = {'address': 'none', 'netmask': 'none', 'gateway': 'none'}
@@ -527,18 +476,15 @@ def network_config():
     return inf
 
 
-@task
 def add_host(hostname, ip):
     sudo('sed -i /%s/d /etc/hosts' % hostname)
     sudo('echo "%s  %s" >> /etc/hosts' % (hostname, ip))
 
 
-@task
 def remove_host(hostname):
     sudo('sed -i /%s/d /etc/hosts' % hostname)
 
 
-@task
 def show_partitions(disk=None):
     out = sudo("""for hdd in `ls %s`;do  parted -s -m $hdd unit MB
                print ;done """ % disk)
@@ -546,13 +492,11 @@ def show_partitions(disk=None):
     return out
 
 
-@task
 def parted(disk='/dev/sdb', start=0, end=100):
     sudo('parted -s %s mklabel msdos' % disk)
     sudo('parted -s %s unit %% mkpart primary %s%% %s%%' % (disk, start, end))
 
 
-@task
 def execute_bootstrap():
     boot = "https://raw.github.com/StackOps/fabuloso/master/bootstrap/init.sh"
     run("wget -O - " + boot + " | sudo sh")

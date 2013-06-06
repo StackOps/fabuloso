@@ -43,7 +43,7 @@ def main():
                 print "* %s%s%s: %s" % (HEADER, name_s, ENDC, tup[0])
                 params = []
                 for met in tup[1]:
-                    params.extend(comp.methods[met])
+                    params.extend(comp.methods[met][1])
                 if not params:
                     print "\t- %sNo params%s" % (RED, ENDC)
                 else:

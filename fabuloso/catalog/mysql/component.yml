@@ -9,6 +9,13 @@ Methods:
       params:
         - name: root_pass
           description: Admin password
+    - name: configure_all_schemas
+      description: Prepares a database and a user password for each StackOps schemas
+      params:
+        - name: root_pass
+          description: Admin password
+        - name: password
+          description: Common password for all the users
     - name: start
       description: Starts the mysql service
     - name: stop
@@ -34,15 +41,15 @@ Methods:
 
 Services:
     - name: setup
-      description: Installs a mysql service and runs it
       methods:
           - configure
           - start
     - name: teardown
-      description: Stops the mysql service
       methods:
           - stop
     - name: set_schema
-      description: Set a new schema in the database
       methods:
           - setup_schema
+    - name: set_all_schemas
+      methods:
+          - configure_all_schemas

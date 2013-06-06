@@ -42,12 +42,10 @@ Methods:
      
 Services:
     - name: install_and_configure
-      description: Installs and Configure OpenStack Keystone
       methods:
           - install
           - set_config_file
     - name: prepare_image
-      description: Register and image and prepare the storage repo
       methods:
           - publish_ttylinux
           - configure_local_storage

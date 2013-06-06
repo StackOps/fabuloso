@@ -12,27 +12,24 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.from fabric.api import *
-from fabric.api import task, sudo, settings, put, cd, local, puts
+from fabric.api import sudo, settings, put, cd, local, puts
 from cuisine import package_ensure, package_clean
 
 GLANCE_IMAGES = '/var/lib/glance/images'
 
 
-@task
 def stop():
     with settings(warn_only=True):
         sudo("service glance-api stop")
         sudo("service glance-registry stop")
 
 
-@task
 def start():
     stop()
     sudo("service glance-api start")
     sudo("service glance-registry start")
 
 
-@task
 def uninstall_ubuntu_packages():
     """Uninstall glance packages"""
     package_clean('glance')
@@ -44,7 +41,6 @@ def uninstall_ubuntu_packages():
     package_clean('python-mysqldb')
 
 
-@task
 def install(cluster=False):
     """Generate glance configuration. Execute on both servers"""
     package_ensure('glance')
@@ -72,7 +68,6 @@ def sql_connect_string(host, password, port, schema, username):
     return sql_connection
 
 
-@task
 def set_config_file(user, tenant, password,
                     mysql_username, mysql_password, mysql_schema,
                     mysql_host='127.0.0.1', mysql_port='3306',
@@ -93,12 +88,16 @@ def set_config_file(user, tenant, password,
         sudo("sed -i 's/auth_port.*$/auth_port = %s/g' %s" % (auth_port, f))
         sudo("sed -i 's/auth_protocol.*$/auth_protocol = %s/g' %s"
              % (auth_protocol, f))
+
+    sudo("sed -i 's/^#flavor=.*$/flavor=keystone+cachemanagement/g' "
+         "/etc/glance/glance-api.conf")
+    sudo("sed -i 's/^#flavor=.*$/flavor=keystone/g' "
+         "/etc/glance/glance-registry.conf")
     start()
     sudo("glance-manage version_control 0")
     sudo("glance-manage db_sync")
 
 
-@task
 def configure_local_storage(delete_content=False, set_glance_owner=True):
     if delete_content:
         sudo('rm -fr %s' % GLANCE_IMAGES)
@@ -110,9 +109,9 @@ def configure_local_storage(delete_content=False, set_glance_owner=True):
     start()
 
 
-@task
 def configure_nfs_storage(endpoint, delete_content=False,
                           set_glance_owner=True, endpoint_params='defaults'):
+    package_ensure('nfs-common')
     if delete_content:
         sudo('rm -fr %s' % GLANCE_IMAGES)
     stop()
@@ -126,7 +125,6 @@ def configure_nfs_storage(endpoint, delete_content=False,
     start()
 
 
-@task
 def publish_ttylinux(auth_uri,
                      test_username='admin', test_password='stackops',
                      test_tenant_name='admin',

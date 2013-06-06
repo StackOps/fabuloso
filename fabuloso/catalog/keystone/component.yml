@@ -70,16 +70,13 @@ Methods:
      
 Services:
     - name: install_and_configure
-      description: Installs and Configure OpenStack Keystone
       methods:
           - install
           - set_config_file
           - configure_users
     - name: register_service
-      description: Register a new service in keystone
       methods: 
           - create_service
     - name: register_service_user
-      description: Registers a new user for the service
       methods:
           - create_user_for_service

@@ -13,23 +13,20 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.from fabric.api import *
 
-from fabric.api import task, settings, sudo, put, local, puts
+from fabric.api import settings, sudo, put, local, puts
 from cuisine import package_ensure, package_clean
 
 
-@task
 def stop():
     with settings(warn_only=True):
         sudo("service keystone stop")
 
 
-@task
 def start():
     stop()
     sudo("service keystone start")
 
 
-@task
 def uninstall():
     """Uninstall keystone packages"""
     package_clean('keystone')
@@ -37,7 +34,6 @@ def uninstall():
     package_clean('python-keystoneclient')
 
 
-@task
 def install(cluster=False):
     """Generate keystone configuration. Execute on both servers"""
     package_ensure('keystone')
@@ -65,7 +61,6 @@ def _sql_connect_string(host, password, port, schema, username):
     return sql_connection
 
 
-@task
 def set_config_file(admin_token, mysql_schema, mysql_username,
                     mysql_password, mysql_host='127.0.0.1',
                     mysql_port='3306'):
@@ -131,7 +126,6 @@ def _get_role_id(endpoint, admin_token, name):
     return stdout.replace('\n', '')
 
 
-@task
 def create_user_for_service(endpoint, service_user_name, admin_token,
                             service_user_pass, tenant):
     """Configure component user and service"""
@@ -144,11 +138,11 @@ def create_user_for_service(endpoint, service_user_name, admin_token,
                     service_tenant)
 
 
-@task
 def configure_users(endpoint, admin_token, admin_pass, tenant_name):
     """Configure basic service users/roles"""
     admin_tenant = _create_tenant(endpoint, admin_token, 'admin')
     _create_tenant(endpoint, admin_token, tenant_name)
+    head_tenant = _create_tenant(endpoint, admin_token, 'head')
     admin_role = _create_role(endpoint, admin_token, 'admin')
     member_role = _create_role(endpoint, admin_token, 'Member')
     keystone_admin_role = _create_role(endpoint, admin_token, 'KeystoneAdmin')
@@ -167,6 +161,8 @@ def configure_users(endpoint, admin_token, admin_pass, tenant_name):
                                         'ROLE_CHARGEBACK_USER')
     accounting_user_role = _create_role(endpoint, admin_token,
                                         'ROLE_ACCOUNTING')
+    automation_user_role = _create_role(endpoint, admin_token,
+                                        'ROLE_HEAD_ADMIN')
     admin_user = _create_user(endpoint, admin_token, 'admin', admin_pass,
                               admin_tenant)
     _link_user_role(endpoint, admin_token, admin_user, keystone_admin_role,
@@ -191,9 +187,10 @@ def configure_users(endpoint, admin_token, admin_pass, tenant_name):
                     admin_tenant)
     _link_user_role(endpoint, admin_token, admin_user, accounting_user_role,
                     admin_tenant)
+    _link_user_role(endpoint, admin_token, admin_user, automation_user_role,
+                    head_tenant)
 
 
-@task
 def create_service(admin_token, service_name, service_type, description,
                    region, endpoint, public_url, internal_url, admin_url):
     """Create a new service"""
@@ -209,7 +206,6 @@ def create_service(admin_token, service_name, service_type, description,
             internal_url))
 
 
-@task
 def configure_services(admin_token="password", public_ip='127.0.0.1',
                        public_port='80', internal_ip='127.0.0.1',
                        region='RegionOne'):

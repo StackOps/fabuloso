@@ -65,21 +65,23 @@ class Component(object):
         self.methods = {}
         for method in self._config['Methods']:
             method_name = method['name']
+            desc = method['description']
             list_params = []
             if 'params' in method:
                 for param in method['params']:
                     list_params.append((param['name'], param['description']))
 
-            self.methods[method_name] = list_params
+            self.methods[method_name] = (desc, list_params)
 
     def _load_services(self):
         self.services = {}
         for service in self._config['Services']:
             name = service['name']
             list_methods = []
+            description = ''
             for method in service['methods']:
                 list_methods.append(method)
-            description = service['description']
+                description += self.methods[method][0] + '\n'
             self.services[name] = (description, list_methods)
 
     def _load_module(self):
@@ -111,7 +113,7 @@ class Component(object):
         the ones that are needed for the current 'method'
         """
         method_args = {}
-        parameters = self.methods[method]
+        parameters = self.methods[method][1]
         for parameter in parameters:
             param_name, description = parameter
             if param_name in kwargs:

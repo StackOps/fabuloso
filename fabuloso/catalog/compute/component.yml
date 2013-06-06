@@ -1,10 +1,10 @@
 name: compute
 file: compute.py
-description: Operations over node component
+description: Operations over Node Compute component
 
 Methods:
     - name: install
-      description: Install cinder plugins
+      description: Install Compute Component
     - name: configure_network
       description: Configure Compute Network
     - name: configure_ntp
@@ -22,9 +22,9 @@ Methods:
       description: Configure component file
       params:
           - name: user
-            description: cinder User 
+            description: Nova User 
           - name: password
-            description: cinder Password
+            description: Nova Password
           - name: tenant
             description: Tenant name
           - name: auth_protocol
@@ -58,7 +58,6 @@ Methods:
      
 Services:
     - name: install_and_configure
-      description: Installs and Configure OpenStack cinder
       methods:
           - install
           - configure_network
@@ -68,6 +67,5 @@ Services:
           - set_config_file
           - configure_quantum
     - name: start 
-      description: start nova-compute service
       methods: 
           - start

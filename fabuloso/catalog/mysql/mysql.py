@@ -36,7 +36,7 @@ def configure(root_pass):
     start()
     sudo("sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf")
     sudo("""mysql -uroot -p%s -e "GRANT ALL PRIVILEGES ON *.* TO
-            'root'@'%%' IDENTIFIED BY '%s' WITH GRANT OPTION;" """
+         'root'@'%%' IDENTIFIED BY '%s' WITH GRANT OPTION;" """
          % (root_pass, root_pass))
 
 
@@ -67,16 +67,42 @@ def setup_schema(root_pass, username, password, schema_name,
     if drop_previous:
         sudo('mysql -uroot -p%s -e "DROP DATABASE IF EXISTS %s;"'
              % (root_pass, schema_name))
-    sudo('mysql -uroot -p%s -e "CREATE DATABASE %s;"' % (root_pass,
-                                                         schema_name))
-    sudo("""mysql -uroot -p%s -e "GRANT ALL PRIVILEGES ON %s.* TO
-            '%s'@'localhost' IDENTIFIED BY '%s';" """
-         % (root_pass, schema_name, username, password))
-    if host is not None:
+        sudo('mysql -uroot -p%s -e "CREATE DATABASE %s;"' % (root_pass,
+             schema_name))
         sudo("""mysql -uroot -p%s -e "GRANT ALL PRIVILEGES ON %s.* TO
-                '%s'@'%s' IDENTIFIED BY '%s';" """
-             % (root_pass, schema_name, username, host, password))
+             '%s'@'localhost' IDENTIFIED BY '%s';" """
+             % (root_pass, schema_name, username, password))
+        if host is not None:
+            sudo("""mysql -uroot -p%s -e "GRANT ALL PRIVILEGES ON %s.* TO
+                 '%s'@'%s' IDENTIFIED BY '%s';" """
+                 % (root_pass, schema_name, username, host, password))
     else:
         sudo("""mysql -uroot -p%s -e "GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%%'
-                IDENTIFIED BY '%s';" """
+             IDENTIFIED BY '%s';" """
              % (root_pass, schema_name, username, password))
+
+
+def configure_all_schemas(root_pass, password, mysql_host='127.0.0.1'):
+    setup_schema(username='portal', schema_name='portal', root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
+    setup_schema(username='keystone', schema_name='keystone',
+                 root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
+    setup_schema(username='glance', schema_name='glance', root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
+    setup_schema(username='nova', schema_name='nova', root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
+    setup_schema(username='cinder', schema_name='cinder', root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
+    setup_schema(username='quantum', schema_name='quantum',
+                 root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
+    setup_schema(username='quantum', schema_name='quantum',
+                 root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
+    setup_schema(username='accounting', schema_name='accounting',
+                 root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
+    setup_schema(username='automation', schema_name='automation',
+                 root_pass=root_pass,
+                 password=password, drop_previous=False, mysql_host=mysql_host)
