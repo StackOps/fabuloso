@@ -10,12 +10,8 @@ Methods:
       params:
           - name: user
             description: Username of the Glance Service
-          - name: tenant
-            description: Name of the user's tenant
           - name: password
             description: Password of the user
-          - name: mysql_schema
-            description: Glance mysql schema name
           - name: mysql_username
             description: Glance mysql user name
           - name: mysql_password

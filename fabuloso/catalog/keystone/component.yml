@@ -33,40 +33,116 @@ Methods:
             description: Keystone Admin URL endpoint
           - name: tenant_name
             description: Name of the tenant of the services
-    - name: create_service
-      description: Register a new service in keystone
+    - name: define_keystone_service
+      description: Register the keystone service and the endpoint
       params:
           - name: admin_token
             description: Administration access token/password
-          - name: service_name
-            description: Name of the service to register
-          - name: service_type
-            description: Type of the service to register
-          - name: description
-            description: Description of the service to register
           - name: region
             description: Region where the service will be used
           - name: endpoint
             description: Keystone Admin URL endpoint
-          - name: public_url
+          - name: ks_public_url
             description: Exposed URI to access to this service
-          - name: admin_url
+          - name: ks_admin_url
             description: Exposed URI to admin_url
-          - name: internal_url
+          - name: ks_internal_url
             description: Internal URI of this service
-    - name: create_user_for_service
-      description: the service is a user itself. This methods creates one
+          - name: ks_user
+            description: Service user
+          - name: ks_password
+            description: Service password
+    - name: define_nova_service
+      description: Register the nova service and the endpoint
       params:
-          - name: service_user_name
-            description: User of the service
-          - name: service_user_pass
-            description: Password where the user of the service authenticates to others
-          - name: tenant
-            description: Name of the tenant for the service
+          - name: admin_token
+            description: Administration access token/password
+          - name: region
+            description: Region where the service will be used
           - name: endpoint
             description: Keystone Admin URL endpoint
+          - name: nova_public_url
+            description: Exposed URI to access to this service
+          - name: nova_admin_url
+            description: Exposed URI to admin_url
+          - name: nova_internal_url
+            description: Internal URI of this service
+          - name: nova_user
+            description: Service user
+          - name: nova_password
+            description: Service password
+    - name: define_ec2_service
+      description: Register the service and the endpoint
+      params:
           - name: admin_token
-            description: Admin password token for authenticate through Keystone
+            description: Administration access token/password
+          - name: region
+            description: Region where the service will be used
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: ec2_public_url
+            description: Exposed URI to access to this service
+          - name: ec2_admin_url
+            description: Exposed URI to admin_url
+          - name: ec2_internal_url
+            description: Internal URI of this service
+    - name: define_glance_service
+      description: Register the service and the endpoint
+      params:
+          - name: admin_token
+            description: Administration access token/password
+          - name: region
+            description: Region where the service will be used
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: glance_public_url
+            description: Exposed URI to access to this service
+          - name: glance_admin_url
+            description: Exposed URI to admin_url
+          - name: glance_internal_url
+            description: Internal URI of this service
+          - name: glance_user
+            description: Service user
+          - name: glance_password
+            description: Service password
+    - name: define_quantum_service
+      description: Register the service and the endpoint
+      params:
+          - name: admin_token
+            description: Administration access token/password
+          - name: region
+            description: Region where the service will be used
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: quantum_public_url
+            description: Exposed URI to access to this service
+          - name: quantum_admin_url
+            description: Exposed URI to admin_url
+          - name: quantum_internal_url
+            description: Internal URI of this service
+          - name: quantum_user
+            description: Service user
+          - name: quantum_password
+            description: Service password
+    - name: define_cinder_service
+      description: Register the service and the endpoint
+      params:
+          - name: admin_token
+            description: Administration access token/password
+          - name: region
+            description: Region where the service will be used
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: cinder_public_url
+            description: Exposed URI to access to this service
+          - name: cinder_admin_url
+            description: Exposed URI to admin_url
+          - name: cinder_internal_url
+            description: Internal URI of this service
+          - name: cinder_user
+            description: Service user
+          - name: cinder_password
+            description: Service password
      
 Services:
     - name: install_and_configure
@@ -74,9 +150,11 @@ Services:
           - install
           - set_config_file
           - configure_users
-    - name: register_service
+    - name: register_services_and_endpoints
       methods: 
-          - create_service
-    - name: register_service_user
-      methods:
-          - create_user_for_service
+          - define_keystone_service
+          - define_nova_service
+          - define_ec2_service
+          - define_glance_service
+          - define_quantum_service
+          - define_cinder_service

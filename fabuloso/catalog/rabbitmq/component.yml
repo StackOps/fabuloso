@@ -9,17 +9,17 @@ Methods:
       description: Stops the service
     - name: configure
       description: Installs and configure the service
+      params:
+          - name: password
+            description: Password for the rabbit user
 
 Services:
     - name: start
-      description: Starts the service
       methods:
           - start
     - name: configure
-      description: Installs and configure the service
       methods:
           - configure
     - name: stop
-      description: Stops the service
       methods:
           - stop

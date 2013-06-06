@@ -178,12 +178,12 @@ def no_framebuffer():
             /etc/modprobe.d/blacklist-framebuffer.conf""")
 
 
-def change_hostname(new_hostname):
+def change_hostname(hostname):
     """Modify the hostname of the server"""
     current_hostname = run('hostname')
-    sudo('echo "%s" > /etc/hostname' % new_hostname)
-    sudo("sed -i 's/%s/%s/g' /etc/hosts" % (current_hostname, new_hostname))
-    sudo("hostname %s" % new_hostname)
+    sudo('echo "%s" > /etc/hostname' % hostname)
+    sudo("sed -i 's/%s/%s/g' /etc/hosts" % (current_hostname, hostname))
+    sudo("hostname %s" % hostname)
 
 
 def add_nova_user():

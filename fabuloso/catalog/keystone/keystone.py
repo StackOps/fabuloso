@@ -126,11 +126,10 @@ def _get_role_id(endpoint, admin_token, name):
     return stdout.replace('\n', '')
 
 
-def create_user_for_service(endpoint, service_user_name, admin_token,
-                            service_user_pass, tenant):
+def _create_user_for_service(endpoint, service_user_name, admin_token,
+                             service_user_pass, tenant):
     """Configure component user and service"""
     service_tenant = _get_tenant_id(endpoint, admin_token, tenant)
-    print "Service tenant is" + service_tenant
     admin_role = _get_role_id(endpoint, admin_token, 'admin')
     service_user = _create_user(endpoint, admin_token, service_user_name,
                                 service_user_pass, service_tenant)
@@ -191,8 +190,8 @@ def configure_users(endpoint, admin_token, admin_pass, tenant_name):
                     head_tenant)
 
 
-def create_service(admin_token, service_name, service_type, description,
-                   region, endpoint, public_url, internal_url, admin_url):
+def _create_service(admin_token, service_name, service_type, description,
+                    region, endpoint, public_url, internal_url, admin_url):
     """Create a new service"""
     stdout = sudo("keystone --endpoint %s --token %s service-create --name=%s"
                   " --type=%s --description='%s' " % (endpoint, admin_token,
@@ -206,42 +205,99 @@ def create_service(admin_token, service_name, service_type, description,
             internal_url))
 
 
+def define_keystone_service(admin_token, region, endpoint, ks_public_url,
+                            ks_internal_url, ks_admin_url, ks_user,
+                            ks_password):
+    _create_service(admin_token, 'keystone', 'identity', 'Keystone Identity '
+                    'Service', region, endpoint, ks_public_url,
+                    ks_internal_url, ks_admin_url)
+    _create_user_for_service(endpoint, ks_user, admin_token,
+                             ks_password, 'service')
+
+
+def define_nova_service(admin_token, region, endpoint, nova_public_url,
+                        nova_internal_url, nova_admin_url, nova_user,
+                        nova_password):
+    _create_service(admin_token, 'nova', 'compute', 'OpenStack Computer '
+                    'Service', region, endpoint, nova_public_url,
+                    nova_internal_url, nova_admin_url)
+    _create_user_for_service(endpoint, nova_user, admin_token,
+                             nova_password, 'service')
+
+
+def define_ec2_service(admin_token, region, endpoint, ec2_public_url,
+                       ec2_internal_url, ec2_admin_url):
+    _create_service(admin_token, 'ec2', 'ec2', 'EC2 Compatibility '
+                    'Service', region, endpoint, ec2_public_url,
+                    ec2_internal_url, ec2_admin_url)
+
+
+def define_glance_service(admin_token, region, endpoint, glance_public_url,
+                          glance_internal_url, glance_admin_url, glance_user,
+                          glance_password):
+    _create_service(admin_token, 'glance', 'image', 'Glance Image '
+                    'Service', region, endpoint, glance_public_url,
+                    glance_internal_url, glance_admin_url)
+    _create_user_for_service(endpoint, glance_user, admin_token,
+                             glance_password, 'service')
+
+
+def define_quantum_service(admin_token, region, endpoint, quantum_public_url,
+                           quantum_internal_url, quantum_admin_url,
+                           quantum_user, quantum_password):
+    _create_service(admin_token, 'quantum', 'network', 'Network '
+                    'Service', region, endpoint, quantum_public_url,
+                    quantum_internal_url, quantum_admin_url)
+    _create_user_for_service(endpoint, quantum_user, admin_token,
+                             quantum_password, 'service')
+
+
+def define_cinder_service(admin_token, region, endpoint, cinder_public_url,
+                          cinder_internal_url, cinder_admin_url, cinder_user,
+                          cinder_password):
+    _create_service(admin_token, 'cinder', 'volume', 'OpenStack Volume '
+                    'Service', region, endpoint, cinder_public_url,
+                    cinder_internal_url, cinder_admin_url)
+    _create_user_for_service(endpoint, cinder_user, admin_token,
+                             cinder_password, 'service')
+
+
 def configure_services(admin_token="password", public_ip='127.0.0.1',
                        public_port='80', internal_ip='127.0.0.1',
                        region='RegionOne'):
     """Configure services and endpoints"""
     endpoint = "'http://localhost:35357/v2.0'"
-    create_service(endpoint, admin_token, 'keystone', 'identity',
-                   'Keystone Identity Service', region,
-                   'http://%s:%s/keystone/v2.0' % (public_ip, public_port),
-                   'http://%s:$(admin_port)s/v2.0' % internal_ip,
-                   'http://%s:$(public_port)s/v2.0' % internal_ip)
-    create_service(endpoint, admin_token, 'nova', 'compute',
-                   'Openstack Compute Service', region,
-                   'http://%s:%s/compute/v1.1/$(tenant_id)s' % (public_ip,
-                                                                public_port),
-                   'http://%s:$(compute_port)s/v1.1/$(tenant_id)s'
-                   % internal_ip,
-                   'http://%s:$(compute_port)s/v1.1/$(tenant_id)s'
-                   % internal_ip)
-    create_service(endpoint, admin_token, 'ec2', 'ec2',
-                   'EC2 Compatibility Layer', region,
-                   'http://%s:%s/services/Cloud' % (public_ip, public_port),
-                   'http://%s:8773/services/Admin' % internal_ip,
-                   'http://%s:8773/services/Cloud' % internal_ip)
-    create_service(endpoint, admin_token, 'glance', 'image',
-                   'Glance Image Service', region,
-                   'http://%s:9292/v1' % public_ip,
-                   'http://%s:9292/v1' % internal_ip,
-                   'http://%s:9292/v1' % internal_ip)
-    create_service(endpoint, admin_token, 'cinder', 'volume',
-                   'Openstack Volume Service', region,
-                   'http://%s:%s/volume/v1/$(tenant_id)s' % (public_ip,
-                                                             public_port),
-                   'http://%s:8776/v1/$(tenant_id)s' % internal_ip,
-                   'http://%s:8776/v1/$(tenant_id)s' % internal_ip)
-    create_service(endpoint, admin_token, 'quantum', 'network',
-                   'Quantum Service', region,
-                   'http://%s:%s/network' % (public_ip, public_port),
-                   'http://%s:9696' % internal_ip,
-                   'http://%s:9696' % internal_ip)
+    _create_service(endpoint, admin_token, 'keystone', 'identity',
+                    'Keystone Identity Service', region,
+                    'http://%s:%s/keystone/v2.0' % (public_ip, public_port),
+                    'http://%s:$(admin_port)s/v2.0' % internal_ip,
+                    'http://%s:$(public_port)s/v2.0' % internal_ip)
+    _create_service(endpoint, admin_token, 'nova', 'compute',
+                    'Openstack Compute Service', region,
+                    'http://%s:%s/compute/v1.1/$(tenant_id)s' % (public_ip,
+                                                                 public_port),
+                    'http://%s:$(compute_port)s/v1.1/$(tenant_id)s'
+                    % internal_ip,
+                    'http://%s:$(compute_port)s/v1.1/$(tenant_id)s'
+                    % internal_ip)
+    _create_service(endpoint, admin_token, 'ec2', 'ec2',
+                    'EC2 Compatibility Layer', region,
+                    'http://%s:%s/services/Cloud' % (public_ip, public_port),
+                    'http://%s:8773/services/Admin' % internal_ip,
+                    'http://%s:8773/services/Cloud' % internal_ip)
+    _create_service(endpoint, admin_token, 'glance', 'image',
+                    'Glance Image Service', region,
+                    'http://%s:9292/v1' % public_ip,
+                    'http://%s:9292/v1' % internal_ip,
+                    'http://%s:9292/v1' % internal_ip)
+    _create_service(endpoint, admin_token, 'cinder', 'volume',
+                    'Openstack Volume Service', region,
+                    'http://%s:%s/volume/v1/$(tenant_id)s' % (public_ip,
+                                                              public_port),
+                    'http://%s:8776/v1/$(tenant_id)s' % internal_ip,
+                    'http://%s:8776/v1/$(tenant_id)s' % internal_ip)
+    _create_service(endpoint, admin_token, 'quantum', 'network',
+                    'Quantum Service', region,
+                    'http://%s:%s/network' % (public_ip, public_port),
+                    'http://%s:9696' % internal_ip,
+                    'http://%s:9696' % internal_ip)

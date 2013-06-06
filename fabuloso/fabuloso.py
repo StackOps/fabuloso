@@ -25,9 +25,10 @@ class Fabuloso(object):
         self.env = env
         self.catalog = self._load_catalog(self.env)
 
-    def get_component(self, component_name):
+    def get_component(self, component_name, properties):
         comp = self.catalog[component_name]
         comp.set_environment(self.env)
+        comp.set_properties(properties)
         return comp
 
     def list_components(self):

@@ -12,29 +12,25 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.from fabric.api import *
-from fabric.api import task, sudo, settings
+from fabric.api import sudo, settings
 from cuisine import package_ensure
 
 
-@task
 def stop():
     with settings(warn_only=True):
         sudo("nohup service rabbitmq-server stop")
 
 
-@task
 def start():
     stop()
     sudo("nohup service rabbitmq-server start")
 
 
-@task
 def configure_ubuntu_packages():
     """Configure rabbitmq ubuntu packages"""
     package_ensure('rabbitmq-server')
 
 
-@task
 def configure(cluster=False, password='guest'):
     """Generate rabbitmq configuration. Execute on both servers"""
     configure_ubuntu_packages()

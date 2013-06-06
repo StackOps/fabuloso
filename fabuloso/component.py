@@ -45,6 +45,9 @@ class Component(object):
     def set_environment(self, env):
         self.provider.set_environment(env)
 
+    def set_properties(self, props):
+        self.properties = props
+
     @property
     def name(self):
         return self._config['name']
@@ -96,10 +99,10 @@ class Component(object):
         pass
 
     def _execute_service(self, service_name):
-        def wrapper_method(**kwargs):
+        def wrapper_method():
             description, methods = self.services[service_name]
             for method in methods:
-                service_args = self._build_args(method, kwargs)
+                service_args = self._build_args(method, self.properties)
                 self.provider.execute_method(getattr(self.module, method),
                                              **service_args)
 

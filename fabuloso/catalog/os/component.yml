@@ -21,7 +21,7 @@ Methods:
     - name: change_hostname
       description: Change the hostname of the remote machine
       params:
-          - name: new_hostname
+          - name: hostname
             description: New hostname of the machine
     - name: parted
       description: make partition
@@ -32,7 +32,7 @@ Services:
           - nameservers
           - block_devices
           - mounts
-    - name: setup_singlenode
+    - name: setup_node
       methods:
           - add_repos
           - add_nova_user
