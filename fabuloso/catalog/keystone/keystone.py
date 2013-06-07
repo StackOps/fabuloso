@@ -262,6 +262,29 @@ def define_cinder_service(admin_token, region, endpoint, cinder_public_url,
                              cinder_password, 'service')
 
 
+def define_portal_service(admin_token, region, endpoint, portal_public_url,
+                          portal_internal_url, portal_admin_url, portal_user,
+                          portal_password):
+    _create_service(admin_token, 'portal', 'portal', 'StackOps Portal '
+                    'Service', region, endpoint, portal_public_url,
+                    portal_internal_url, portal_admin_url)
+    _create_user_for_service(endpoint, portal_user, admin_token,
+                             portal_password, 'service')
+
+
+def define_accounting_service(admin_token, region, endpoint,
+                              accounting_public_url, accounting_internal_url,
+                              accounting_admin_url, accounting_user,
+                              accounting_password):
+    _create_service(admin_token, 'accounting', 'accounting', 'StackOps Accounting '
+                    'Service', region, endpoint, accounting_public_url,
+                    accounting_internal_url, accounting_admin_url)
+    _create_service(admin_token, 'activity', 'activity', 'StackOps Activity '
+                    'Service', region, endpoint, accounting_public_url,
+                    accounting_internal_url, accounting_admin_url)
+    _create_user_for_service(endpoint, accounting_user, admin_token,
+                             accounting_password, 'service')
+
 def configure_services(admin_token="password", public_ip='127.0.0.1',
                        public_port='80', internal_ip='127.0.0.1',
                        region='RegionOne'):

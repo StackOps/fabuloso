@@ -22,6 +22,12 @@ Methods:
             description: Cinder internal URL
           - name: quantum_internal_url
             description: Quantum internal URL
+          - name: portal_internal_url
+            description: Cinder internal URL
+            optional: True
+          - name: activity_internal_url
+            description: Activity internal URL
+            optional: True
     - name: start
       description: Start Apache HTTP service
     - name: stop

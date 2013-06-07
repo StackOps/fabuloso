@@ -82,7 +82,24 @@ Methods:
           description: Quantum user
         - name: quantum_password
           description: Quantum password
-
+    - name: setup_portal
+      description: Creates a new database for portal and grants privileges on it
+      params:
+        - name: root_pass
+          description: Admin password
+        - name: portal_user
+          description: Portal user
+        - name: portal_password
+          description: Portal password
+    - name: setup_accounting
+      description: Creates a new database for accounting and grants privileges on it
+      params:
+        - name: root_pass
+          description: Admin password
+        - name: accounting_user
+          description: Accounting user
+        - name: accounting_password
+          description: Accounting password
 
 Services:
     - name: setup
@@ -113,3 +130,9 @@ Services:
     - name: set_quantum
       methods:
           - setup_quantum
+    - name: set_portal
+      methods:
+          - setup_portal
+    - name: set_accounting
+      methods:
+          - setup_accounting

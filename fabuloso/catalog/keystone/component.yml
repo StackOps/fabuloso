@@ -143,6 +143,44 @@ Methods:
             description: Service user
           - name: cinder_password
             description: Service password
+    - name: define_portal_service
+      description: Register the service and the endpoint
+      params:
+          - name: admin_token
+            description: Administration access token/password
+          - name: region
+            description: Region where the service will be used
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: portal_public_url
+            description: Exposed URI to access to this service
+          - name: portal_admin_url
+            description: Exposed URI to admin_url
+          - name: portal_internal_url
+            description: Internal URI of this service
+          - name: portal_user
+            description: Service user
+          - name: portal_password
+            description: Service password
+    - name: define_accounting_service
+      description: Register the service and the endpoint
+      params:
+          - name: admin_token
+            description: Administration access token/password
+          - name: region
+            description: Region where the service will be used
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: accounting_public_url
+            description: Exposed URI to access to this service
+          - name: accounting_admin_url
+            description: Exposed URI to admin_url
+          - name: accounting_internal_url
+            description: Internal URI of this service
+          - name: accounting_user
+            description: Service user
+          - name: accounting_password
+            description: Service password
      
 Services:
     - name: install_and_configure
@@ -158,3 +196,9 @@ Services:
           - define_glance_service
           - define_quantum_service
           - define_cinder_service
+    - name: register_portal
+      methods:
+          - define_portal_service
+    - name: register_accounting
+      methods:
+          - define_accounting_service
