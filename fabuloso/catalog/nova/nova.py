@@ -154,10 +154,12 @@ def sql_connect_string(host, password, port, schema, username):
     return sql_connection
 
 
-def set_config_file(user, tenant, password, auth_host,
+def set_config_file(user, password, auth_host,
                     auth_port, auth_protocol, management_ip,
-                    mysql_schema, mysql_username, mysql_password,
-                    mysql_host='127.0.0.1', mysql_port='3306'):
+                    mysql_username, mysql_password,
+                    mysql_schema='nova',
+                    tenant='service', mysql_host='127.0.0.1',
+                    mysql_port='3306'):
 
     f = '/etc/nova/api-paste.ini'
     sudo('sed -i "/volume/d" %s' % f)
@@ -251,7 +253,7 @@ def set_property(name, value, comment=None):
     sudo('echo "%s=%s       %s" >> %s' % (name, value, comm, CONFIG_FILE))
 
 
-def set_properties(props):
+def nova_properties(props):
     for key, value in props.items():
         set_property(key, value)
 

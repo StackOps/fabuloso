@@ -225,8 +225,8 @@ def configure_ovs_plugin_vlan(iface_bridge='eth1', br_postfix='eth1',
 
 
 @task
-def configure_l3_agent(user, tenant, password,
-                       auth_url, management_ip, region):
+def configure_l3_agent(user, password, auth_url, management_ip,
+                       region, tenant='service'):
     utils.set_option(L3_AGENT_CONF, 'debug', 'True')
     utils.set_option(L3_AGENT_CONF, 'interface_driver',
                      'quantum.agent.linux.interface.OVSInterfaceDriver')
@@ -248,8 +248,9 @@ def configure_dhcp_agent(name_server='8.8.8.8'):
 
 
 @task
-def set_config_file(user, tenant, password, auth_host,
-                    auth_port, auth_protocol, rabbit_password='guest',
+def set_config_file(user, password, auth_host,
+                    auth_port, auth_protocol, tenant='service',
+                    rabbit_password='guest',
                     rabbit_host='127.0.0.1'):
 
     utils.set_option(QUANTUM_API_PASTE_CONF, 'admin_tenant_name',

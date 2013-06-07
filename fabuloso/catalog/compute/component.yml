@@ -25,16 +25,12 @@ Methods:
             description: Nova User 
           - name: password
             description: Nova Password
-          - name: tenant
-            description: Tenant name
           - name: auth_protocol
             description: Authorization service (keystone) protocol
           - name: auth_host
             description: Authorization service (keystone) host
           - name: auth_port
             description: Authorization service (keystone) port value
-          - name: mysql_schema
-            description: Nova mysql schema name
           - name: mysql_username
             description: Nova mysql user name
           - name: mysql_password

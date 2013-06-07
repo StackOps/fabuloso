@@ -12,8 +12,6 @@ Methods:
             description: Quantum User 
           - name: password
             description: Quantum Password
-          - name: tenant
-            description: Tenant name
           - name: auth_protocol
             description: Authorization service (keystone) protocol
           - name: auth_host

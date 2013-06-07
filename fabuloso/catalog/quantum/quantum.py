@@ -65,8 +65,8 @@ def install(cluster=False):
 
 
 @task
-def set_config_file(user, tenant, password, auth_host,
-                    auth_port, auth_protocol):
+def set_config_file(user, password, auth_host,
+                    auth_port, auth_protocol, tenant='service'):
     utils.set_option(QUANTUM_API_PASTE_CONF, 'admin_tenant_name',
                      tenant, section='filter:authtoken')
     utils.set_option(QUANTUM_API_PASTE_CONF, 'admin_user',

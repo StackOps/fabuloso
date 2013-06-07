@@ -69,10 +69,10 @@ def install():
     sudo("echo 'include /etc/tgt/conf.d/cinder.conf' > /etc/tgt/targets.conf")
 
 
-def set_config_file(user, tenant, password, auth_host,
+def set_config_file(user, password, auth_host,
                     auth_port, auth_protocol,
                     mysql_username, mysql_password,
-                    mysql_schema,
+                    mysql_schema='cinder', tenant='service',
                     mysql_host='127.0.0.1', mysql_port='3306',
                     storage_type='lvm', nfs_shares=None,
                     nfs_sparsed_volumes=True,

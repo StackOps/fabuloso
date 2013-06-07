@@ -200,16 +200,12 @@ def configure_libvirt(hostname, shared_storage=False,
     compute_start()
 
 
-# @task
-# def configure_files(rabbit_password='guest',
-#                     libvirt_type='kvm', rabbit_host='127.0.0.1',
-#                     vncproxy_host='127.0.0.1', vncproxy_port='6080',
-
-def set_config_file(user, tenant, password, auth_host, auth_port,
+def set_config_file(user,  password, auth_host, auth_port,
                     auth_protocol, admin_auth_url, quantum_url,
                     mysql_username, mysql_password, glance_host,
-                    management_ip, glance_port, mysql_schema,
-                    mysql_host='127.0.0.1',
+                    management_ip, glance_port,
+                    mysql_schema='nova',
+                    mysql_host='127.0.0.1', tenant='service',
                     mysql_port='3306', rabbit_host='localhost',
                     rabbit_password='guest', libvirt_type='kvm',
                     vncproxy_port='6080', vncproxy_host='127.0.0.1'):
