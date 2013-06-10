@@ -106,21 +106,24 @@ def _configure_default(ec2_internal_url, compute_internal_url,
             |
             |   ProxyPass /portal %s
             |   ProxyPassReverse /portal %s
-            ''') % (portal_internal_url)
+            |
+            ''') % (portal_internal_url, portal_internal_url)
 
         if activity_internal_url is not None:
             apache_conf += text_strip_margin('''
             |
             |   ProxyPass /activity %s
             |   ProxyPassReverse /activity %s
-            ''') % (activity_internal_url)
+            |
+            ''') % (activity_internal_url, activity_internal_url)
 
         if cb_internal_url is not None:
             apache_conf += text_strip_margin('''
             |
             |   ProxyPass /chargeback %s
             |   ProxyPassReverse /chargeback %s
-            ''') % (cb_internal_url)
+            |
+            ''') % (cb_internal_url, cb_internal_url)
 
         apache_conf += text_strip_margin('''
         |
@@ -221,21 +224,24 @@ def _configure_apache_ssl(ec2_internal_url, compute_internal_url,
         |
         |   ProxyPass /portal %s
         |   ProxyPassReverse /portal %s
-        ''') % (portal_internal_url)
+        |
+        ''') % (portal_internal_url, portal_internal_url)
 
     if activity_internal_url is not None:
         apache_conf += text_strip_margin('''
         |
         |   ProxyPass /activity %s
         |   ProxyPassReverse /activity %s
-        ''') % (activity_internal_url)
+        |
+        ''') % (activity_internal_url, activity_internal_url)
 
     if cb_internal_url is not None:
         apache_conf += text_strip_margin('''
         |
         |   ProxyPass /chargeback %s
         |   ProxyPassReverse /chargeback %s
-        ''') % (cb_internal_url)
+        |
+        ''') % (cb_internal_url, cb_internal_url)
 
     apache_conf += text_strip_margin('''
     |   <Proxy *>
