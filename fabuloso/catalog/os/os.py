@@ -12,7 +12,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-from fabric.api import sudo, puts, task, env, local, run, abort
+from fabric.api import sudo, puts, env, local, run, abort
 from cuisine import group_ensure, user_ensure, upstart_ensure, \
     package_ensure
 from cuisine import re, os
@@ -126,6 +126,17 @@ def _bits2netmask(bits):
     return '.'.join(parts)
 
 
+def _get_ip_info(interface=''):
+    line = sudo('ip -f inet -o addr show %s' % interface).split()
+    if not line:
+        return None
+    order, name = line[0:2]
+    ip, netmask = line[3].split('/')
+    return {'id': int(order[:-1]), 'name': name, 'ip': ip,
+            'netmask': _bits2netmask(netmask),
+            'broadcast': line[5]}
+
+
 def _configureOnline(bond_name, bond_slaves, bond_options):
     sudo('modprobe bonding %s' % bond_options)
     ip_info = None
@@ -222,28 +233,22 @@ def remove_repos():
 
 def add_repos():
     """Clean and Add necessary repositories and updates"""
-    sudo("sed -i /precise-updates/d /etc/apt/sources.list")
-    sudo("sed -i /precise-security/d /etc/apt/sources.list")
-    sudo("sed -i /archive.ubuntu.com/d /etc/apt/sources.list")
-    sudo("rm  -f /etc/apt/sources.list.d/stackops.list")
-    sudo("echo 'deb http://us.archive.ubuntu.com/ubuntu/ precise main \
-         universe' >> /etc/apt/sources.list")
-    sudo("echo 'deb http://us.archive.ubuntu.com/ubuntu/ precise-security \
-         main universe' >> /etc/apt/sources.list")
-    sudo("echo 'deb http://us.archive.ubuntu.com/ubuntu/ precise-updates main \
-         universe' >> /etc/apt/sources.list")
-    sudo("wget -O - http://repos.stackops.net/keys/stackopskey_pub.gpg | \
-         apt-key add -")
-    sudo("echo 'deb http://repos.stackops.net/ folsom-dev main' > \
-         /etc/apt/sources.list.d/stackops.list")
-    sudo("echo 'deb http://repos.stackops.net/ folsom main' >> \
-         /etc/apt/sources.list.d/stackops.list")
-    sudo("echo 'deb http://repos.stackops.net/ folsom-updates main' >> \
-         /etc/apt/sources.list.d/stackops.list")
-    sudo("echo 'deb http://repos.stackops.net/ folsom-security main' >> \
-         /etc/apt/sources.list.d/stackops.list")
-    sudo("echo 'deb http://repos.stackops.net/ folsom-backports main' >> \
-         /etc/apt/sources.list.d/stackops.list")
+    sudo('sed -i /precise-updates/d /etc/apt/sources.list')
+    sudo('sed -i /precise-security/d /etc/apt/sources.list')
+    sudo('sed -i /archive.ubuntu.com/d /etc/apt/sources.list')
+    sudo('rm -f /etc/apt/sources.list.d/stackops.list')
+    sudo('echo "deb http://us.archive.ubuntu.com/ubuntu/ precise main '
+         'universe" >> /etc/apt/sources.list')
+    sudo('echo "deb http://us.archive.ubuntu.com/ubuntu/ precise-security '
+         'main universe" >> /etc/apt/sources.list')
+    sudo('echo "deb http://us.archive.ubuntu.com/ubuntu/ precise-updates '
+         'main universe" >> /etc/apt/sources.list')
+    sudo('wget -O - http://repos.stackops.net/keys/stackopskey_pub.gpg '
+         '| apt-key add -')
+    sudo('echo "deb http://repos.stackops.net/ folsom-dev main" >> '
+         '/etc/apt/sources.list.d/stackops.list')
+    sudo('echo "deb http://repos.stackops.net/ precise-dev main" '
+         '>> /etc/apt/sources.list.d/stackops.list')
     sudo('apt-get -y update')
 
 

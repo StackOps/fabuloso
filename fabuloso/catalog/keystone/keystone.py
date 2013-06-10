@@ -276,14 +276,28 @@ def define_accounting_service(admin_token, region, endpoint,
                               accounting_public_url, accounting_internal_url,
                               accounting_admin_url, accounting_user,
                               accounting_password):
-    _create_service(admin_token, 'accounting', 'accounting', 'StackOps Accounting '
-                    'Service', region, endpoint, accounting_public_url,
+    _create_service(admin_token, 'accounting', 'accounting',
+                    'StackOps accounting '
+                    'service', region, endpoint, accounting_public_url,
                     accounting_internal_url, accounting_admin_url)
-    _create_service(admin_token, 'activity', 'activity', 'StackOps Activity '
-                    'Service', region, endpoint, accounting_public_url,
+    _create_service(admin_token, 'activity', 'activity', 'stackops activity '
+                    'service', region, endpoint, accounting_public_url,
                     accounting_internal_url, accounting_admin_url)
     _create_user_for_service(endpoint, accounting_user, admin_token,
                              accounting_password, 'service')
+
+
+def define_automation_service(admin_token, region, endpoint,
+                              automation_public_url, automation_internal_url,
+                              automation_admin_url, automation_user,
+                              automation_password):
+    _create_service(admin_token, 'automation', 'automation',
+                    'Stackops Automation '
+                    'service', region, endpoint, automation_public_url,
+                    automation_internal_url, automation_admin_url)
+    _create_user_for_service(endpoint, automation_user, admin_token,
+                             automation_password, 'service')
+
 
 def configure_services(admin_token="password", public_ip='127.0.0.1',
                        public_port='80', internal_ip='127.0.0.1',

@@ -117,6 +117,11 @@ def setup_accounting(root_pass, accounting_user, accounting_password):
                  schema_name='activity', root_pass=root_pass)
 
 
+def setup_automation(root_pass, automation_user, automation_password):
+    setup_schema(username=automation_user, password=automation_password,
+                 schema_name='stackopshead', root_pass=root_pass)
+
+
 def configure_all_schemas(root_pass, password, mysql_host='127.0.0.1'):
     setup_schema(username='portal', schema_name='portal', root_pass=root_pass,
                  password=password, drop_previous=False, mysql_host=mysql_host)

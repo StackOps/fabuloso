@@ -181,6 +181,25 @@ Methods:
             description: Service user
           - name: accounting_password
             description: Service password
+    - name: define_automation_service
+      description: Register the service and the endpoint
+      params:
+          - name: admin_token
+            description: Administration access token/password
+          - name: region
+            description: Region where the service will be used
+          - name: endpoint
+            description: Keystone Admin URL endpoint
+          - name: automation_public_url
+            description: Exposed URI to access to this service
+          - name: automation_admin_url
+            description: Exposed URI to admin_url
+          - name: automation_internal_url
+            description: Internal URI of this service
+          - name: automation_user
+            description: Service user
+          - name: automation_password
+            description: Service password
      
 Services:
     - name: install_and_configure
@@ -202,3 +221,6 @@ Services:
     - name: register_accounting
       methods:
           - define_accounting_service
+    - name: register_automation
+      methods:
+          - define_automation_service
