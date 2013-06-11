@@ -79,3 +79,26 @@ def set_config_file(user, password, auth_host,
                      auth_port, section='filter:authtoken')
     utils.set_option(QUANTUM_API_PASTE_CONF, 'auth_protocol',
                      auth_protocol, section='filter:authtoken')
+
+
+def configure_ovs_plugin_vlan(vlan_start='1', vlan_end='4094',
+                              mysql_username='quantum',
+                              mysql_password='stackops',
+                              mysql_host='127.0.0.1',
+                              mysql_port='3306', mysql_schema='quantum'):
+
+    utils.set_option(OVS_PLUGIN_CONF, 'sql_connection',
+                     utils.sql_connect_string(mysql_host, mysql_password,
+                                              mysql_port, mysql_schema,
+                                              mysql_username),
+                     section='DATABASE')
+    utils.set_option(OVS_PLUGIN_CONF, 'reconnect_interval', '2',
+                     section='DATABASE')
+    utils.set_option(OVS_PLUGIN_CONF, 'tenant_network_type', 'vlan',
+                     section='OVS')
+    utils.set_option(OVS_PLUGIN_CONF, 'network_vlan_ranges', 'physnet1:%s:%s'
+                     % (vlan_start, vlan_end), section='OVS')
+    utils.set_option(OVS_PLUGIN_CONF, 'root_helper',
+                     'sudo /usr/bin/quantum-rootwrap '
+                     '/etc/quantum/rootwrap.conf',
+                     section='AGENT')

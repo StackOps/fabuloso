@@ -93,7 +93,7 @@ def set_config_file(user, password, auth_host,
     utils.set_option(CINDER_CONF, 'volume_group', 'cinder-volumes')
     utils.set_option(CINDER_CONF, 'log_dir', '/var/log/cinder')
     utils.set_option(CINDER_CONF, 'notification_driver',
-                     'nova.openstack.common.notifier.rabbit_notifier')
+                     'cinder.openstack.common.notifier.rabbit_notifier')
     utils.set_option(CINDER_CONF, 'notification_topics',
                      'notifications,monitor')
     utils.set_option(CINDER_CONF, 'default_notification_level', 'INFO')

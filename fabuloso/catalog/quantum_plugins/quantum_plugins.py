@@ -12,7 +12,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-from fabric.api import task, settings, sudo, puts, local
+from fabric.api import task, settings, sudo, puts
 from cuisine import package_ensure, package_clean
 
 import fabuloso.utils as utils
@@ -198,7 +198,8 @@ def configure_ovs_plugin_vlan(iface_bridge='eth1', br_postfix='eth1',
                               mysql_host='127.0.0.1',
                               mysql_port='3306', mysql_schema='quantum'):
     utils.set_option(OVS_PLUGIN_CONF, 'sql_connection',
-                     utils.sql_connect_string(mysql_host, mysql_password,
+                     utils.sql_connect_string(mysql_host,
+                                              mysql_password,
                                               mysql_port, mysql_schema,
                                               mysql_username),
                      section='DATABASE')
@@ -278,31 +279,6 @@ def set_config_file(user, password, auth_host,
     utils.set_option(QUANTUM_CONF, 'default_notification_level', 'INFO')
 
 
-def get_net_id(str):
-    stdout = local("echo '%s' | awk '/ id / { print $4 }'" % (str,),
-                   capture=True)
-    puts(stdout)
-    return stdout.replace('\n', '')
-
-
-@task
-def configure_external_network(floating_start, floating_end, floating_gw,
-                               floating_range, admin_user, admin_tenant_name,
-                               admin_pass, auth_url):
-
-    stdout = sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
-                  '--os-tenant-name %s net-create ext_net '
-                  '--provider:network_type local  --router:external=True'
-                  % (auth_url, admin_user, admin_pass, admin_tenant_name))
-    external_network_id = get_net_id(stdout)
-    sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
-         '--os-tenant-name %s subnet-create --ip_version 4 --allocation-pool '
-         'start=%s,end=%s --gateway %s %s %s -- --enable_dhcp=False'
-         % (auth_url, admin_user, admin_pass, admin_tenant_name,
-            floating_start, floating_end, floating_gw,
-            external_network_id, floating_range))
-
-
 @task
 def configure_external_bridge(floating_range):
     sudo('ip addr flush dev br-ex')
@@ -310,37 +286,104 @@ def configure_external_bridge(floating_range):
     sudo('ip link set br-ex up')
 
 
-@task
-def configure_private_network(tenant_id, network_name, private_range,
-                              private_gw, external_network_id,
-                              admin_user='admin', admin_tenant_name='admin',
-                              admin_pass='stackops',
-                              auth_url='http://localhost:5000/v2.0'):
-    stdout = sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
-                  '--os-tenant-name %s net-create --tenant_id %s %s'
+def get_net_id(network_name, admin_user, admin_tenant_name, admin_pass,
+               auth_url):
+
+    stdout = sudo("quantum --os-auth-url %s --os-username %s --os-password %s "
+                  "--os-tenant-name %s net-list | grep %s | awk '/ | "
+                  "/ { print $2 }'"
                   % (auth_url, admin_user, admin_pass, admin_tenant_name,
-                     tenant_id, network_name))
-    private_network_id = get_net_id(stdout)
-    stdout = sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
-                  '--os-tenant-name %s subnet-create --tenant_id %s '
-                  '--ip_version 4 %s %s --gateway %s'
+                     network_name))
+    puts(stdout)
+    return stdout.replace('\n', '')
+
+
+def get_subnet_id(subnetwork_name, admin_user, admin_tenant_name, admin_pass,
+                  auth_url):
+    stdout = sudo("quantum --os-auth-url %s --os-username %s --os-password %s "
+                  "--os-tenant-name %s subnet-list | grep %s | awk '/ | / "
+                  "{ print $2 }'"
                   % (auth_url, admin_user, admin_pass, admin_tenant_name,
-                     tenant_id, private_network_id, private_range, private_gw))
-    private_subnet_id = get_net_id(stdout)
-    stdout = sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
-                  '--os-tenant-name %s router-create --tenant_id %s '
-                  'provider-router'
+                     subnetwork_name))
+    puts(stdout)
+    return stdout.replace('\n', '')
+
+
+def get_router_id(router_name, admin_user, admin_tenant_name, admin_pass,
+                  auth_url):
+    stdout = sudo("quantum --os-auth-url %s --os-username %s --os-password %s "
+                  "--os-tenant-name %s router-list | grep %s | awk '/ | / "
+                  "{ print $2 }'"
                   % (auth_url, admin_user, admin_pass, admin_tenant_name,
-                     tenant_id))
-    router_id = get_net_id(stdout)
+                     router_name))
+    puts(stdout)
+    return stdout.replace('\n', '')
+
+
+def configure_external_network(floating_start, floating_end, floating_gw,
+                               floating_range, admin_user, admin_tenant_name,
+                               admin_pass, auth_url,
+                               external_network_name='ext-net'):
+
+    sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
+         '--os-tenant-name '
+         '%s net-create %s --provider:network_type local '
+         '--router:external=True'
+         % (auth_url, admin_user, admin_pass, admin_tenant_name,
+            external_network_name))
+
+    external_network_id = get_net_id(external_network_name, admin_user,
+                                     admin_tenant_name,
+                                     admin_pass, auth_url)
+    sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
+         '--os-tenant-name %s subnet-create --ip_version 4 --allocation-pool '
+         'start=%s,end=%s --gateway %s --name %s %s %s --enable_dhcp=False'
+         % (auth_url, admin_user, admin_pass, admin_tenant_name,
+            floating_start, floating_end, floating_gw, external_network_name,
+            external_network_id, floating_range))
+    sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
+         '--os-tenant-name %s router-create provider-router'
+         % (auth_url, admin_user, admin_pass, admin_tenant_name))
+    router_id = get_router_id('provider-router', admin_user, admin_tenant_name,
+                              admin_pass, auth_url)
+    sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
+         '--os-tenant-name %s router-gateway-set %s %s'
+         % (auth_url, admin_user, admin_pass, admin_tenant_name, router_id,
+            external_network_name))
+
+
+def add_route_to_quantum_host(private_range, quantum_host):
+    sudo('route add -net %s gw %s' % (private_range, quantum_host))
+
+
+def configure_default_private_network(private_range, private_gw,
+                                      admin_user, admin_tenant_name,
+                                      admin_pass, auth_url,
+                                      network_name='default-private',
+                                      dns_list='8.8.8.8 8.8.4.4'):
+
+    sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
+         '--os-tenant-name %s net-create %s'
+         % (auth_url, admin_user, admin_pass, admin_tenant_name,
+            network_name))
+    private_network_id = get_net_id(network_name, admin_user,
+                                    admin_tenant_name, admin_pass, auth_url)
+
+    sc = ('quantum --os-auth-url %s --os-username %s --os-password %s '
+          '--os-tenant-name %s subnet-create --ip_version 4 %s %s --gateway '
+          '%s --dns_nameservers list=true %s --name %s'
+          % (auth_url, admin_user, admin_pass, admin_tenant_name,
+             private_network_id, private_range, private_gw, dns_list,
+             network_name))
+    sudo(sc)
+    private_subnet_id = get_subnet_id(network_name, admin_user,
+                                      admin_tenant_name, admin_pass, auth_url)
+    router_id = get_router_id('provider-router', admin_user, admin_tenant_name,
+                              admin_pass, auth_url)
     sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
          '--os-tenant-name %s router-interface-add %s %s'
          % (auth_url, admin_user, admin_pass, admin_tenant_name, router_id,
             private_subnet_id))
-    sudo('quantum --os-auth-url %s --os-username %s --os-password %s '
-         '--os-tenant-name %s router-gateway-set %s %s'
-         % (auth_url, admin_user, admin_pass, admin_tenant_name, router_id,
-            external_network_id))
 
 
 @task

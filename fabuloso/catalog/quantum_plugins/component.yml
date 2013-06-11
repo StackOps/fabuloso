@@ -36,9 +36,9 @@ Methods:
             description: last vlan tag
           - name: mysql_schema
             description: Quantum mysql schema name
-          - name: mysql_username
+          - name: mysql_quantum_username
             description: Quantum mysql user name
-          - name: mysql_password
+          - name: mysql_quantum_password
             description: Quantum mysql password
           - name: mysql_host
             description: Connection host.
@@ -63,18 +63,70 @@ Methods:
       description: Configure DHCP
     - name: start
       description: Starts the plugin
+    - name: configure_external_network
+      description: Configure External Network
+      params:
+          - name: floating_start
+            description: First floating IP in Range
+          - name: floating_end
+            description: Last floating IP in Range
+          - name: floating_gw
+            description: Gateway of the floating IPs
+          - name: floating_range
+            description: Range of the floating network
+          - name: admin_user
+            description: OpenStack admin user
+          - name: admin_tenant_name
+            description: OpenStack tenant name
+          - name: admin_pass
+            description: OpenStack admin password
+          - name: auth_url
+            description: Keystone auth Url
+    - name: add_route_to_quantum_host
+      description: Add default gateway of private address to quantum host
+      params:
+          - name: private_range
+            description: First floating IP in Range
+          - name: quantum_host
+            description: IP address of the Quantum host
+    - name: configure_default_private_network
+      description: Configure Private Network
+      params:
+          - name: private_range
+            description: First floating IP in Range
+          - name: private_gw
+            description: Gateway of the floating IPs
+          - name: admin_user
+            description: OpenStack admin user
+          - name: admin_tenant_name
+            description: OpenStack tenant name
+          - name: admin_pass
+            description: OpenStack admin password
+          - name: auth_url
+            description: Keystone auth Url
      
 Services:
     - name: install_and_configure
-      description: Installs and Configure OpenStack Keystone
       methods:
           - compile_datapath
           - install
           - set_config_file
+    - name: configure_ovs_plugin_vlan
+      methods:
           - configure_ovs_plugin_vlan
+    - name: configure_l3_and_dhcp
+      methods:
           - configure_l3_agent
           - configure_dhcp_agent
     - name: start
-      description: Starts the plugin
       methods: 
           - start
+    - name: configure_external_network
+      methods:
+          - configure_external_network
+    - name: configure_default_private_network
+      methods:
+          - configure_default_private_network
+    - name: add_route_to_quantum_host
+      methods:
+          - add_route_to_quantum_host

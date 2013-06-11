@@ -203,12 +203,13 @@ def configure_libvirt(hostname, shared_storage=False,
 def set_config_file(user,  password, auth_host, auth_port,
                     auth_protocol, admin_auth_url, quantum_url,
                     mysql_username, mysql_password, glance_host,
-                    management_ip, glance_port,
+                    management_ip, glance_port, rabbit_host,
+                    libvirt_type, vncproxy_host,
                     mysql_schema='nova',
                     mysql_host='127.0.0.1', tenant='service',
-                    mysql_port='3306', rabbit_host='localhost',
-                    rabbit_password='guest', libvirt_type='kvm',
-                    vncproxy_port='6080', vncproxy_host='127.0.0.1'):
+                    mysql_port='3306',
+                    rabbit_password='guest',
+                    vncproxy_port='6080'):
 
     if management_ip is None:
         puts("{error:'Management IP of the node needed as argument'}")
@@ -326,7 +327,6 @@ def configure_quantum(rabbit_password='guest', rabbit_host='127.0.0.1'):
                      'notifications,monitor')
     utils.set_option(QUANTUM_CONF, 'default_notification_level', 'INFO')
     quantum_plugin_openvswitch_agent_start()
-    openvswitch_start()
 
 
 def configure_ovs_plugin_gre(mysql_username='quantum',
@@ -361,15 +361,16 @@ def configure_ovs_plugin_gre(mysql_username='quantum',
 
 
 def configure_ovs_plugin_vlan(iface_bridge='eth1', br_postfix='eth1',
-                              vlan_start='1',
-                              vlan_end='4094', mysql_username='quantum',
-                              mysql_password='stackops',
+                              vlan_start='2',
+                              vlan_end='4094', mysql_quantum_username='quantum',
+                              mysql_quantum_password='stackops',
                               mysql_host='127.0.0.1',
                               mysql_port='3306', mysql_schema='quantum'):
     utils.set_option(OVS_PLUGIN_CONF, 'sql_connection',
-                     utils.sql_connect_string(mysql_host, mysql_password,
+                     utils.sql_connect_string(mysql_host,
+                                              mysql_quantum_password,
                                               mysql_port, mysql_schema,
-                                              mysql_username),
+                                              mysql_quantum_username),
                      section='DATABASE')
     utils.set_option(OVS_PLUGIN_CONF, 'reconnect_interval', '2',
                      section='DATABASE')

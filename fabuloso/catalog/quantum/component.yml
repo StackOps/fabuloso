@@ -18,17 +18,30 @@ Methods:
             description: Authorization service (keystone) host
           - name: auth_port
             description: Authorization service (keystone) port value
+    - name: configure_ovs_plugin_vlan
+      description: Configures the Quantum Server to know the VLAN for OVS must be enabled
+      params:
+          - name: vlan_start
+            description: First VLAN tag
+          - name: vlan_end
+            description: Last VLAN tag
+          - name: mysql_username
+            description: Mysql quantum username
+          - name: mysql_password
+            description: Mysql quantum password
     - name: start
       description: Start the Quantum service
       
      
 Services:
     - name: install_and_configure
-      description: Installs and Configure OpenStack Quantum
       methods:
           - install
           - set_config_file
     - name: start
-      description: Starts the plugin
       methods: 
           - start
+    - name: configure_ovs_plugin_vlan
+      methods:
+          - configure_ovs_plugin_vlan
+      

@@ -35,8 +35,12 @@ Methods:
             description: Nova mysql user name
           - name: mysql_password
             description: Nova mysql password
+          - name: mysql_host
+            description: Nova mysql host
           - name: management_ip
             description: Management ip
+          - name: vncproxy_host
+            description: External IP of the controller
           - name: admin_auth_url
             description: Keystone endpoint
           - name: quantum_url
@@ -45,10 +49,40 @@ Methods:
             description: Glance host
           - name: glance_port
             description: Glance port
+          - name: rabbit_host
+            description: Rabbit Host
+            optional: True
+          - name: libvirt_type
+            description: Libvirt emulation type
+            optional: True
     - name: configure_quantum
       description: configure compute host for quantum
     - name: start
       description: Start Nova-compute service
+    - name: configure_ovs_plugin_vlan
+      description: Configure the vlan
+      params:
+          - name: iface_bridge
+            description: interface bridge
+          - name: br_postfix
+            description: dunno
+          - name: vlan_start
+            description: first vlan tag
+          - name: vlan_end
+            description: last vlan tag
+          - name: mysql_schema
+            description: Quantum mysql schema name
+            optional: true
+          - name: quantum_mysql_username
+            description: Quantum mysql user name
+          - name: quantum_mysql_password
+            description: Quantum mysql password
+          - name: mysql_host
+            description: Connection host.
+            optional: True
+          - name: mysql_port
+            description: Connection port
+            optional: True
         
       
      
@@ -62,6 +96,9 @@ Services:
           - configure_libvirt
           - set_config_file
           - configure_quantum
+    - name: configure_ovs_plugin_vlan
+      methods:
+          - configure_ovs_plugin_vlan
     - name: start 
       methods: 
           - start
