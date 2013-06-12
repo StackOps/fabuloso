@@ -18,19 +18,19 @@
 # Once the 'fabuloso' is installed, this file is copied into the path
 # $HOME/.config/fabuloso/config.py and used when fabuloso runs
 # Fabuloso environment variables
+catalog_dir = ['catalog']
+
 environments = {
     "default": {
         "host": "localhost",
         "port": 2223,
         "username": "stackops",
         "ssh_key_file": "~/.ssh/nonsecureid_rsa",
-        "catalog": ['catalog']
     },
     "example_remote": {
         "host": "remotehost",
         "port": 2223,
         "username": "stackops",
         "ssh_key_file": "~/.ssh/nonsecureid_rsa",
-        "catalog": ['catalog']
     }
 }

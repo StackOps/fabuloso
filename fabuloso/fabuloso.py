@@ -20,31 +20,24 @@ import component
 
 class Fabuloso(object):
     """ Unique entry point via API of this package"""
-    def __init__(self, env):
+    def __init__(self, catalog_dir):
         """ Init with environment"""
-        self.env = env
-        self.catalog = self._load_catalog(self.env)
+        self.catalog = self._load_catalog(catalog_dir)
 
-    def get_component(self, component_name, properties):
+    def get_component(self, component_name, properties, environment):
         comp = self.catalog[component_name]
-        comp.set_environment(self.env)
         comp.set_properties(properties)
+        comp.set_environment(environment)
         return comp
 
     def list_components(self):
         """ Return the catalog in a string/json way."""
         return self.catalog.values()
 
-    def execute_service(self, comp_name, service, **kwargs):
-        comp = self.get_component(comp_name)
-        method = getattr(comp, service)
-        method(**kwargs)
-
-    def _load_catalog(self, env):
+    def _load_catalog(self, catalog_dir):
         """Returns a dict that maps the component name with the module."""
-        catalogues = env['catalog']
         catalog_dict = {}
-        for catalogue in catalogues:
+        for catalogue in catalog_dir:
             cat_dir = os.path.join(os.path.dirname(__file__), catalogue)
 
             # Walk through all the catalog components

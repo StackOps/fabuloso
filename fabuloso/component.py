@@ -36,10 +36,10 @@ class Component(object):
         with open(self._config_path) as f:
             self._config = yaml.load(f.read())
 
+        self._module = imp.load_source(self.name, self.path)
         self._check_component_coherency()
         self._load_methods()
         self._load_services()
-        self._load_module()
         self._set_attributes()
 
     def set_environment(self, env):
@@ -59,7 +59,7 @@ class Component(object):
     def _set_attributes(self):
         for service, tup in self.services.items():
             description, methods = tup
-            setattr(self, service, self._execute_service(service))
+            setattr(self, service, self._define_service(service))
 
     def __repr__(self):
         return json.dumps(self._config, indent=4)
@@ -77,6 +77,11 @@ class Component(object):
             self.methods[method_name] = (desc, list_params)
 
     def _load_services(self):
+        """ Load the services in the component.
+
+        Load dinamically the services in the component defined in its
+        'component.yml' file
+        """
         self.services = {}
         for service in self._config['Services']:
             name = service['name']
@@ -87,9 +92,6 @@ class Component(object):
                 description += self.methods[method][0] + '\n'
             self.services[name] = (description, list_methods)
 
-    def _load_module(self):
-        self.module = imp.load_source(self.name, self.path)
-
     def _check_component_coherency(self):
         """ Checks if the component has coherency.
 
@@ -98,12 +100,26 @@ class Component(object):
         """
         pass
 
-    def _execute_service(self, service_name):
+    def execute_service(self, service_name):
+        """ Indirect way to execute service.
+
+        Although you can execute the dynamically-inserted services in a
+        component via component.service_name(), you might want to execute
+        them this way.
+        """
+        self._define_service(service_name)()
+
+    def _define_service(self, service_name):
+        """ Return the function that will execute the service.
+
+        This method is used to insert in the component the function
+        that will execute a service.
+        """
         def wrapper_method():
             description, methods = self.services[service_name]
             for method in methods:
                 service_args = self._build_args(method, self.properties)
-                self.provider.execute_method(getattr(self.module, method),
+                self.provider.execute_method(getattr(self._module, method),
                                              **service_args)
 
         return wrapper_method
