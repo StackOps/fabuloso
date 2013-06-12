@@ -2,46 +2,18 @@ name: quantum
 file: quantum.py
 description: Operations over Quantum
 
-Methods:
-    - name: install
-      description: Install quantum plugins
-    - name: set_config_file
-      description: Configure Quantum file
-      params:
-          - name: user
-            description: Quantum User 
-          - name: password
-            description: Quantum Password
-          - name: auth_protocol
-            description: Authorization service (keystone) protocol
-          - name: auth_host
-            description: Authorization service (keystone) host
-          - name: auth_port
-            description: Authorization service (keystone) port value
-    - name: configure_ovs_plugin_vlan
-      description: Configures the Quantum Server to know the VLAN for OVS must be enabled
-      params:
-          - name: vlan_start
-            description: First VLAN tag
-          - name: vlan_end
-            description: Last VLAN tag
-          - name: mysql_username
-            description: Mysql quantum username
-          - name: mysql_password
-            description: Mysql quantum password
-    - name: start
-      description: Start the Quantum service
-      
-     
 Services:
     - name: install_and_configure
+      description: Install quantum server and configure it
       methods:
           - install
           - set_config_file
     - name: start
+      description: Start the Quantum service
       methods: 
           - start
     - name: configure_ovs_plugin_vlan
+      description: Configures the Quantum Server to know the VLAN for OVS must be enabled
       methods:
           - configure_ovs_plugin_vlan
       

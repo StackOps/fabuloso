@@ -2,51 +2,18 @@ name: cinder
 file: cinder.py
 description: OpenStack Cinder Component
 
-Methods:
-    - name: install
-      description: Install Cinder plugins
-    - name: set_config_file
-      description: Configure Cinder file
-      params:
-          - name: user
-            description: cinder User 
-          - name: password
-            description: cinder Password
-          - name: tenant
-            description: Tenant name
-          - name: auth_protocol
-            description: Authorization service (keystone) protocol
-          - name: auth_host
-            description: Authorization service (keystone) host
-          - name: auth_port
-            description: Authorization service (keystone) port value
-          - name: mysql_schema
-            description: Cinder mysql schema name
-          - name: mysql_username
-            description: Cinder mysql user name
-          - name: mysql_password
-            description: Cinder mysql password
-    - name: start
-      description: Start the cinder service
-    - name: iscsi_start
-      description: Start the iscsi service
-    - name: iscsi_stop
-      description: Stop the iscsi service
-    - name: create_volume
-      description: Create a volume with cinder
-    - name: uninstall
-      description: Uninstall Cinder
-      
-     
 Services:
     - name: install_and_configure
+      description: Install cinder and configure it
       methods:
           - install
           - set_config_file
     - name: start
+      description: Start the cinder service
       methods: 
           - iscsi_start
           - start
     - name: create_volume
+      description: Create a volume with cinder
       methods:
           - create_volume

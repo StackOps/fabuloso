@@ -12,7 +12,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-from fabric.api import task, settings, sudo, puts
+from fabric.api import settings, sudo, puts
 from cuisine import package_ensure, package_clean
 
 import fabuloso.utils as utils
@@ -28,55 +28,46 @@ OVS_PLUGIN_CONF = '/etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini'
 QUANTUM_CONF = '/etc/quantum/quantum.conf'
 
 
-@task
 def openvswitch_stop():
     with settings(warn_only=True):
         sudo("/etc/init.d/openvswitch-switch stop")
 
 
-@task
 def openvswitch_start():
     openvswitch_stop()
     sudo("/etc/init.d/openvswitch-switch start")
 
 
-@task
 def quantum_plugin_openvswitch_agent_stop():
     with settings(warn_only=True):
         sudo("service quantum-plugin-openvswitch-agent stop")
 
 
-@task
 def quantum_plugin_openvswitch_agent_start():
     quantum_plugin_openvswitch_agent_stop()
     sudo("service quantum-plugin-openvswitch-agent start")
 
 
-@task
 def quantum_dhcp_agent_stop():
     with settings(warn_only=True):
         sudo("service quantum-dhcp-agent stop")
 
 
-@task
 def quantum_dhcp_agent_start():
     quantum_dhcp_agent_stop()
     sudo("service quantum-dhcp-agent start")
 
 
-@task
 def quantum_l3_agent_stop():
     with settings(warn_only=True):
         sudo("service quantum-l3-agent stop")
 
 
-@task
 def quantum_l3_agent_start():
     quantum_l3_agent_stop()
     sudo("service quantum-l3-agent start")
 
 
-@task
 def stop():
     openvswitch_stop()
     quantum_plugin_openvswitch_agent_stop()
@@ -84,7 +75,6 @@ def stop():
     quantum_l3_agent_stop()
 
 
-@task
 def start():
     openvswitch_start()
     quantum_plugin_openvswitch_agent_start()
@@ -92,14 +82,12 @@ def start():
     quantum_l3_agent_start()
 
 
-@task
 def compile_datapath():
     package_ensure('openvswitch-datapath-source')
     sudo('DEBIAN_FRONTEND=noninteractive module-assistant -fi '
          'auto-install openvswitch-datapath')
 
 
-@task
 def configure_ubuntu_packages():
     """Configure openvwsitch and quantum packages"""
     package_ensure('vlan')
@@ -114,7 +102,6 @@ def configure_ubuntu_packages():
     package_ensure('python-mysqldb')
 
 
-@task
 def uninstall_ubuntu_packages():
     """Uninstall openvswitch and quantum packages"""
     package_clean('openvswitch-datapath-dkms')
@@ -129,14 +116,12 @@ def uninstall_ubuntu_packages():
     package_clean('bridge-utils')
 
 
-@task
 def configure_network():
     sudo("sed -i -r 's/^\s*#(net\.ipv4\.ip_forward=1.*)/\\1/' "
          "/etc/sysctl.conf")
     sudo("echo 1 > /proc/sys/net/ipv4/ip_forward")
 
 
-@task
 def install(cluster=False, iface_ex=None):
     """Generate quantum configuration. Execute on both servers"""
     if iface_ex is None:
@@ -157,7 +142,6 @@ def install(cluster=False, iface_ex=None):
     sudo('update-rc.d quantum-plugin-openvswitch-agent defaults 98 02')
 
 
-@task
 def configure_ovs_plugin_gre(ip_tunnel='127.0.0.1', tunnel_start='1',
                              tunnel_end='1000', mysql_username='quantum',
                              mysql_password='stackops', mysql_host='127.0.0.1',
@@ -190,7 +174,6 @@ def configure_ovs_plugin_gre(ip_tunnel='127.0.0.1', tunnel_start='1',
     quantum_plugin_openvswitch_agent_start()
 
 
-@task
 def configure_ovs_plugin_vlan(iface_bridge='eth1', br_postfix='eth1',
                               vlan_start='1', vlan_end='4094',
                               mysql_username='quantum',
@@ -225,7 +208,6 @@ def configure_ovs_plugin_vlan(iface_bridge='eth1', br_postfix='eth1',
     quantum_plugin_openvswitch_agent_start()
 
 
-@task
 def configure_l3_agent(user, password, auth_url, management_ip,
                        region, tenant='service'):
     utils.set_option(L3_AGENT_CONF, 'debug', 'True')
@@ -242,13 +224,11 @@ def configure_l3_agent(user, password, auth_url, management_ip,
     utils.set_option(L3_AGENT_CONF, 'use_namespaces', 'False')
 
 
-@task
 def configure_dhcp_agent(name_server='8.8.8.8'):
     utils.set_option(DHCP_AGENT_CONF, 'use_namespaces', 'False')
     utils.set_option(DHCP_AGENT_CONF, 'dnsmasq_dns_server', name_server)
 
 
-@task
 def set_config_file(user, password, auth_host,
                     auth_port, auth_protocol, tenant='service',
                     rabbit_password='guest',
@@ -279,7 +259,6 @@ def set_config_file(user, password, auth_host,
     utils.set_option(QUANTUM_CONF, 'default_notification_level', 'INFO')
 
 
-@task
 def configure_external_bridge(floating_range):
     sudo('ip addr flush dev br-ex')
     sudo('ip addr add %s dev br-ex' % floating_range)
@@ -386,7 +365,6 @@ def configure_default_private_network(private_range, private_gw,
             private_subnet_id))
 
 
-@task
 def delete_network(network_id, admin_user='admin', admin_tenant_name='admin',
                    admin_pass='stackops',
                    auth_url='http://localhost:5000/v2.0'):
@@ -395,7 +373,6 @@ def delete_network(network_id, admin_user='admin', admin_tenant_name='admin',
          % (auth_url, admin_user, admin_pass, admin_tenant_name, network_id))
 
 
-@task
 def delete_router(router_id, admin_user='admin', admin_tenant_name='admin',
                   admin_pass='stackops',
                   auth_url='http://localhost:5000/v2.0'):

@@ -12,7 +12,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-from fabric.api import settings, sudo, task
+from fabric.api import settings, sudo
 from cuisine import package_clean, package_ensure
 
 import fabuloso.utils as utils
@@ -27,23 +27,19 @@ def quantum_server_stop():
         sudo("service quantum-server stop")
 
 
-@task
 def quantum_server_start():
     quantum_server_stop()
     sudo("service quantum-server start")
 
 
-@task
 def stop():
     quantum_server_stop()
 
 
-@task
 def start():
     quantum_server_start()
 
 
-@task
 def uninstall_ubuntu_packages():
     """Uninstall openvswitch and quantum packages"""
     package_clean('quantum-server')
@@ -52,7 +48,6 @@ def uninstall_ubuntu_packages():
     package_clean('python-mysqldb')
 
 
-@task
 def install(cluster=False):
     """Generate quantum configuration. Execute on both servers"""
     """Configure openvwsitch and quantum packages"""
@@ -64,7 +59,6 @@ def install(cluster=False):
         stop()
 
 
-@task
 def set_config_file(user, password, auth_host,
                     auth_port, auth_protocol, tenant='service'):
     utils.set_option(QUANTUM_API_PASTE_CONF, 'admin_tenant_name',

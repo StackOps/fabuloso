@@ -13,92 +13,55 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-import imp
-import json
-import os
-
-import providers
-
-import yaml
+import inspect
 
 
 class Component(object):
 
-    services = {}
-    methods = {}
-    module = None
+    # List of attributes obtained at definition time, when
+    # the 'fabuloso' entity reads from component.yml
+    _services = {}
+    _module = None
+    _name = None
+    _provider = None
+
+    # List of attributes obtained at execution time, when the
+    # user decides where to run this component and its properties
+    _properties = {}
 
     """Parses component files and extracts its data"""
-    def __init__(self, comp_dir):
-        self._comp_dir = comp_dir
-        self._config_path = os.path.join(comp_dir, 'component.yml')
-        self.provider = providers.FabricProvider()
-        with open(self._config_path) as f:
-            self._config = yaml.load(f.read())
-
-        self._module = imp.load_source(self.name, self.path)
-        self._check_component_coherency()
-        self._load_methods()
-        self._load_services()
+    def __init__(self, name, module, services, provider):
+        self._name = name
+        self._module = module
+        self._services = services
+        self._provider = provider
         self._set_attributes()
 
     def set_environment(self, env):
-        self.provider.set_environment(env)
+        self._provider.set_environment(env)
 
     def set_properties(self, props):
-        self.properties = props
+        self._properties = props
 
-    @property
-    def name(self):
-        return self._config['name']
+    def get_propreties(self, props):
+        return self._properties
 
-    @property
-    def path(self):
-        return os.path.join(self._comp_dir, self._config['file'])
+    def get_needed_properties(self):
+        """ Retrieves the list of needed properties"""
+        props = []
+        for service, service_def in self._services.items():
+            description, methods = service_def
+            for method in methods:
+                params = self._get_method_params(method)
+                for param in params:
+                    if not param in props:
+                        props.append(param)
+        return props
 
     def _set_attributes(self):
-        for service, tup in self.services.items():
-            description, methods = tup
+        """ Set the dynamically set services. """
+        for service in self._services.keys():
             setattr(self, service, self._define_service(service))
-
-    def __repr__(self):
-        return json.dumps(self._config, indent=4)
-
-    def _load_methods(self):
-        self.methods = {}
-        for method in self._config['Methods']:
-            method_name = method['name']
-            desc = method['description']
-            list_params = []
-            if 'params' in method:
-                for param in method['params']:
-                    list_params.append((param['name'], param['description']))
-
-            self.methods[method_name] = (desc, list_params)
-
-    def _load_services(self):
-        """ Load the services in the component.
-
-        Load dinamically the services in the component defined in its
-        'component.yml' file
-        """
-        self.services = {}
-        for service in self._config['Services']:
-            name = service['name']
-            list_methods = []
-            description = ''
-            for method in service['methods']:
-                list_methods.append(method)
-                description += self.methods[method][0] + '\n'
-            self.services[name] = (description, list_methods)
-
-    def _check_component_coherency(self):
-        """ Checks if the component has coherency.
-
-        According with the fabuloso doc [todo link here], this method
-        checks if the component has coherency.
-        """
-        pass
 
     def execute_service(self, service_name):
         """ Indirect way to execute service.
@@ -107,7 +70,7 @@ class Component(object):
         component via component.service_name(), you might want to execute
         them this way.
         """
-        self._define_service(service_name)()
+        getattr(self, service_name)()
 
     def _define_service(self, service_name):
         """ Return the function that will execute the service.
@@ -116,15 +79,15 @@ class Component(object):
         that will execute a service.
         """
         def wrapper_method():
-            description, methods = self.services[service_name]
+            description, methods = self._services[service_name]
             for method in methods:
-                service_args = self._build_args(method, self.properties)
-                self.provider.execute_method(getattr(self._module, method),
-                                             **service_args)
+                service_args = self._build_args(method)
+                self._provider.execute_method(getattr(self._module, method),
+                                              **service_args)
 
         return wrapper_method
 
-    def _build_args(self, method, kwargs):
+    def _build_args(self, method):
         """ Build appropiate args depending on the method
 
         The execute service receives a list of arguments that may be
@@ -132,9 +95,17 @@ class Component(object):
         the ones that are needed for the current 'method'
         """
         method_args = {}
-        parameters = self.methods[method][1]
+        parameters = self._get_method_params(method)
         for parameter in parameters:
-            param_name, description = parameter
-            if param_name in kwargs:
-                method_args[param_name] = kwargs[param_name]
+            if parameter in self._properties:
+                method_args[parameter] = self._properties[parameter]
         return method_args
+
+    def _get_method_params(self, method):
+        """ Get method parameters.
+
+        Use introspection to retrieve the list of parameters that
+        a method needs
+        """
+        meth = getattr(self._module, method)
+        return inspect.getargspec(meth).args

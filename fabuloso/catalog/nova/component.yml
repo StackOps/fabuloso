@@ -1,51 +1,18 @@
 name: nova
 file: nova.py
 description: Operations over OpenStack Nova service
-
-Methods:
-    - name: install
-      description:  Install OpenStack Glance from ubuntu packages
-    - name: set_config_file
-      description: Modify the /etc/glance/glance.conf
-      params:
-          - name: user
-            description: Username of the Glance Service
-          - name: password
-            description: Password of the user
-          - name: mysql_username
-            description: Nova mysql user name
-          - name: mysql_password
-            description: Nova mysql password
-          - name: mysql_host
-            description: Connection host.
-            optional: True
-          - name: mysql_port
-            description: Connection port
-            optional: True
-          - name: auth_protocol
-            description: Authorization service (keystone) protocol
-          - name: auth_host
-            description: Authorizatoin service (keystone) host
-          - name: auth_port
-            description: Authorization service (keystone) port value
-          - name: management_ip
-            description: Management IP
-    - name: nova_properties
-      description: Set properties of the Nova service
-      params:
-          - name: props
-            description: just all the properties we want to set
-    - name: start
-      description: Start Nova Service
      
 Services:
     - name: install_and_configure
+      description: Install OpenStack Nova from ubuntu packages
       methods:
           - install
           - set_config_file
     - name: nova_properties
+      description: Set properties of the Nova service
       methods:
           - nova_properties
     - name: start
+      description: Start Nova Service
       methods:
           - start

@@ -1,43 +1,22 @@
 name: os
 file: os.py
 description: Basic operations over remote os
-provider: fabric
-
-Methods:
-    - name: nameservers
-      description: Returns the DNS info of the remote machine
-    - name: block_devices
-      description: Returns the remote machine's disk partitions
-    - name: mounts
-      description: Mounted file systems
-    - name: iface_list
-      description: Return the Network Interfaces
-    - name: add_repos
-      description: Adds the StackOps repos to the target machine
-    - name: add_nova_user
-      description: Add Nova User in the target machine
-    - name: add_glance_user
-      description: Add Glance User in the target machine
-    - name: change_hostname
-      description: Change the hostname of the remote machine
-      params:
-          - name: hostname
-            description: New hostname of the machine
-    - name: parted
-      description: make partition
 
 Services:
     - name: info
+      description: Returns OS remote info
       methods:
           - nameservers
           - block_devices
           - mounts
     - name: setup_node
+      description: Prepares remote system for a OS with StackOps deployment
       methods:
           - add_repos
           - add_nova_user
           - add_glance_user
           - change_hostname
     - name: parted
+      description: make partition
       methods:
           - parted

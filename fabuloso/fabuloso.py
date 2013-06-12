@@ -13,9 +13,13 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+import imp
 import os
 
+import yaml
+
 import component
+import providers
 
 
 class Fabuloso(object):
@@ -45,10 +49,39 @@ class Fabuloso(object):
                 for subdirname in subdirnames:
                     comp_dir = os.path.join(cat_dir, subdirname)
                     try:
-                        comp = component.Component(comp_dir)
-                        catalog_dict[comp.name] = comp
+                        comp = self._load_component(comp_dir)
+                        catalog_dict[comp._name] = comp
                     except IOError:
                         # Skip the failing components
                         continue
 
         return catalog_dict
+
+    def _load_component(self, comp_dir):
+        """ Based on the definition file, build the component.
+        """
+        definition_path = os.path.join(comp_dir, 'component.yml')
+        with open(definition_path) as f:
+            definition = yaml.load(f.read())
+
+        # load the module that belongs to this component
+        component_name = definition['name']
+        module_path = os.path.join(comp_dir, definition['file'])
+        module = imp.load_source(component_name, module_path)
+
+        # TODO: read also from the configuration file, now we have
+        # only a provider, so we hard core it
+        provider = providers.FabricProvider()
+
+        comp_services = {}
+        for service in definition['Services']:
+            name = service['name']
+            list_methods = []
+            description = service['description']
+            for method in service['methods']:
+                list_methods.append(method)
+            comp_services[name] = (description, list_methods)
+
+        comp = component.Component(component_name, module, comp_services,
+                                   provider)
+        return comp

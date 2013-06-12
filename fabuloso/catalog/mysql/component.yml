@@ -112,39 +112,47 @@ Methods:
 
 Services:
     - name: setup
+      description: Prepares a mysql service and sets its root password
       methods:
           - configure
           - start
     - name: teardown
+      description: Stop the mysql service
       methods:
           - stop
-    - name: set_schema
-      methods:
-          - setup_schema
     - name: set_all_schemas
+      description: Prepares a database and a user password for each StackOps schemas
       methods:
           - configure_all_schemas
     - name: set_keystone
+      description: Creates a new database for keystone and grants privileges on it
       methods:
           - setup_keystone
     - name: set_nova
+      description: Creates a new database for nova and grants privileges on it
       methods:
           - setup_nova
     - name: set_glance
+      description: Creates a new database for glance and grants privileges on it
       methods:
           - setup_glance
     - name: set_cinder
+      description: Creates a new database for cinder and grants privileges on it
       methods:
           - setup_cinder
     - name: set_quantum
+      description: Creates a new database for quantum and grants privileges on it
       methods:
           - setup_quantum
     - name: set_portal
+      description: Creates a new database for portal and grants privileges on it
       methods:
           - setup_portal
     - name: set_accounting
+      description: Creates a new database for accounting and grants privileges on it
       methods:
           - setup_accounting
     - name: set_automation
+      description: Creates a new database for automation and grants privileges on it
       methods:
           - setup_automation

@@ -2,92 +2,9 @@ name: compute
 file: compute.py
 description: Operations over Node Compute component
 
-Methods:
-    - name: install
-      description: Install Compute Component
-    - name: configure_network
-      description: Configure Compute Network
-    - name: configure_ntp
-      description: Configure NTP
-    - name: configure_vhost_net
-      description: Configure vHost
-    - name: configure_libvirt
-      description: Configure libvirt
-      params:
-          - name: hostname
-            description: Host where the libvirt runs
-    - name: configure_hugepages
-      description: Configure Hugepages
-    - name: set_config_file
-      description: Configure component file
-      params:
-          - name: user
-            description: Nova User 
-          - name: password
-            description: Nova Password
-          - name: auth_protocol
-            description: Authorization service (keystone) protocol
-          - name: auth_host
-            description: Authorization service (keystone) host
-          - name: auth_port
-            description: Authorization service (keystone) port value
-          - name: mysql_username
-            description: Nova mysql user name
-          - name: mysql_password
-            description: Nova mysql password
-          - name: mysql_host
-            description: Nova mysql host
-          - name: management_ip
-            description: Management ip
-          - name: vncproxy_host
-            description: External IP of the controller
-          - name: admin_auth_url
-            description: Keystone endpoint
-          - name: quantum_url
-            description: Quantum URL
-          - name: glance_host
-            description: Glance host
-          - name: glance_port
-            description: Glance port
-          - name: rabbit_host
-            description: Rabbit Host
-            optional: True
-          - name: libvirt_type
-            description: Libvirt emulation type
-            optional: True
-    - name: configure_quantum
-      description: configure compute host for quantum
-    - name: start
-      description: Start Nova-compute service
-    - name: configure_ovs_plugin_vlan
-      description: Configure the vlan
-      params:
-          - name: iface_bridge
-            description: interface bridge
-          - name: br_postfix
-            description: dunno
-          - name: vlan_start
-            description: first vlan tag
-          - name: vlan_end
-            description: last vlan tag
-          - name: mysql_schema
-            description: Quantum mysql schema name
-            optional: true
-          - name: quantum_mysql_username
-            description: Quantum mysql user name
-          - name: quantum_mysql_password
-            description: Quantum mysql password
-          - name: mysql_host
-            description: Connection host.
-            optional: True
-          - name: mysql_port
-            description: Connection port
-            optional: True
-        
-      
-     
 Services:
     - name: install_and_configure
+      description: Install and configure component file
       methods:
           - install
           - configure_network
@@ -97,8 +14,10 @@ Services:
           - set_config_file
           - configure_quantum
     - name: configure_ovs_plugin_vlan
+      description: Configure the openvswitch
       methods:
           - configure_ovs_plugin_vlan
     - name: start 
+      description: Start Nova-compute service
       methods: 
           - start
