@@ -3,19 +3,23 @@ FABric scripts with steroids
 
 ## What is FABuloso?
 
-Fabuloso is a fabric script executor that handles plugable components
-inside a catalog and configurable remote environments. 
+Fabuloso is a provider-agnostic remote script executor 
+(although currently we only use Fabric)
+that handles plugable components inside a catalog and
+runs them into configurable remote environments to handle
+IT deployments.
+
 In StackOps we use FABuloso mainly to manage OpenStack
-deployments.
+deployments with our own components.
 
 ### What is a Component
 
 A component is just a directory that holds a python module and
- a configuration file.
+ a definition file.
  
- Configuration file defines which services of
+ Definition file defines which services of
  the module are exposed to be executed. For
- instance, the embedded 'mysql' configuration file is:
+ instance, a 'mysql' configuration would be:
 
 ```yaml
 name: mysql

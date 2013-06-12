@@ -23,9 +23,14 @@ import providers
 
 
 class Fabuloso(object):
-    """ Unique entry point via API of this package"""
-    def __init__(self, catalog_dir):
-        """ Init with environment"""
+
+    def __init__(self, catalog_dir=None):
+        if catalog_dir is None:
+            config_file = os.path.expanduser('~/.config/fabuloso/config.py')
+            module = imp.load_source('config', config_file)
+            catalog_dir = getattr(module, 'catalog_dir')
+
+        """ Init with catalog dir"""
         self.catalog = self._load_catalog(catalog_dir)
 
     def get_component(self, component_name, properties, environment):

@@ -18,9 +18,10 @@
 # Once the 'fabuloso' is installed, this file is copied into the path
 # $HOME/.config/fabuloso/config.py and used when fabuloso runs
 # Fabuloso environment variables
-catalog_dir = ['catalog']
+catalog_dir = []
 
 environments = {
+
     "default": {
         "host": "localhost",
         "port": 2223,
