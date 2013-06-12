@@ -11,7 +11,9 @@ deployments.
 ### What is a Component
 
 A component is just a directory that holds a python module and
- a configuration file. Configuration file defines which services of
+ a configuration file.
+ 
+ Configuration file defines which services of
  the module are exposed to be executed. For
  instance, the embedded 'mysql' configuration file is:
 
@@ -19,17 +21,6 @@ A component is just a directory that holds a python module and
 name: mysql
 file: mysql.py
 description: MySQL database component
-
-Methods:
-    - name: configure
-      description: Prepares a mysql service and sets its root password
-      params:
-        - name: root_pass
-          description: Admin password
-    - name: start
-      description: Starts the mysql service
-    - name: stop
-      description: Stop the mysql service
 
 Services:
     - name: setup
@@ -45,7 +36,7 @@ Services:
 
 The *component* name is 'mysql' and exposes the services 'setup' and 'teardown'.
 Each *service* wraps one or more module *methods*. These methods are actually
-fabric scripts.
+defined in the actual python module.
 
 These components are loaded dynamically when a Fabuloso instance is created.
 
@@ -62,11 +53,6 @@ executions that fabuloso performs run in that remote connection. The [configurat
 file](TODO) define the remote executions in the [shell way](TODO). You
 can also create your own environment programatically and use it to instance
 a new Fabuloso instance in the [API way].
-
-If you don't specify anything (via shell or via API, fabuloso
-will use the 'default' one). 
-
-You can switch between environments as many times as you wish (Not ready!)
 
 ## Getting Started
 
@@ -134,6 +120,8 @@ Fabuloso provides a simple API to execute the services. A simple program would b
 
 ```python
 
+catalog = ['/path/to/catalog']
+
 env_dict = {
     "host": "localhost",
     "port": 2223,
@@ -141,13 +129,28 @@ env_dict = {
     "ssh_key_file": "~/.ssh/nonsecureid_rsa"
 }
 
-env = fabuloso.RemoteEnvironment(env_dict)
-fab = fabuloso.Fabuloso(env)
-fab.execute("mysql", "start")
+mysql_properties = {
+    'root_pass' = 'root'
+}
+
+fab = fabuloso.Fabuloso(catalog)
+mysql = fabuloso.get_component('mysql', mysql_properties, env_dict)
+mysql.install()
+
 ```
 
-Where the first parameters is the 'component', the second parameters is the 'services'
-and then you can provide a list of **named** parameters related to the service.
+This code:
+* first define the directory where fabuloso will search into the
+list of components
+* Then defines the environment where the component will be executed
+* Then defines the properties of the component
+* Instantiates fabuloso with the catalog directory
+* Gets an instance of the component with the properties and the environment
+* It runs the 'install' service defined by the 'component.yml' definition file
+  of the component
+
+
+See the [wiki](TODO) to more information
 
 ### What license do you use?
 
