@@ -24,7 +24,7 @@ def sql_connect_string(host, password, port, schema, username):
     return sql_connection
 
 
-def delete_option(config_file,name, section='DEFAULT'):
+def delete_option(config_file, name, section='DEFAULT'):
 
     if config_file is None:
         puts("{'error':'No config file.'}")
