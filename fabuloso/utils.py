@@ -12,37 +12,38 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-
-from fabric.api import *
-from cuisine import *
+from fabric.api import puts, sudo, get, put, local
 
 import uuid
 import ConfigParser
 
+
 def sql_connect_string(host, password, port, schema, username):
-    sql_connection = 'mysql://%s:%s@%s:%s/%s' % (username, password, host, port, schema)
+    sql_connection = 'mysql://%s:%s@%s:%s/%s' % (username, password, host,
+                                                 port, schema)
     return sql_connection
 
+
 def delete_option(config_file, name, section='DEFAULT'):
+
     if config_file is None:
         puts("{'error':'No config file.'}")
         SystemExit()
-#    sudo('sed -i "/^%s=/d" %s' % (name,config_file))
-    temp_file="/tmp/%s" % uuid.uuid1()
+    temp_file = "/tmp/%s" % uuid.uuid1()
     sudo("cp %s %s" % (config_file, temp_file))
     sudo("chmod 666 %s" % temp_file)
-    local_file="/tmp/%s" % uuid.uuid1()
+    local_file = "/tmp/%s" % uuid.uuid1()
     get(temp_file, local_file)
     sudo('rm -f %s' % temp_file)
-    d = {}
     cfg = ConfigParser.ConfigParser()
     cfg.read([local_file])
-    cfg.remove_option(section,name)
-    cfg.write(open(local_file,'w'))
-    put(local_file,config_file,use_sudo=True)
+    cfg.remove_option(section, name)
+    cfg.write(open(local_file, 'w'))
+    put(local_file, config_file, use_sudo=True)
     local('rm -f %s' % local_file)
 
-def set_option(config_file,name,value,comment=None, section='DEFAULT'):
+
+def set_option(config_file, name, value, comment=None, section='DEFAULT'):
     if config_file is None:
         puts("{'error':'No config file.'}")
         SystemExit()
@@ -54,25 +55,24 @@ def set_option(config_file,name,value,comment=None, section='DEFAULT'):
     if config_file is None:
         puts("{'error':'No config file.'}")
         SystemExit()
-    temp_file="/tmp/%s" % uuid.uuid1()
+    temp_file = "/tmp/%s" % uuid.uuid1()
     sudo("cp %s %s" % (config_file, temp_file))
     sudo("chmod 666 %s" % temp_file)
-    local_file="/tmp/%s" % uuid.uuid1()
+    local_file = "/tmp/%s" % uuid.uuid1()
     get(temp_file, local_file)
     sudo('rm -f %s' % temp_file)
-    d = {}
     cfg = ConfigParser.ConfigParser()
     cfg.read([local_file])
-    cfg.set(section,name,value)
-    cfg.write(open(local_file,'w'))
-    put(local_file,config_file,use_sudo=True)
+    cfg.set(section, name, value)
+    cfg.write(open(local_file, 'w'))
+    put(local_file, config_file, use_sudo=True)
     local('rm -f %s' % local_file)
 
-def get_option(config_file,name,section='DEFAULT'):
+
+def get_option(config_file, name, section='DEFAULT'):
     if config_file is None:
         puts("{'error':'No config file.'}")
         SystemExit()
-#    sudo('''sed '/^\#/d' %s | grep "%s"  | tail -n 1 | sed 's/^.*=//' ''' % (name,config_file))
     d = get_options(config_file)
     result = ''
     try:
@@ -81,47 +81,56 @@ def get_option(config_file,name,section='DEFAULT'):
         pass
     return result
 
+
 def get_options(config_file):
     if config_file is None:
         puts("{'error':'No config file.'}")
         SystemExit()
-    temp_file="/tmp/%s" % uuid.uuid1()
+    temp_file = "/tmp/%s" % uuid.uuid1()
     sudo("cp %s %s" % (config_file, temp_file))
     sudo("chmod 666 %s" % temp_file)
-    local_file="/tmp/%s" % uuid.uuid1()
+    local_file = "/tmp/%s" % uuid.uuid1()
     get(temp_file, local_file)
     sudo('rm -f %s' % temp_file)
-    d = {}
     cfg = ConfigParser.SafeConfigParser(allow_no_value=True)
     cfg.read([local_file])
     sec = cfg.sections()
     sec.append('DEFAULT')
+    d = {}
     for section_name in sec:
         section = dict(cfg.items(section_name))
         d[section_name] = section
     local('rm -f %s' % local_file)
     return d
 
-def uncomment_property(config_file,name):
-    if config_file is None:
-        puts("{'error':'No config file.'}")
-        SystemExit()
-    sudo('''sed -i 's&^#.*%s.*=\(.*\)$&%s =\\1&g' %s''' % (name,name,config_file))
 
-def comment_property(config_file,name):
+def uncomment_property(config_file, name):
     if config_file is None:
         puts("{'error':'No config file.'}")
         SystemExit()
-    sudo('''sed -i 's&^.*%s.*=\(.*\)$&# %s =\\1&g' %s''' % (name,name,config_file))
+    sudo('''sed -i 's&^#.*%s.*=\(.*\)$&%s =\\1&g' %s'''
+         % (name, name, config_file))
 
-def modify_property(config_file,name, value):
-    if config_file is None:
-        puts("{'error':'No config file.'}")
-        SystemExit()
-    sudo('''sed -i 's&^%s.*=\(.*\)$&%s=%s&g' %s''' % (name,name,value,config_file))
 
-def modify_property_with_semicolon(config_file,name, value):
+def comment_property(config_file, name):
     if config_file is None:
         puts("{'error':'No config file.'}")
         SystemExit()
-    sudo('''sed -i 's&^\$%s.*=.*\"\(.*\)\";$&\$%s=\"%s\";&g' %s''' % (name,name,value,config_file))
+    sudo('''sed -i 's&^.*%s.*=\(.*\)$&# %s =\\1&g' %s'''
+         % (name, name, config_file))
+
+
+def modify_property(config_file, name, value):
+    if config_file is None:
+        puts("{'error':'No config file.'}")
+        SystemExit()
+    sudo('''sed -i 's&^%s.*=\(.*\)$&%s=%s&g' %s'''
+         % (name, name, value, config_file))
+
+
+def modify_property_with_semicolon(config_file, name, value):
+    if config_file is None:
+        puts("{'error':'No config file.'}")
+        SystemExit()
+    sudo('''sed -i 's&^\$%s.*=.*\"\(.*\)\";$&\$%s=\"%s\";&g' %s'''
+         % (name, name, value, config_file))
