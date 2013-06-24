@@ -3,10 +3,10 @@ FABric scripts with steroids
 
 ## What is FABuloso?
 
-Fabuloso is a provider-agnostic remote script executor 
-(although currently we only use Fabric)
-that handles plugable components inside a catalog and
-runs them into configurable remote environments to handle
+Fabuloso is a provider-agnostic configuration management tool
+(although currently we only use Fabric) that handles plugable
+*components* inside a *catalog* and
+runs them into configurable *remote environments* to handle
 IT deployments.
 
 In StackOps we use FABuloso mainly to manage OpenStack
