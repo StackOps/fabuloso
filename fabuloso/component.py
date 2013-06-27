@@ -110,6 +110,5 @@ class Component(object):
         meth = getattr(self._module, method)
         return inspect.getargspec(meth).args
 
-
     def __repr__(self):
         return "<Component:%s, %s>" % (self._name, self._module.__file__)
