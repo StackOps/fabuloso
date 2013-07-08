@@ -20,7 +20,7 @@ import subprocess
 import sys
 import unittest
 
-requirements= ['pep8', 'cuisine', 'pyyaml']
+requirements = ['pep8', 'cuisine', 'pyyaml', 'setuptools', 'python-keystoneclient']
 
 if sys.version_info < (2, 7):
     requirements.append('argparse')
@@ -130,4 +130,7 @@ setuptools.setup(name='fabuloso',
                      "Programming Language :: Python :: 2",
                      "Programming Language :: Python :: 2.7",
                      "Topic :: System"
-                 ])
+                 ]
+                 )
+
+
