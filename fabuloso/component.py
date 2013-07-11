@@ -43,22 +43,8 @@ class Component(object):
     def set_properties(self, props):
         self._properties = props
 
-    def get_propreties(self, props):
+    def get_properties(self):
         return self._properties
-
-    def get_needed_properties(self):
-        """ Retrieves the list of needed properties"""
-        props = []
-        for service, service_def in self._services.items():
-            service_properties = {}
-            description, methods = service_def
-            for method in methods:
-                params = self._get_method_params(method)
-                for param in params:
-                    if not param in service_properties:
-                        service_properties[param] = ''
-            props.append({service: service_properties})
-        return props
 
     def _set_attributes(self):
         """ Set the dynamically set services. """
