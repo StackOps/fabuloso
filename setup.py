@@ -20,7 +20,7 @@ import subprocess
 import sys
 import unittest
 
-requirements= ['pep8', 'cuisine', 'pyyaml']
+requirements = ['pep8', 'cuisine', 'pyyaml']
 
 if sys.version_info < (2, 7):
     requirements.append('argparse')

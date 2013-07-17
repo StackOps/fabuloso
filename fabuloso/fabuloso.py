@@ -40,19 +40,19 @@ class Fabuloso(object):
         return comp
 
     def init_component_extended_data(self, component_name,
-                               ext_properties, environment):
+                                     ext_properties, environment):
         properties = {}
         map(properties.update, ext_properties.values())
         return self.init_component(component_name, properties, environment)
 
     def get_template(self, component_name):
         """ Retrieves the list of needed properties"""
-        component = self.catalog[component_name]
+        comp = self.catalog[component_name]
         props = {}
-        for service, service_def in component._services.items():
+        for service, service_def in comp._services.items():
             description, methods = service_def
             for method in methods:
-                params = component._get_method_params(method)
+                params = comp._get_method_params(method)
                 for param in params:
                     if not param in props:
                         props[param] = ''
@@ -60,13 +60,13 @@ class Fabuloso(object):
 
     def get_template_extended_data(self, component_name):
         """ Retrieves the list of needed properties"""
-        component = self.catalog[component_name]
+        comp = self.catalog[component_name]
         props = {}
-        for service, service_def in component._services.items():
+        for service, service_def in comp._services.items():
             service_props = {}
             description, methods = service_def
             for method in methods:
-                params = component._get_method_params(method)
+                params = comp._get_method_params(method)
                 for param in params:
                     if not param in service_props:
                         service_props[param] = ''
