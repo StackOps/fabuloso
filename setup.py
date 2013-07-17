@@ -96,7 +96,8 @@ class Pep8Command(setuptools.Command):
 
 setuptools.setup(name='fabuloso',
                  packages=['fabuloso'],
-                 package_data={'fabuloso': ['data/easter_egg.txt']},
+                 package_data={'fabuloso': ['data/easter_egg.txt',
+                                            'catalog/*/*.*']},
                  author='Jaume Devesa',
                  author_email='jaume.devesa@stackops.com',
                  description='StackOps remote executor',
