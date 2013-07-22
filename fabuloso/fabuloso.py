@@ -20,6 +20,7 @@ import yaml
 
 import component
 import providers
+import utils
 
 
 class Fabuloso(object):
@@ -90,3 +91,18 @@ class Fabuloso(object):
         comp = component.Component(component_name, module, comp_services,
                                    provider)
         return comp
+
+    def validate_credentials(self, user, password, tenant, endpoint,
+                             admin_token):
+        utils.validate_credentials(user, password, tenant, endpoint,
+                                   admin_token)
+
+    def validate_database(self, database_type, username, password, host, port,
+                          schema, drop_schema=None, install_database=None):
+        utils.validate_database(database_type, username, password, host, port,
+                                schema, drop_schema, install_database)
+
+    def send_rabbitMQ(self, service_type, host, port=None, user=None,
+                      password=None, virtual_host=None):
+        utils.send_rabbitMQ(service_type, host, port, user, password,
+                            virtual_host)
