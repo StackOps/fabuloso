@@ -312,13 +312,15 @@ def _receive_rabbitMQ(service_type, host, port=None, user=None, password=None,
         channel = connection.channel()
         channel.queue_declare(queue='test')
         print ' [*] Waiting for messages....'
-        channel.basic_consume(_callback, queue='test', no_ack=True)
-        channel.start_consuming()
+        channel.basic_consume(_callback, queue='test', no_ack=True,
+                              consumer_tag='consumer')
+        connection.close()
     except Exception, e:
         #logging.error('RabbitMQ to %s Test Failed...%s' % (service_type, e))
         raise Exception('RabbitMQ to %s Test Failed...%s' % (service_type, e))
 
 
 def _callback(ch, method, properties, body):
-    print " [x] RECEIVED: %r" % (body)
-    print ' [*] Message sent and received successfully....Test completed...'
+        print " [x] RECEIVED: %r" % (body)
+        print ' [*] Message sent and received successfully....' \
+              'Test completed...'
