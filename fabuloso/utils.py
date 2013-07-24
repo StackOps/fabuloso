@@ -147,7 +147,7 @@ def validate_credentials(user, password, tenant, endpoint, admin_token):
                                              password=password)
         if token is not None:
             print '\nValidation of credentials for %s user in ' \
-                  'tenant %s was successful..' % (user, tenant)
+                  'tenant %s was successful..\n' % (user, tenant)
 
     except Exception, e:
         #logging.error("Error at the moment to add a Service. %s" % e)
@@ -236,11 +236,11 @@ def validate_database(database_type, username, password, host, port,
             if con is not None:
                 if len(con) > 0:
                     print '\nDatabase connection successfully and schema %s ' \
-                          'has some tables...' % schema
+                          'has some tables...\n' % schema
 
                 else:
                     raise Exception('\nDatabase connection successfully '
-                                    'but schema %s seems empty...' % schema)
+                                    'but schema %s seems empty...\n' % schema)
 
             cur.close()
             db.close()
