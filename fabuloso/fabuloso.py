@@ -34,11 +34,45 @@ class Fabuloso(object):
         """ Init with catalog dir"""
         self.catalog = self._load_catalog(catalog_dir)
 
-    def get_component(self, component_name, properties, environment):
+    def init_component(self, component_name, properties, environment):
         comp = self.catalog[component_name]
         comp.set_properties(properties)
         comp.set_environment(environment)
         return comp
+
+    def init_component_extended_data(self, component_name,
+                                     ext_properties, environment):
+        properties = {}
+        map(properties.update, ext_properties.values())
+        return self.init_component(component_name, properties, environment)
+
+    def get_template(self, component_name):
+        """ Retrieves the list of needed properties"""
+        comp = self.catalog[component_name]
+        props = {}
+        for service, service_def in comp._services.items():
+            description, methods = service_def
+            for method in methods:
+                params = comp._get_method_params(method)
+                for param in params:
+                    if not param in props:
+                        props[param] = ''
+        return props
+
+    def get_template_extended_data(self, component_name):
+        """ Retrieves the list of needed properties"""
+        comp = self.catalog[component_name]
+        props = {}
+        for service, service_def in comp._services.items():
+            service_props = {}
+            description, methods = service_def
+            for method in methods:
+                params = comp._get_method_params(method)
+                for param in params:
+                    if not param in service_props:
+                        service_props[param] = ''
+            props[service] = service_props
+        return props
 
     def list_components(self):
         """ Return the catalog in a string/json way."""
