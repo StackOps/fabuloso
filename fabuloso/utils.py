@@ -146,7 +146,7 @@ def validate_credentials(user, password, tenant, endpoint, admin_token):
                                              tenant_name=tenant,
                                              password=password)
         if token is not None:
-            print 'Validation of credentials for %s user in ' \
+            print '\nValidation of credentials for %s user in ' \
                   'tenant %s was successful..' % (user, tenant)
 
     except Exception, e:
@@ -235,11 +235,11 @@ def validate_database(database_type, username, password, host, port,
             con = cur.fetchall()
             if con is not None:
                 if len(con) > 0:
-                    print 'Database connection successfully and schema %s ' \
+                    print '\nDatabase connection successfully and schema %s ' \
                           'has some tables...' % schema
 
                 else:
-                    raise Exception('Database connection successfully '
+                    raise Exception('\nDatabase connection successfully '
                                     'but schema %s seems empty...' % schema)
 
             cur.close()
