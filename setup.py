@@ -20,7 +20,8 @@ import subprocess
 import sys
 import unittest
 
-requirements = ['pep8', 'cuisine', 'pyyaml']
+requirements = ['pep8', 'cuisine', 'pyyaml', 'setuptools',
+                'python-keystoneclient', 'MySQL-python', 'pika ']
 
 if sys.version_info < (2, 7):
     requirements.append('argparse')
