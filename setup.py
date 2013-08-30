@@ -22,7 +22,7 @@ import unittest
 
 requirements = ['pep8', 'cuisine', 'pyyaml', 'setuptools',
                 'python-keystoneclient', 'MySQL-python', 'pika ',
-                'expects==0.1']
+                'expects>=0.1,<0.2']
 
 if sys.version_info < (2, 7):
     requirements.append('argparse')
