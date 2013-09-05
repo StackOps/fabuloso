@@ -113,7 +113,7 @@ class Component(object):
             if param in args:
                 index = args.index(param)
                 default_value = defaults[index]
-                return str(default_value)
+                return default_value
 
         return ""
 
