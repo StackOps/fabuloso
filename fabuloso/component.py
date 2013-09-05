@@ -98,5 +98,24 @@ class Component(object):
         meth = getattr(self._module, method)
         return inspect.getargspec(meth).args
 
+    def _get_param_default(self, param, method):
+        """ Get the default value of a parameter
+        """
+        meth = getattr(self._module, method)
+        args = inspect.getargspec(meth).args
+
+        defaults = inspect.getargspec(meth).defaults
+        if defaults is not None:
+
+            # only the n-last arguments have default arguments, where
+            # n == the lenght of defaults
+            args = args[len(args) - len(defaults):]
+            if param in args:
+                index = args.index(param)
+                default_value = defaults[index]
+                return str(default_value)
+
+        return ""
+
     def __repr__(self):
         return "<Component:%s, %s>" % (self._name, self._module.__file__)

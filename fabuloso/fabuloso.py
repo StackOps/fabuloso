@@ -56,7 +56,7 @@ class Fabuloso(object):
                 params = comp._get_method_params(method)
                 for param in params:
                     if not param in props:
-                        props[param] = ''
+                        props[param] = comp._get_param_default(param, method)
         return props
 
     def get_template_extended_data(self, component_name):
@@ -70,7 +70,7 @@ class Fabuloso(object):
                 params = comp._get_method_params(method)
                 for param in params:
                     if not param in service_props:
-                        service_props[param] = ''
+                        service_props[param] = comp._get_param_default(param, method)
             props[service] = service_props
         return props
 
