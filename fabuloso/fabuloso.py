@@ -19,26 +19,39 @@ import os
 import yaml
 
 import component
+import keys
+import repos
 import providers
 import utils
 
 
 class Fabuloso(object):
 
-    def __init__(self, catalog_dir=None):
-        if catalog_dir is None:
-            config_file = os.path.expanduser('~/.config/fabuloso/config.py')
-            module = imp.load_source('config', config_file)
-            catalog_dir = getattr(module, 'catalog_dir')
+    def __init__(self):
+        self._initialize_dirs()
 
         """ Init with catalog dir"""
-        self.catalog = self._load_catalog(catalog_dir)
+        self._load_catalog()
+        self._repositorer = repos.Repositorer(self._catalog_dir)
+        self._key_manager = keys.KeyManager(self._keys_dir)
+
+    def add_repository(self, repo_name, repo_url, auth_keys=None):
+        self._repositorer.add_repo(repo_name, repo_url, auth_keys)
+        self._load_catalog()
+
+    def delete_repository(self, repo_name):
+        self._repositorer.del_repo(repo_name)
+        self._load_catalog()
 
     def init_component(self, component_name, properties, environment):
-        comp = self.catalog[component_name]
+        comp = self._catalog[component_name]
         comp.set_properties(properties)
         comp.set_environment(environment)
         return comp
+
+    def get_keys(self):
+        return self._key_manager.get_keys()
+    
 
     def init_component_extended_data(self, component_name,
                                      ext_properties, environment):
@@ -48,7 +61,7 @@ class Fabuloso(object):
 
     def get_template(self, component_name):
         """ Retrieves the list of needed properties"""
-        comp = self.catalog[component_name]
+        comp = self._catalog[component_name]
         props = {}
         for service, service_def in comp._services.items():
             description, methods = service_def
@@ -61,7 +74,7 @@ class Fabuloso(object):
 
     def get_template_extended_data(self, component_name):
         """ Retrieves the list of needed properties"""
-        comp = self.catalog[component_name]
+        comp = self._catalog[component_name]
         props = {}
         for service, service_def in comp._services.items():
             service_props = {}
@@ -76,28 +89,49 @@ class Fabuloso(object):
 
     def list_components(self):
         """ Return the catalog in a string/json way."""
-        return self.catalog.values()
+        return self._catalog.values()
 
-    def _load_catalog(self, catalog_dir):
+    def _initialize_dirs(self):
+        self._base_dir = os.path.expanduser('~/.config/fabuloso/')
+
+        if not os.path.exists(self._base_dir):
+            os.makedirs(self_base_dir)
+
+        self._keys_dir = os.path.join(self._base_dir, 'keys')
+        if not os.path.exists(self._keys_dir):
+            os.makedirs(self._keys_dir)
+
+        self._catalog_dir = os.path.join(self._base_dir, 'catalog')
+        if not os.path.exists(self._catalog_dir):
+            os.makedirs(self._catalog_dir)
+
+        self._environments_dir = os.path.join(self._base_dir, 'environments')
+        if not os.path.exists(self._environments_dir):
+            os.makedirs(self._environments_dir)
+
+    def _load_catalog(self):
         """Returns a dict that maps the component name with the module."""
-        catalog_dict = {}
-        for catalogue in catalog_dir:
-            cat_dir = os.path.join(os.path.dirname(__file__), catalogue)
-
+        self._catalog = {}
+        repos = self._get_subdirectories(self._catalog_dir)
+        for repo in repos:
             # Walk through all the catalog components
-            for dirname, subdirnames, filenames in os.walk(cat_dir):
+            repo_dir = os.path.join(self._catalog_dir, repo)
+            for dirname, subdirnames, filenames in os.walk(repo_dir):
                 for subdirname in subdirnames:
-                    comp_dir = os.path.join(cat_dir, subdirname)
+                    comp_dir = os.path.join(repo_dir, subdirname)
                     try:
-                        comp = self._load_component(comp_dir)
-                        catalog_dict[comp._name] = comp
+                        comp = self._load_component(repo, comp_dir)
+                        self._catalog[comp._name] = comp
                     except IOError:
                         # Skip the failing components
                         continue
 
-        return catalog_dict
 
-    def _load_component(self, comp_dir):
+    def _get_subdirectories(self, dir):
+        return [name for name in os.listdir(dir) 
+                        if os.path.isdir(os.path.join(dir, name))]
+
+    def _load_component(self, repo, comp_dir):
         """ Based on the definition file, build the component.
         """
         definition_path = os.path.join(comp_dir, 'component.yml')
@@ -105,9 +139,9 @@ class Fabuloso(object):
             definition = yaml.load(f.read())
 
         # load the module that belongs to this component
-        component_name = definition['name']
+        component_name = repo + '.' + definition['name']
         module_path = os.path.join(comp_dir, definition['file'])
-        module = imp.load_source(component_name, module_path)
+        module = imp.load_source(definition['name'], module_path)
 
         # TODO: read also from the configuration file, now we have
         # only a provider, so we hard core it
