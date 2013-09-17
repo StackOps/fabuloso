@@ -44,7 +44,9 @@ setuptools.setup(name='fabuloso',
                  data_files=[
                      (os.path.join(os.path.expanduser('~'),
                                    '.config/fabuloso/keys'),
-                      ['keys/nonsecureid_rsa', 'keys/keys.cfg'])
+                      ['keys/nonsecureid_rsa']),
+                     (os.path.join(os.path.expanduser('~/.config/fabuloso')),
+                      ['keys/keys.cfg'])
                  ],
                  version='0.1',
                  license='Apache License 2.0',

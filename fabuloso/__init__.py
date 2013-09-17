@@ -3,3 +3,4 @@
 __all__ = []
 
 from fabuloso import Fabuloso
+from fabuloso import SshKey
