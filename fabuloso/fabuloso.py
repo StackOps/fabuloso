@@ -219,6 +219,11 @@ class Repository(UserDict.UserDict):
         return ("<Repository '%(name)s': type=%(type)s, url=%(url)s " % self.data)
 
 
+    @classmethod
+    def import_repo(cls, name):
+        config_editor = config.ConfigureEditor()
+        return cls(config_editor.get_repo(name))
+
 class SshKey(object):
     """ Manage a ssh key"""
 

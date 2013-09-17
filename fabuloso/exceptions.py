@@ -15,7 +15,7 @@
 #   limitations under the License.
 class EnvironmentNotFound(Exception):
 
-    message = "Environment '%(env_name)s' not found"
+    message = "Environment '%(env_name)s' not found."
 
     def __init__(self, **kwargs):
         super(EnvironmentNotFound, self).__init__(self.message % kwargs)
@@ -24,7 +24,7 @@ class EnvironmentNotFound(Exception):
 
 class EnvironmentAlreadyExists(Exception):
 
-    message = "Environment '%(env_name)s' already exists. Choose another name"
+    message = "Environment '%(env_name)s' already exists. Choose another name."
 
     def __init__(self, **kwargs):
         super(EnvironmentAlreadyExists, self).__init__(self.message % kwargs)
@@ -33,7 +33,7 @@ class EnvironmentAlreadyExists(Exception):
 
 class RepositoryNotFound(Exception):
 
-    message = "Repository '%(repo_name)s' not found"
+    message = "Repository '%(repo_name)s' not found."
 
     def __init__(self, **kwargs):
         super(RepositoryNotFound, self).__init__(self.message % kwargs)
@@ -42,7 +42,7 @@ class RepositoryNotFound(Exception):
 
 class RepositoryAlreadyExists(Exception):
 
-    message = "Repository '%(repo_name)s' already exists. Choose another name"
+    message = "Repository '%(repo_name)s' already exists. Choose another name."
 
     def __init__(self, **kwargs):
         super(RepositoryAlreadyExists, self).__init__(self.message % kwargs)
@@ -51,7 +51,7 @@ class RepositoryAlreadyExists(Exception):
 
 class KeyNotFound(Exception):
 
-    message = "Key '%(key_name)s' not found"
+    message = "Key '%(key_name)s' not found."
 
     def __init__(self, **kwargs):
         super(KeyNotFound, self).__init__(self.message % kwargs)

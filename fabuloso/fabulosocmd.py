@@ -53,6 +53,102 @@ class FabulosoCmd(cmd.Cmd):
         for key in self.fabuloso.list_keys():
             print " * %s%s%s" % (self.HEADER, key.name, self.ENDC)
 
+    def do_show_key(self, args):
+        """ Prints the details of a key. 
+
+        Usage:
+        $ show_key {key_name}
+        
+        """
+        msg_error = ("'show_key' command needs just one parameter to run. "
+                     "Type 'help show_key' for more info")
+        if not args:
+            print msg_error
+            return
+
+        try:
+            arg_split = tuple(args.split())
+            if len(arg_split) != 1:
+                print msg_error
+                return
+            key_name = arg_split[0]
+        except ValueError:
+            print msg_error
+            return
+
+        try:
+            key = fabuloso.SshKey.import_key(key_name)
+            print " * %sName: %s%s" % (self.HEADER, self.ENDC, key.name)
+            print " * %sPath: %s%s" % (self.HEADER, self.ENDC, key.path)
+            with open(key.path, 'r') as key_file:
+                print " * %sKey: %s%s" % (self.HEADER, self.ENDC, key_file.read())
+        except exceptions.KeyNotFound as e:
+            print e.msg + " Use 'list_keys' to see available ssh keys."
+
+    def do_show_environment(self, args):
+        """ Prints the details of an environment. 
+
+        Usage:
+        $ show_environment {environment_name}
+        
+        """
+        msg_error = ("'show_environment' command needs just one parameter to run. "
+                     "Type 'help show_environment' for more info")
+        if not args:
+            print msg_error
+            return
+
+        try:
+            arg_split = tuple(args.split())
+            if len(arg_split) != 1:
+                print msg_error
+                return
+            env_name = arg_split[0]
+        except ValueError:
+            print msg_error
+            return
+
+        try:
+            env = fabuloso.Environment.import_environment(env_name)
+            print " * %sName: %s%s" % (self.HEADER, self.ENDC, env['name'])
+            print " * %sUsername: %s%s" % (self.HEADER, self.ENDC, env['username'])
+            print " * %sHost: %s%s" % (self.HEADER, self.ENDC, env['host'])
+            print " * %sPort: %s%s" % (self.HEADER, self.ENDC, env['port'])
+            print " * %sKey: %s%s" % (self.HEADER, self.ENDC, env['key_name'])
+        except exceptions.EnvironmentNotFound as e:
+            print e.msg + " Use 'list_environments' to see available environments."
+
+    def do_show_repository(self, args):
+        """ Prints the details of a repo. 
+
+        Usage:
+        $ show_repo {repo_name}
+        
+        """
+        msg_error = ("'show_repo' command needs just one parameter to run. "
+                     "Type 'help show_repo' for more info")
+        if not args:
+            print msg_error
+            return
+
+        try:
+            arg_split = tuple(args.split())
+            if len(arg_split) != 1:
+                print msg_error
+                return
+            repo_name = arg_split[0]
+        except ValueError:
+            print msg_error
+            return
+
+        try:
+            repo = fabuloso.Repository.import_repo(repo_name)
+            print " * %sName: %s%s" % (self.HEADER, self.ENDC, repo['name'])
+            print " * %sType: %s%s" % (self.HEADER, self.ENDC, repo['type'])
+            print " * %sUrl: %s%s" % (self.HEADER, self.ENDC, repo['url'])
+        except exceptions.RepositoryNotFound as e:
+            print e.msg + " Use 'list_repositories' to see available repositories."
+
     def do_list_environments(self, args):
         """ Return the list of available environments. """
         for env in self.fabuloso.list_environments():
@@ -74,7 +170,6 @@ class FabulosoCmd(cmd.Cmd):
         Fabuloso will prompt to ask for properties to initialize the 
         component
         """
-
         try:
             comp_name, env_name = tuple(args.split())
         except ValueError:
@@ -158,6 +253,51 @@ class FabulosoCmd(cmd.Cmd):
         try:
             self.fabuloso.add_repository(repo_name, repo_url) 
         except exceptions.RepositoryAlreadyExists as e:
+            print e.msg
+
+    def do_add_environment(self, args):
+        """ Add an enviroment. """
+        if args:
+            print "No input arguments needed. Ignored"
+        tmp_prompt = "%s-(Adding new environment)-%s" % (self.OKBLUE, self.ENDC)
+
+        env_name = raw_input(tmp_prompt + " Name: ")
+        username = raw_input(tmp_prompt + " Remote username: ")
+        host = raw_input(tmp_prompt + " Remote host: ")
+        port = raw_input(tmp_prompt + " Remote port: ")
+        key_name = raw_input(tmp_prompt + " Ssh Key name: ")
+        try:
+            self.fabuloso.add_environment(env_name, username, host, port, key_name)
+        except exceptions.KeyNotFound as e:
+            print e.msg + " Use 'list_keys' to see available ssh keys."
+        except exceptions.EnvironmentAlreadyExists as e:
+            print e.msg
+
+    def do_del_environment(self, args):
+        """ Deletes an environment.
+
+        Usage
+        $ del_environment {env_name}
+        """
+        msg_error = ("'del_environment' command needs just one parameter to run. "
+                     "Type 'help del_environment' for more info")
+        if not args:
+            print msg_error
+            return
+
+        try:
+            arg_split = tuple(args.split())
+            if len(arg_split) != 1:
+                print msg_error
+                return
+            env_name = arg_split[0]
+        except ValueError:
+            print msg_error
+            return
+
+        try:
+            self.fabuloso.delete_environment(env_name)
+        except exceptions.EnvironmentNotFound as e:
             print e.msg
 
     def do_del_repo(self, args):

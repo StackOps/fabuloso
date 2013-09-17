@@ -137,6 +137,18 @@ class ConfigureEditor(object):
                 env[item[0]] = item[1]
             return env
 
+    def get_repo(self, name):
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._repos_cfg)
+        if not config_parser.has_section(name):
+            excp_data = {'repo_name': name}
+            raise exceptions.RepositoryNotFound(**excp_data)
+        else:
+            repo = {'name': name}
+            for item in config_parser.items(name):
+                repo[item[0]] = item[1]
+            return repo
+
     def list_envs(self):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._environments_cfg)
