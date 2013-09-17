@@ -20,8 +20,6 @@ import yaml
 from sh import git
 
 import component
-import keys
-import repos
 import providers
 import utils
 
@@ -68,6 +66,7 @@ class Fabuloso(object):
                             " of Environment class")
         comp = self._catalog[component_name]
         comp.set_properties(properties)
+        environment.data['ssh_key_file'] = SshKey.import_key(environment.data['key_name']).path
         comp.set_environment(environment)
         return comp
 
@@ -119,7 +118,14 @@ class Fabuloso(object):
         for env in envs:
             ret_data.append(Environment(env))
         return ret_data
-            
+
+    def list_repositories(self):
+        repos = self._config_editor.list_repos()
+        ret_data = []
+        for repo in repos:
+            ret_data.append(Repository(repo))
+        return ret_data
+
 
     def _load_catalog(self):
         """Returns a dict that maps the component name with the module."""
@@ -205,7 +211,12 @@ class Environment(UserDict.UserDict):
     @classmethod
     def import_environment(cls, name):
         config_editor = config.ConfigureEditor()
-        return cls(*config_editor.get_env(name))
+        return cls(config_editor.get_env(name))
+
+class Repository(UserDict.UserDict):
+
+    def __repr__(self):
+        return ("<Repository '%(name)s': type=%(type)s, url=%(url)s " % self.data)
 
 
 class SshKey(object):

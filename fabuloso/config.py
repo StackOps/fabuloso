@@ -16,6 +16,7 @@
 import ConfigParser
 import os
 
+import exceptions
 
 class ConfigureEditor(object):
     """Object that handles the read and write actions
@@ -31,7 +32,6 @@ class ConfigureEditor(object):
 
     def __init__(self):
         self._base_dir = os.path.expanduser('~/.config/fabuloso/')
-        self._config = ConfigParser.ConfigParser()
 
         if not os.path.exists(self._base_dir):
             os.makedirs(self_base_dir)
@@ -59,77 +59,103 @@ class ConfigureEditor(object):
         return self._repos_dir
 
     def add_repo(self, name, url):
-        self._config.read(self._repos_cfg)
-        if not self._config.has_section(name):
-            self._config.add_section(name)
-            self._config.set(name, 'type', 'git')
-            self._config.set(name, 'url', url)
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._repos_cfg)
+        if not config_parser.has_section(name):
+            config_parser.add_section(name)
+            config_parser.set(name, 'type', 'git')
+            config_parser.set(name, 'url', url)
             with open(self._repos_cfg, 'w') as index_file:
-                self._config.write(index_file)
+                config_parser.write(index_file)
         else:
-            raise Exception("Repository '%s' already exists" % (name))
+            excp_data = { 'repo_name': name }
+            raise exceptions.RepositoryAlreadyExists(**excp_data)
 
     def del_repo(self, name):
-        self._config.read(self._repos_cfg)
-        if not self._config.has_section(name):
-            raise Exception("Repository '%s' does not exist" % (name))
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._repos_cfg)
+        if not config_parser.has_section(name):
+            excp_data = { 'repo_name': name }
+            raise exceptions.RepositoryNotFound(**excp_data)
         else:
-            self._config.remove_section(name)
+            config_parser.remove_section(name)
             with open(self._repos_cfg, 'w') as index_file:
-                self._config.write(index_file)
+                config_parser.write(index_file)
 
     def get_key(self, name):
-        self._config.read(self._keys_cfg)
-        if not self._config.has_section(name):
-            raise Exception("Key '%s' does not exist" % (name))
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._keys_cfg)
+        if not config_parser.has_section(name):
+            excp_data = { 'key_name': name }
+            raise exceptions.KeyNotFound(**excp_data)
         else:
             file_path = os.path.join(os.path.abspath(os.path.dirname(self._keys_cfg)), 'keys')
-            return name, os.path.join(file_path, self._config.get(name, 'file'))
+            return name, os.path.join(file_path, config_parser.get(name, 'file'))
 
     def list_keys(self):
-        self._config.read(self._keys_cfg)
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._keys_cfg)
         file_path = os.path.join(os.path.abspath(os.path.dirname(self._keys_cfg)), 'keys')
-        return [(name, os.path.join(file_path, self._config.get(name, 'file'))) for name in self._config.sections()]
+        return [(name, os.path.join(file_path, config_parser.get(name, 'file'))) for name in config_parser.sections()]
 
     def add_env(self, env):
-        self._config.read(self._environments_cfg)
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._environments_cfg)
         name = env['name']
-        if self._config.has_section(name):
-            raise Exception("Environment '%s' already exist" % name)
+        if config_parser.has_section(name):
+            excp_data = { 'env_name': name }
+            raise exceptions.EnvironmentAlreadyExists(**excp_data)
         else:
-            self._config.add_section(name)
+            config_parser.add_section(name)
             for key in env.keys():
                 if key is not 'name':
-                    self._config.set(name, key, env[key])
+                    config_parser.set(name, key, env[key])
 
             with open(self._environments_cfg, 'w') as index_file:
-                self._config.write(index_file)
+                config_parser.write(index_file)
 
     def del_env(self, name):
-        self._config.read(self._environments_cfg)
-        if not self._config.has_section(name):
-            raise Exception("Environment '%s' does not exist" % (name))
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._environments_cfg)
+        if not config_parser.has_section(name):
+            excp_data = {'env_name': name}
+            raise exceptions.EnvironmentNotFound(**excp_data)
         else:
-            self._config.remove_section(name)
+            config_parser.remove_section(name)
             with open(self._environments_cfg, 'w') as index_file:
-                self._config.write(index_file)
+                config_parser.write(index_file)
 
     def get_env(self, name):
-        self._config.read(self._environments_cfg)
-        if not self._config.has_section(name):
-            raise Exception("Environment '%s' does not exist" % (name))
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._environments_cfg)
+        if not config_parser.has_section(name):
+            excp_data = {'env_name': name}
+            raise exceptions.EnvironmentNotFound(**excp_data)
         else:
             env = {'name': name}
-            for item in self._config.items(name):
+            for item in config_parser.items(name):
                 env[item[0]] = item[1]
             return env
 
     def list_envs(self):
-        self._config.read(self._environments_cfg)
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._environments_cfg)
         list_environments = []
-        for section in self._config.sections():
+        for section in config_parser.sections():
             env = { 'name': section }
-            for item in self._config.items(section):
+            for item in config_parser.items(section):
+                env[item[0]] = item[1]
+            list_environments.append(env)
+        return list_environments
+
+
+    def list_repos(self):
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._repos_cfg)
+        list_environments = []
+        for section in config_parser.sections():
+            env = { 'name': section }
+            for item in config_parser.items(section):
                 env[item[0]] = item[1]
             list_environments.append(env)
         return list_environments

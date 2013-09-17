@@ -15,6 +15,7 @@
 #   limitations under the License.
 import cmd
 import fabuloso
+import exceptions
 
 
 class FabulosoCmd(cmd.Cmd):
@@ -41,42 +42,82 @@ class FabulosoCmd(cmd.Cmd):
         print("Unknow command")
 
     def do_list_components(self, args):
+        """ Return the list of available components. """
         print "\nAvailable components are:"
         for component in self.fabuloso.list_components():
             print " * %s%s%s" % (self.HEADER, component._name, self.ENDC)
 
-    def do_init(self, args):
+    def do_list_keys(self, args):
+        """ Return the list of available ssh keys"""
+
+        for key in self.fabuloso.list_keys():
+            print " * %s%s%s" % (self.HEADER, key.name, self.ENDC)
+
+    def do_list_environments(self, args):
+        """ Return the list of available environments. """
+        for env in self.fabuloso.list_environments():
+            data = env.data
+            print " * %s%s%s" % (self.HEADER, data['name'], self.ENDC)
+
+    def do_list_repositories(self, args):
+        """ Return the list of available repositories. """
+        for env in self.fabuloso.list_repositories():
+            data = env.data
+            print " * %s%s%s" % (self.HEADER, data['name'], self.ENDC)
+
+    def do_init_component(self, args):
+        """Initialize a fabuloso component. 
+
+        Usage:
+        $ init {component_name} {environment_name}
+
+        Fabuloso will prompt to ask for properties to initialize the 
+        component
+        """
+
+        try:
+            comp_name, env_name = tuple(args.split())
+        except ValueError:
+            print "'init' command needs two parameters to run. Type 'help init' for more info"
+            return
+
         """Initialize a component. """
-        if not args in self.fabuloso._catalog:
+        if not comp_name in self.fabuloso._catalog:
             print "Component '%s' not available" % args 
             return
 
-        properties = self.fabuloso.get_template(args)
-        tmp_prompt = "%s-(initializing %s)%s" % (self.OKBLUE, args, self.ENDC)
+        try:
+            environment = fabuloso.Environment.import_environment(env_name)
+        except exceptions.EnvironmentNotFound as e:
+            print e.msg
+            return
+
+        properties = self.fabuloso.get_template(comp_name)
+        tmp_prompt = "%s-(initializing %s in environment %s)%s" % (self.OKBLUE, comp_name, env_name, self.ENDC)
         for key, value in properties.items():
             curr_prompt = tmp_prompt + " Insert value for property '%s' [%s]: "
             input_user = raw_input(curr_prompt % (key, value))
             if input_user:
                 properties[key] = input_user
 
-        tmp_prompt = "%s-(connection data %s)%s" % (self.MAGENTA, args, self.ENDC)
-        host = raw_input(tmp_prompt + " Insert remote host IP: ")
-        port = raw_input(tmp_prompt + " Insert remote host port: ")
-        username = raw_input(tmp_prompt + " Insert username: ")
-        key_file = raw_input(tmp_prompt + " Insert key file path: ")
-        environment = {'host': host,
-                       'port': port,
-                       'ssh_key_file': key_file,
-                       'username': username}
+        self.current_comp = self.fabuloso.init_component(comp_name, properties, environment)
+        self.prompt = self.OKGREEN + "fabuloso [" + comp_name + "/" + env_name + "]" + self.ENDC + " > "
 
-        self.current_comp = self.fabuloso.init_component(args, properties, environment)
-        self.prompt = self.OKGREEN + "fabuloso [" + args + "]" + self.ENDC + " > "
+    def do_finalize_component(self, args):
+        """ Finalize a component.
 
-    def do_finalize(self, args):
+        That means the initialized component will be dropped and
+        'list_services' and 'execute_service' will not be
+        available as actions.
+        """
         self.current_comp = None
         self.prompt = self.OKGREEN + "fabuloso" + self.ENDC + " > "
 
     def do_list_services(self, args):
+        """ List the available services.
+
+        A component must be initialized to see the correct output.
+        """
         if not self.current_comp:
             print "No component initialized. Can not list services"
             return
@@ -84,7 +125,14 @@ class FabulosoCmd(cmd.Cmd):
         for key, value in self.current_comp._services.iteritems():
             print " * %s%s%s" % (self.HEADER, key, self.ENDC)
 
-    def do_execute(self, args):
+    def do_execute_service(self, args):
+        """Execute a service from a loaded component.
+
+        Usage:
+        $ execute {service_name}
+
+        run 'list_services' to know the available services.
+        """
         if not self.current_comp:
             print "No component initialized. Can not execute any service"
             return
@@ -95,29 +143,52 @@ class FabulosoCmd(cmd.Cmd):
         self.current_comp.execute_service(args)
 
     def do_add_repo(self, args):
-        """ Add repository catalog"""
-        self.fabuloso.add_repository(args[0], args[1]) 
+        """ Add repository catalog.
+            Usage:
+                $ add_repo {repo_name} {repo_url} {ssh_key:optional}
+        
+            Currently ssh_key does not work
+        """
+        try:
+            repo_name, repo_url = tuple(args.split())
+        except ValueError:
+            print "'add_repo' command needs two parameters to run. Type 'help add_repo' for more info"
+            return
 
+        try:
+            self.fabuloso.add_repository(repo_name, repo_url) 
+        except exceptions.RepositoryAlreadyExists as e:
+            print e.msg
 
-    def help_init(self):
-        print ("Initialize a fabuloso component")
+    def do_del_repo(self, args):
+        """ Deletes a repository. 
 
-    def help_finalize(self):
-        print ("Finalize a fabuloso component")
+        Usage:
+        $ del_repo {repo_name}
+        """
+        msg_error = "'del_repo' command needs just one parameter to run. Type 'help del_repo' for more info"
+        if not args:
+            print msg_error
+            return
 
-    def help_list_components(self):
-        print ("List the available fabuloso components")
+        try:
+            arg_split = tuple(args.split())
+            if len(arg_split) != 1:
+                print msg_error
+                return
+            repo_name = arg_split[0]
+        except ValueError:
+            print msg_error
+            return
 
-    def help_list_services(self):
-        print ("List services by loaded component")
+        try:
+            self.fabuloso.delete_repository(repo_name)
+        except exceptions.RepositoryNotFound as e:
+            print e.msg
 
-    def help_execute(self):
-        print ("Execute a service from a loaded component")
-
-    def help_quit(self):
-        print ("Exit shell")
 
     def do_quit(self, args):
+        """ Exit shell"""
         return -1
 
     def get_names(self):
