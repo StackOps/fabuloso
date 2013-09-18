@@ -32,8 +32,7 @@ class FabricProvider(Provider):
         super(FabricProvider, self).__init__()
 
     def execute_method(self, method, **kwargs):
-        with settings(hide('stdout', 'status', 'running'),
-                      host_string=self.env['host'],
+        with settings(host_string=self.env['host'],
                       key_filename=self.env['ssh_key_file'],
                       port=self.env['port'], user=self.env['username']):
             return method(**kwargs)
