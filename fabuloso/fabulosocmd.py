@@ -165,7 +165,7 @@ class FabulosoCmd(cmd.Cmd):
         """Initialize a fabuloso component. 
 
         Usage:
-        $ init {component_name} {environment_name}
+        $ init_component {component_name} {environment_name}
 
         Fabuloso will prompt to ask for properties to initialize the 
         component
@@ -173,7 +173,7 @@ class FabulosoCmd(cmd.Cmd):
         try:
             comp_name, env_name = tuple(args.split())
         except ValueError:
-            print "'init' command needs two parameters to run. Type 'help init' for more info"
+            print "'init_component' command needs two parameters to run. Type 'help init_component' for more info"
             return
 
         """Initialize a component. """
