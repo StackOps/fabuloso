@@ -237,17 +237,17 @@ class FabulosoCmd(cmd.Cmd):
             return
         self.current_comp.execute_service(args)
 
-    def do_add_repo(self, args):
+    def do_add_repository(self, args):
         """ Add repository catalog.
             Usage:
-                $ add_repo {repo_name} {repo_url} {ssh_key:optional}
+                $ add_repository {repo_name} {repo_url} {ssh_key:optional}
         
             Currently ssh_key does not work
         """
         try:
             repo_name, repo_url = tuple(args.split())
         except ValueError:
-            print "'add_repo' command needs two parameters to run. Type 'help add_repo' for more info"
+            print "'add_repository' command needs two parameters to run. Type 'help add_repository' for more info"
             return
 
         try:
@@ -300,13 +300,13 @@ class FabulosoCmd(cmd.Cmd):
         except exceptions.EnvironmentNotFound as e:
             print e.msg
 
-    def do_del_repo(self, args):
+    def do_del_repository(self, args):
         """ Deletes a repository. 
 
         Usage:
-        $ del_repo {repo_name}
+        $ del_repository {repo_name}
         """
-        msg_error = "'del_repo' command needs just one parameter to run. Type 'help del_repo' for more info"
+        msg_error = "'del_repository' command needs just one parameter to run. Type 'help del_repository' for more info"
         if not args:
             print msg_error
             return

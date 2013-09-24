@@ -31,10 +31,13 @@ class ConfigureEditor(object):
         return cls._instance
 
     def __init__(self):
-        self._base_dir = os.path.expanduser('~/.config/fabuloso/')
+        if os.path.exists('/etc/fabuloso/'):
+            self._base_dir = '/etc/fabuloso/'
+        else:
+            self._base_dir = os.path.expanduser('~/.config/fabuloso/')
 
         if not os.path.exists(self._base_dir):
-            os.makedirs(self_base_dir)
+            os.makedirs(self._base_dir)
 
         self._keys_dir = os.path.join(self._base_dir, 'keys')
         if not os.path.exists(self._keys_dir):
