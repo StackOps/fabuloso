@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+
+# Verbose mode
+export DH_VERBOSE=1
+export DH_OPTIONS=-v
+
+include /usr/share/python/python.mk
+
+PACKAGE_NAME=python-fabuloso
+debroot = debian/tmp
+site_packages_dir=$(debroot)$(call py_libdir,$(shell pyversions -d))
+
+# Lucid does not have dh_python2, but we would like to be able to use this
+# rules file to build on lucid as well. Thus the branching logic.
+
+WITH_PYTHON2 = $(shell test -f /usr/bin/dh_python2 && echo "--with python2")
+
+%:
+	dh $@ ${WITH_PYTHON2}
+
+override_dh_python2:
+
+override_dh_auto_install:
+	python setup.py install -f --install-layout=deb --root=$(debroot)
+
+override_dh_install:
+	dh_install
+
+override_dh_pysupport:
+
+

@@ -1,0 +1,24 @@
+Source: fabuloso
+Section: python
+Priority: optional
+Maintainer: StackOps Developers <developers@stackops.com>
+Uploaders: Pedro Navarro <pedro.navarro@stackops.com>
+Build-Depends: debhelper (>= 7.0.50), python-dev,
+ python-setuptools
+Standards-Version: 3.9.3
+Homepage: http://www.stackops.com
+X-Python-Version: >= 2.6
+
+Package: python-fabuloso
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends},
+ python-mysqldb,
+ python-expects,
+ python-pika,
+ python-keystoneclient,
+ python-cuisine,
+ python-yaml,
+ python-sh,
+ git,
+ pep8
+Description: StackOps remote executor
