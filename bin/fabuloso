@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+
+# --
+#     Fabuloso start-up script.
+#
+#     This is just an invocation wrapper. (Done for faster start-up.)
+#     The main body of the client is in fabuloso.py
+# --
+from fabuloso import main
+
+if __name__ == "__main__":
+    try:
+        main.main()
+    except KeyboardInterrupt:
+        print "\n\nReceived Ctrl-C or other break signal. Exiting."

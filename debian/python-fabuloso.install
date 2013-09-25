@@ -1,2 +1,3 @@
 usr/lib/python*/dist-packages/fabuloso
 etc/fabuloso/* etc/fabuloso/
+bin/fabuloso /usr/share/fabuloso/
