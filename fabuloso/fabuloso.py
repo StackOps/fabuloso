@@ -17,26 +17,56 @@ import imp
 import os
 
 import yaml
+from sh import git
 
 import component
 import providers
 import utils
 
+import config
+import shutil
+import UserDict
+
 
 class Fabuloso(object):
 
-    def __init__(self, catalog_dir=None):
-        if catalog_dir is None:
-            config_file = os.path.expanduser('~/.config/fabuloso/config.py')
-            module = imp.load_source('config', config_file)
-            catalog_dir = getattr(module, 'catalog_dir')
+    def __init__(self):
+        self._config_editor = config.ConfigureEditor()
 
         """ Init with catalog dir"""
-        self.catalog = self._load_catalog(catalog_dir)
+        self._load_catalog()
+
+    def add_repository(self, repo_name, repo_url, auth_keys=None):
+        self._config_editor.add_repo(repo_name, repo_url)
+        self._clone_repo(repo_name, repo_url)
+        self._load_catalog()
+
+    def add_environment(self, name, username, host, port, key_name): 
+        SshKey.import_key(key_name)
+        env = {'name': name,
+               'username': username,
+               'host': host,
+               'port': port,
+               'key_name': key_name}
+        self._config_editor.add_env(env)
+        return Environment(env)
+
+    def delete_environment(self, name):
+        self._config_editor.del_env(name)
+
+    def delete_repository(self, repo_name):
+        self._config_editor.del_repo(repo_name)
+        path = os.path.join(self._config_editor.get_catalog_dir(), repo_name)
+        shutil.rmtree(path)
+        self._load_catalog()
 
     def init_component(self, component_name, properties, environment):
-        comp = self.catalog[component_name]
+        if not isinstance(environment, Environment):
+            raise Exception("'environment' parameter must be an instance "
+                            " of Environment class")
+        comp = self._catalog[component_name]
         comp.set_properties(properties)
+        environment.data['ssh_key_file'] = SshKey.import_key(environment.data['key_name']).path
         comp.set_environment(environment)
         return comp
 
@@ -48,7 +78,7 @@ class Fabuloso(object):
 
     def get_template(self, component_name):
         """ Retrieves the list of needed properties"""
-        comp = self.catalog[component_name]
+        comp = self._catalog[component_name]
         props = {}
         for service, service_def in comp._services.items():
             description, methods = service_def
@@ -61,7 +91,7 @@ class Fabuloso(object):
 
     def get_template_extended_data(self, component_name):
         """ Retrieves the list of needed properties"""
-        comp = self.catalog[component_name]
+        comp = self._catalog[component_name]
         props = {}
         for service, service_def in comp._services.items():
             service_props = {}
@@ -76,28 +106,51 @@ class Fabuloso(object):
 
     def list_components(self):
         """ Return the catalog in a string/json way."""
-        return self.catalog.values()
+        return self._catalog.values()
 
-    def _load_catalog(self, catalog_dir):
+    def list_keys(self):
+        tuple_keys = self._config_editor.list_keys()
+        return [SshKey(key[0], key[1]) for key in tuple_keys]
+
+    def list_environments(self):
+        envs = self._config_editor.list_envs()
+        ret_data = []
+        for env in envs:
+            ret_data.append(Environment(env))
+        return ret_data
+
+    def list_repositories(self):
+        repos = self._config_editor.list_repos()
+        ret_data = []
+        for repo in repos:
+            ret_data.append(Repository(repo))
+        return ret_data
+
+
+    def _load_catalog(self):
         """Returns a dict that maps the component name with the module."""
-        catalog_dict = {}
-        for catalogue in catalog_dir:
-            cat_dir = os.path.join(os.path.dirname(__file__), catalogue)
-
+        catalog_dir = self._config_editor.get_catalog_dir()
+        self._catalog = {}
+        repos = self._get_subdirectories(catalog_dir)
+        for repo in repos:
             # Walk through all the catalog components
-            for dirname, subdirnames, filenames in os.walk(cat_dir):
+            repo_dir = os.path.join(catalog_dir, repo)
+            for dirname, subdirnames, filenames in os.walk(repo_dir):
                 for subdirname in subdirnames:
-                    comp_dir = os.path.join(cat_dir, subdirname)
+                    comp_dir = os.path.join(repo_dir, subdirname)
                     try:
-                        comp = self._load_component(comp_dir)
-                        catalog_dict[comp._name] = comp
+                        comp = self._load_component(repo, comp_dir)
+                        self._catalog[comp._name] = comp
                     except IOError:
                         # Skip the failing components
                         continue
 
-        return catalog_dict
 
-    def _load_component(self, comp_dir):
+    def _get_subdirectories(self, dir):
+        return [name for name in os.listdir(dir) 
+                        if os.path.isdir(os.path.join(dir, name))]
+
+    def _load_component(self, repo, comp_dir):
         """ Based on the definition file, build the component.
         """
         definition_path = os.path.join(comp_dir, 'component.yml')
@@ -105,9 +158,9 @@ class Fabuloso(object):
             definition = yaml.load(f.read())
 
         # load the module that belongs to this component
-        component_name = definition['name']
+        component_name = repo + '.' + definition['name']
         module_path = os.path.join(comp_dir, definition['file'])
-        module = imp.load_source(component_name, module_path)
+        module = imp.load_source(definition['name'], module_path)
 
         # TODO: read also from the configuration file, now we have
         # only a provider, so we hard core it
@@ -140,3 +193,49 @@ class Fabuloso(object):
                       password=None, virtual_host=None):
         utils.send_rabbitMQ(service_type, host, port, user, password,
                             virtual_host)
+
+    def _clone_repo(self, name, url, auth_tuple=None):
+        path = os.path.join(self._config_editor.get_catalog_dir(), name)
+        if not auth_tuple:
+            git.clone(url, path)
+        else:
+            # TODO: implement for private repos
+            git.clone(url, path)
+
+class Environment(UserDict.UserDict):
+
+    def __repr__(self):
+        return ("<Environment '%(name)s': user=%(username)s, host=%(host)s, "
+                "port=%(port)s, key=%(key_name)s>" % self.data)
+
+    @classmethod
+    def import_environment(cls, name):
+        config_editor = config.ConfigureEditor()
+        return cls(config_editor.get_env(name))
+
+class Repository(UserDict.UserDict):
+
+    def __repr__(self):
+        return ("<Repository '%(name)s': type=%(type)s, url=%(url)s " % self.data)
+
+
+    @classmethod
+    def import_repo(cls, name):
+        config_editor = config.ConfigureEditor()
+        return cls(config_editor.get_repo(name))
+
+class SshKey(object):
+    """ Manage a ssh key"""
+
+    def __init__(self, name, path):
+        self.name = name
+        self.path = path
+
+    @classmethod
+    def import_key(cls, name):
+        """ Import a ssh key by name"""
+        config_editor = config.ConfigureEditor()
+        return cls(*config_editor.get_key(name))
+
+    def __repr__(self):
+        return "<SshKey: %s, %s>" % (self.name, self.path)

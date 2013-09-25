@@ -18,8 +18,6 @@ import itertools
 import os
 import pkgutil
 
-import environment
-import fabuloso
 import fabulosocmd
 
 
@@ -28,10 +26,6 @@ def main():
 
     Those are the input parameters:
     """
-    def load_environment(config_module):
-        environments = getattr(config_module, 'environments')
-        return environment.RemoteEnvironment(environments['default'])
-
     def print_doc(comp):
         def delegate_print():
             RED = '\033[91m'
@@ -39,17 +33,8 @@ def main():
             HEADER = '\033[95m'
             ENDC = '\033[0m'
             print "Available services for this component are:\n"
-            for name_s, tup in comp.services.items():
+            for name_s, tup in comp._services.items():
                 print "* %s%s%s: %s" % (HEADER, name_s, ENDC, tup[0])
-                params = []
-                for met in tup[1]:
-                    params.extend(comp.methods[met][1])
-                if not params:
-                    print "\t- %sNo params%s" % (RED, ENDC)
-                else:
-                    for param in params:
-                        print "\t- %s%s%s: %s" % (BLUE, param[0], ENDC,
-                                                  param[1])
 
         return delegate_print
 
@@ -62,20 +47,11 @@ def main():
 
         return fabuloso_wrapper
 
-    config_module = _load_config_module()
-    env = load_environment(config_module)
-    fab = fabuloso.Fabuloso(env)
     cmd = fabulosocmd.FabulosoCmd()
-    for comp_name, comp in fab.catalog.items():
-        setattr(cmd, 'do_' + comp_name, delegate_execution(fab, comp_name))
-        setattr(cmd, 'help_' + comp_name, print_doc(comp))
+    # for comp_name, comp in fab._catalog.items():
+    #     setattr(cmd, 'do_' + comp_name, delegate_execution(fab, comp_name))
+    #     setattr(cmd, 'help_' + comp_name, print_doc(comp))
     cmd.cmdloop()
-
-
-def _load_config_module():
-    config_file = os.path.join(os.path.expanduser('~'), '.config',
-                               'fabuloso', 'config.py')
-    return imp.load_source('config', config_file)
 
 
 def _parse_parameters_into_dict(parameters):
@@ -94,9 +70,3 @@ def _parse_parameters_into_dict(parameters):
     # Zip the list into two: the even values are the 'keys' and the odds
     # are the 'values'
     return dict(zip(flat[0::2], flat[1::2]))
-
-
-def ee():
-    """Print fabulosamente data"""
-    print(pkgutil.get_data('fabuloso', 'data/easter_egg.txt'))
-    print("This is the way we deploy OpenStack in StackOps!")
