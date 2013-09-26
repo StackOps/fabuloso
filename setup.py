@@ -44,7 +44,7 @@ setuptools.setup(name='fabuloso',
                  data_files=[
                      (os.path.join(os.path.expanduser('~'),
                                    '.config/fabuloso/keys'),
-                      ['keys/nonsecureid_rsa']),
+                      ['keys/nonsecureid_rsa', 'keys/nonsecureid_rsa.pub']),
                      (os.path.join(os.path.expanduser('~/.config/fabuloso')),
                       ['keys/keys.cfg'])
                  ],

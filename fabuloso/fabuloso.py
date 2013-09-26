@@ -13,8 +13,9 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-import imp
+
 import os
+import imp
 
 import yaml
 from sh import git
@@ -42,7 +43,8 @@ class Fabuloso(object):
         self._load_catalog()
 
     def add_environment(self, name, username, host, port, key_name): 
-        SshKey.import_key(key_name)
+        self.get_key(key_name)
+
         env = {'name': name,
                'username': username,
                'host': host,
@@ -66,7 +68,7 @@ class Fabuloso(object):
                             " of Environment class")
         comp = self._catalog[component_name]
         comp.set_properties(properties)
-        environment.data['ssh_key_file'] = SshKey.import_key(environment.data['key_name']).path
+        environment.data['ssh_key_file'] = self.get_key(environment.data['key_name']).key_file
         comp.set_environment(environment)
         return comp
 
@@ -109,8 +111,10 @@ class Fabuloso(object):
         return self._catalog.values()
 
     def list_keys(self):
-        tuple_keys = self._config_editor.list_keys()
-        return [SshKey(key[0], key[1]) for key in tuple_keys]
+        return [SshKey(**key) for key in self._config_editor.list_keys()]
+
+    def get_key(self, name):
+        return SshKey.import_key(name)
 
     def list_environments(self):
         envs = self._config_editor.list_envs()
@@ -227,15 +231,18 @@ class Repository(UserDict.UserDict):
 class SshKey(object):
     """ Manage a ssh key"""
 
-    def __init__(self, name, path):
+    def __init__(self, name, key_file, pub_file):
         self.name = name
-        self.path = path
+        self.key_file = key_file
+        self.pub_file = pub_file
 
     @classmethod
     def import_key(cls, name):
         """ Import a ssh key by name"""
         config_editor = config.ConfigureEditor()
-        return cls(*config_editor.get_key(name))
+
+        return cls(**config_editor.get_key(name))
 
     def __repr__(self):
-        return "<SshKey: %s, %s>" % (self.name, self.path)
+        return '<SshKey: {}, {}, {}>'.format(self.name, self.key_file,
+                                             self.pub_file)

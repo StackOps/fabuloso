@@ -77,11 +77,20 @@ class FabulosoCmd(cmd.Cmd):
             return
 
         try:
-            key = fabuloso.SshKey.import_key(key_name)
+            key = self.fabuloso.get_key(key_name)
+
             print " * %sName: %s%s" % (self.HEADER, self.ENDC, key.name)
-            print " * %sPath: %s%s" % (self.HEADER, self.ENDC, key.path)
-            with open(key.path, 'r') as key_file:
+            print " * %sKey file: %s%s" % (self.HEADER, self.ENDC, key.key_file)
+
+            with open(key.key_file) as key_file:
                 print " * %sKey: %s%s" % (self.HEADER, self.ENDC, key_file.read())
+
+
+            print " * %sPub file: %s%s" % (self.HEADER, self.ENDC, key.pub_file)
+
+            with open(key.pub_file) as pub_file:
+                print " * %sPub: %s%s" % (self.HEADER, self.ENDC, pub_file.read())
+
         except exceptions.KeyNotFound as e:
             print e.msg + " Use 'list_keys' to see available ssh keys."
 

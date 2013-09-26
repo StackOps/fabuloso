@@ -88,18 +88,27 @@ class ConfigureEditor(object):
     def get_key(self, name):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._keys_cfg)
+
         if not config_parser.has_section(name):
             excp_data = { 'key_name': name }
             raise exceptions.KeyNotFound(**excp_data)
-        else:
-            file_path = os.path.join(os.path.abspath(os.path.dirname(self._keys_cfg)), 'keys')
-            return name, os.path.join(file_path, config_parser.get(name, 'file'))
+
+        return self.__get_key(name, config_parser)
 
     def list_keys(self):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._keys_cfg)
+
+        return [self.__get_key(name, config_parser) for name in config_parser.sections()]
+
+    def __get_key(self, name, config_parser):
         file_path = os.path.join(os.path.abspath(os.path.dirname(self._keys_cfg)), 'keys')
-        return [(name, os.path.join(file_path, config_parser.get(name, 'file'))) for name in config_parser.sections()]
+
+        return {
+            'name': name,
+            'key_file': os.path.join(file_path, config_parser.get(name, 'key_file')),
+            'pub_file': os.path.join(file_path, config_parser.get(name, 'pub_file'))
+        }
 
     def add_env(self, env):
         config_parser = ConfigParser.ConfigParser()
