@@ -21,6 +21,7 @@ Contents:
 
     install
     quickstart
+    components
 
 
 Indices and tables

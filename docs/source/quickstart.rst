@@ -104,6 +104,8 @@ A `FABuloso` environment contains a name and the username, host, port and ssh ke
 
     If you want to use another ssh key you must first add a new one as described below.
 
+.. _initializing_component:
+
 Initializing a component
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
