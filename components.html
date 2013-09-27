@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Components &mdash; FABuloso 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quickstart"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="components">
+<h1>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h1>
+<p>A <strong>component</strong> is the fundamental configuration element in <cite>FABuloso</cite>. It&#8217;s just a python module defining some functions and a <cite>component.yml</cite> (<a class="reference external" href="http://yaml.org">yaml</a>) defining some <cite>metadata</cite> and <cite>services</cite>. A <cite>service</cite> is a list of functions from that python module that will be executed in the given order.</p>
+<div class="section" id="component-structure">
+<h2>Component structure<a class="headerlink" href="#component-structure" title="Permalink to this headline">¶</a></h2>
+<p>To see how a <cite>component</cite> looks like we&#8217;re going to use the <cite>nova</cite> component from <a class="reference external" href="https://github.com/StackOps/fabuloso-catalog/tree/master/nova">https://github.com/StackOps/fabuloso-catalog/tree/master/nova</a>.</p>
+<div class="section" id="component-yml">
+<h3>component.yml<a class="headerlink" href="#component-yml" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">nova</span>
+<span class="l-Scalar-Plain">file</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">nova.py</span>
+<span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Operations over OpenStack Nova service</span>
+
+<span class="l-Scalar-Plain">Services</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">install</span>
+      <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Install OpenStack Nova from ubuntu packages</span>
+      <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">install</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">set_config_file</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">nova_properties</span>
+      <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Set properties of the Nova service</span>
+      <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nova_properties</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">start</span>
+      <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Start Nova Service</span>
+      <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">start</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">validate</span>
+      <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Validates nova to operate with it</span>
+      <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">validate_database</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">validate_credentials</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">validate_rabbitmq</span>
+</pre></div>
+</div>
+<p>Required fields are:</p>
+<ul class="simple">
+<li>name: The component name</li>
+<li>file: The path to the python module where service methods are</li>
+<li>description: A brief description about the component</li>
+<li>Services: A list of services that this component exposes. At least one service is needed.</li>
+</ul>
+<p>A service requires the following fields:</p>
+<ul class="simple">
+<li>name: The name we will use to execute this service</li>
+<li>description: A brief description about the service behavior</li>
+<li>methods: A list of function names from the python module</li>
+</ul>
+</div>
+<div class="section" id="nova-py">
+<h3>nova.py<a class="headerlink" href="#nova-py" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">install</span><span class="p">(</span><span class="n">cluster</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate nova configuration. Execute on both servers&quot;&quot;&quot;</span>
+
+    <span class="n">package_ensure</span><span class="p">(</span><span class="s">&#39;nova-api&#39;</span><span class="p">)</span>
+    <span class="n">package_ensure</span><span class="p">(</span><span class="s">&#39;nova-cert&#39;</span><span class="p">)</span>
+    <span class="n">package_ensure</span><span class="p">(</span><span class="s">&#39;nova-common&#39;</span><span class="p">)</span>
+
+    <span class="c"># ...</span>
+
+
+<span class="k">def</span> <span class="nf">set_config_file</span><span class="p">(</span><span class="n">management_ip</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s">&#39;nova&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&#39;stackops&#39;</span><span class="p">,</span>
+                    <span class="n">auth_host</span><span class="o">=</span><span class="s">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+                    <span class="n">auth_port</span><span class="o">=</span><span class="s">&#39;35357&#39;</span><span class="p">,</span> <span class="n">auth_protocol</span><span class="o">=</span><span class="s">&#39;http&#39;</span><span class="p">,</span>
+                    <span class="n">mysql_username</span><span class="o">=</span><span class="s">&#39;nova&#39;</span><span class="p">,</span> <span class="n">mysql_password</span><span class="o">=</span><span class="s">&#39;stackops&#39;</span><span class="p">,</span>
+                    <span class="n">mysql_schema</span><span class="o">=</span><span class="s">&#39;nova&#39;</span><span class="p">,</span> <span class="n">tenant</span><span class="o">=</span><span class="s">&#39;service&#39;</span><span class="p">,</span>
+                    <span class="n">mysql_host</span><span class="o">=</span><span class="s">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+                    <span class="n">mysql_port</span><span class="o">=</span><span class="s">&#39;3306&#39;</span><span class="p">):</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="s">&#39;/etc/nova/api-paste.ini&#39;</span>
+
+    <span class="n">sudo</span><span class="p">(</span><span class="s">&#39;sed -i &quot;/volume/d&quot; </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">sudo</span><span class="p">(</span><span class="s">&quot;sed -i &#39;s/admin_password.*$/admin_password = </span><span class="si">%s</span><span class="s">/g&#39; </span><span class="si">%s</span><span class="s">&quot;</span>
+         <span class="o">%</span> <span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+
+    <span class="c"># ...</span>
+</pre></div>
+</div>
+<p>During the <a class="reference internal" href="quickstart.html#initializing-component"><em>component initialization</em></a> <cite>FABuloso</cite> will ask you for the values of <cite>properties</cite>. Properties are the arguments of the <cite>services</cite> methods.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Components</a><ul>
+<li><a class="reference internal" href="#component-structure">Component structure</a><ul>
+<li><a class="reference internal" href="#component-yml">component.yml</a></li>
+<li><a class="reference internal" href="#nova-py">nova.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="previous chapter">Quickstart</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/components.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quickstart"
+             >previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, StackOps.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

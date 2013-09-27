@@ -1,152 +1,155 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>FABuloso by StackOps</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FABuloso &mdash; FABuloso 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FABuloso 0.1 documentation" href="#" />
+    <link rel="next" title="Installation" href="install.html" /> 
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>FABuloso</h1>
-        <p>Scripts to deploy Openstack-based architectures using Fabric</p>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
 
-        <p class="view"><a href="https://github.com/StackOps/fabuloso">View the Project on GitHub <small>StackOps/fabuloso</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/StackOps/fabuloso/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/StackOps/fabuloso/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/StackOps/fabuloso">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>FABuloso - Scripts to deploy Openstack-based architectures</h1>
-
-<h1>What is FABuloso?</h1>
-
-<p>FABuloso is a set of lightweight Fabric scripts built to deploy Openstack like always should be: easy. </p>
-
-<h2>OMG, another deployment tool for Openstack????</h2>
-
-<p>Relax. This is how StackOps deploys and manages Openstack clouds. There are really cool tools out there, but we think we have to focus on doing things simpler and easier. And Fabric really helps.
-We think the Openstack community suffers of the 'Golden Hammer' syndrome about all these nice deployment tools. FABuloso only does what it does, and it does it very well.</p>
-
-<h2>What is Fabric?</h2>
-
-<p>Fabric is a Python (2.5 or higher) library and command-line tool for streamlining the use of SSH for application deployment or systems administration tasks.
-It provides a basic suite of operations for executing local or remote shell commands (normally or via sudo) and uploading/downloading files, as well as auxiliary functionality such as prompting the running user for input, or aborting execution.
-You can learn more from its website <a href="http://docs.fabfile.org/">http://docs.fabfile.org/</a>.</p>
-
-<h2>What is Vagrant?</h2>
-
-<p>Vagrant is a tool for building complete development environments. With an easy-to-use workflow and focus on automation, Vagrant lowers development environment setup time, increases development/production parity, and makes the "works on my machine" excuse a relic of the past.
-Vagrant uses Oracle’s VirtualBox to build configurable, lightweight, and portable virtual machines dynamically. 
-You can learn more from its website <a href="http://www.vagrant.com/">http://www.vagrant.com/</a>.</p>
-
-<h2>How do I install Vagrant?</h2>
-
-<p>Please read carefully the Vagrant docs in <a href="http://docs-v1.vagrantup.com/v1/docs/getting-started/index.html">http://docs-v1.vagrantup.com/v1/docs/getting-started/index.html</a>.</p>
-
-<h2>How do I install Fabric in my compute?</h2>
-
-<p>Please read the Fabric documentation in <a href="http://docs.fabfile.org/en/1.6/#installation">http://docs.fabfile.org/en/1.6/#installation</a>.</p>
-
-<h2>What license do you use?</h2>
-
-<p>Apache 2.0, of course.</p>
-
-<h2>This looks cool! Can I colaborate?</h2>
-
-<p>Sure, just push your new Fabrics scripts.</p>
-
-<h2>What version of Openstack is supported?</h2>
-
-<p>Right now Folsom Stable. Just check the branches to see different versions. Obvioulsy this will change in the future.</p>
-
-<h1>Deployment example of a single node on Vagrant</h1>
-
-<h2>Install fabric</h2>
-
-<p>This example assumes you are using Ubuntu 12.04 LTS or newer.</p>
-
-<pre lang="shell"><code>sudo apt-get install fabric
-</code></pre>
-
-<h2>Vagrant</h2>
-
-<p>Create the  directory where you want to create your vagrant environment. For example:</p>
-
-<pre lang="shell"><code>mkdir fabuloso
-</code></pre>
-
-<h2>Download our test box</h2>
-
-<p>Go to the directory that you have crated and download the stackops box</p>
-
-<pre lang="shell"><code>cd fabuloso/
-vagrant box add stackops-distro-base-v2 https://dl.dropbox.com/u/527582/stackops-distro-base-v2.box
-</code></pre>
-
-<h2>Download the FABuloso repository in the same directory</h2>
-
-<pre lang="shell"><code>git clone git@github.com:StackOps/fabuloso.git
-</code></pre>
-
-<h2>Run the box stackops-distro-base-v2</h2>
-
-<pre lang="shell"><code>vagrant up
-</code></pre>
-
-<h2>Execute singlenode.sh file to configurate your box.</h2>
-
-<p>This can take a while.</p>
-
-<pre lang="shell"><code>./singlenode.sh
-</code></pre>
-
-<h1>Running FABuloso in other operating Systems. Bootstrapping</h1>
-
-<h2>Installation script</h2>
-
-<p>The scripts needs some basic configuration to work:</p>
-
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fabuloso">
+<h1>FABuloso<a class="headerlink" href="#fabuloso" title="Permalink to this headline">¶</a></h1>
+<p><strong>FABuloso</strong> is a python tool to deploy <a class="reference external" href="http://www.openstack.org">OpenStack</a> using <a class="reference external" href="http://docs.fabfile.org/">Fabric</a>. <em>FABuloso</em> manages configuration with <strong>components</strong> within <strong>catalogs</strong>.</p>
+<p>A <em>component</em> is the most fundamental configuration element in FABuloso. Components are written in Python using Fabric and can be used to install software, edit its configuration files, create users, enable and start system services, and in short, do anything you could do through Fabric. In turn, a component is divided into <em>services</em> which accept <strong>properties</strong>.</p>
+<p>A <em>catalog</em> is a collection of <em>components</em> with something in common to deploy an OpenStack architecture. For example, in an hypothetical <em>folsom</em> catalog we could have mysql, keystone, nova and so on, components.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Just run:</p>
+<div class="highlight-python"><pre>$ python setup.py install</pre>
+</div>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>Apache 2.0</p>
+<p>Now you can take a look at the <a class="reference external" href="install.html">installation</a> and <a class="reference external" href="quickstart.html">quickstart</a> guides.</p>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li>An openssh-server installed</li>
-<li>The stackops user without password and member of the sudo group</li>
-<li>A public key. With the scripts comes a non secure private/public key combo for default installation. Please change it asap.</li>
-</ul><p>The bootstrap script for any OS with a Bourne shell is very simple. You can use it like this:</p>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-github">From github</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#starting-the-shell">Starting the shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#listing-components">Listing components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#adding-a-new-catalog">Adding a new catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#deploying-a-component">Deploying a component</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#adding-a-new-key-pair">Adding a new key pair</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components.html#component-structure">Component structure</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
 
-<pre lang="shell"><code>wget -O - https://raw.github.com/StackOps/fabuloso/master/bootstrap/init.sh | sudo sh
-</code></pre>
 
-<h2>Configuring the network</h2>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FABuloso</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#license">License</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
 
-<p>Depending on the component type, you will have to configure the network with different number of interfaces and configurations.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/StackOps">StackOps</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Installation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-21651960-4");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             >next</a> |</li>
+        <li><a href="#">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, StackOps.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
   </body>
 </html>

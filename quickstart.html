@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Quickstart &mdash; FABuloso 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="next" title="Components" href="components.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">First you need to <a class="reference external" href="install.html">install</a> <cite>FABuloso</cite> on your system. Once installed you can follow this quickstart guide to start deploying OpenStack.</p>
+</div>
+<p>In order to deploy some <cite>components</cite> we will use the builtin <cite>FABuloso</cite> shell.</p>
+<div class="section" id="starting-the-shell">
+<h2>Starting the shell<a class="headerlink" href="#starting-the-shell" title="Permalink to this headline">¶</a></h2>
+<p>Just open a terminal and type:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>fabuloso
+</pre></div>
+</div>
+<p>The <cite>FABuloso</cite> shell should be started. Type <cite>help</cite> to see all available commands:</p>
+<div class="highlight-python"><pre>fabuloso &gt; help
+
+Available methods are:
+
+* add_environment
+* add_repository
+* del_environment
+* del_repository
+* execute_service
+* finalize_component
+* init_component
+* list_components
+* list_environments
+* list_keys
+* list_repositories
+* list_services
+* show_environment
+* show_key
+* show_repository
+
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="listing-components">
+<h2>Listing components<a class="headerlink" href="#listing-components" title="Permalink to this headline">¶</a></h2>
+<p>To list all the available <cite>FABuloso</cite> components run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_components
+
+Available components are:
+fabuloso &gt;</pre>
+</div>
+<p>No components yet, so lets add our first <cite>catalog</cite>.</p>
+</div>
+<div class="section" id="adding-a-new-catalog">
+<h2>Adding a new catalog<a class="headerlink" href="#adding-a-new-catalog" title="Permalink to this headline">¶</a></h2>
+<p>For this example we&#8217;re going to add <a class="reference external" href="https://github.com/StackOps/fabuloso-catalog.git">https://github.com/StackOps/fabuloso-catalog.git</a> as the <cite>folsom</cite> catalog:</p>
+<div class="highlight-python"><pre>fabuloso &gt; add_repository folsom https://github.com/StackOps/fabuloso-catalog.git</pre>
+</div>
+<p>Now you can list the new added components:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_components
+
+Available components are:
+ * folsom.quantum_plugins
+ * folsom.compute
+ * folsom.nova
+ * folsom.swift
+ * folsom.mysql
+ * folsom.rabbitmq
+ * folsom.cinder
+ * folsom.apache
+ * folsom.glance
+ * folsom.storage
+ * folsom.fake
+ * folsom.quantum
+ * folsom.os
+ * folsom.keystone</pre>
+</div>
+</div>
+<div class="section" id="deploying-a-component">
+<h2>Deploying a component<a class="headerlink" href="#deploying-a-component" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have some components we can perform our first <cite>OpenStack</cite> deployment.</p>
+<p>First add a new <cite>environment</cite> in order to connect with the target host over <cite>SSH</cite>.</p>
+<div class="section" id="adding-an-environment">
+<h3>Adding an environment<a class="headerlink" href="#adding-an-environment" title="Permalink to this headline">¶</a></h3>
+<p>Run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; add_environment
+-(Adding new environment)- Name: test
+-(Adding new environment)- Remote username: stackops
+-(Adding new environment)- Remote host: 10.0.0.2
+-(Adding new environment)- Remote port: 22
+-(Adding new environment)- Ssh Key name: nonsecure</pre>
+</div>
+<p>A <cite>FABuloso</cite> environment contains a name and the username, host, port and ssh key used to connect over SSH. We used the <cite>nonsecure</cite> key that comes by default with <cite>FABuloso</cite>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to use another ssh key you must first add a new one as described below.</p>
+</div>
+</div>
+<div class="section" id="initializing-a-component">
+<span id="initializing-component"></span><h3>Initializing a component<a class="headerlink" href="#initializing-a-component" title="Permalink to this headline">¶</a></h3>
+<p>The first step to deploy a component is to initialize it. The component initialization is where we customize our deployment using the so called <cite>properties</cite> (this is the way components are configurable in <cite>FABuloso</cite>).</p>
+<p>So, run the following command and populate the prompted properties:</p>
+<div class="highlight-python"><pre>fabuloso &gt; init_component folsom.mysql test
+-(initializing folsom.mysql in environment test) Insert value for property 'drop_schema' [None]:
+-(initializing folsom.mysql in environment test) Insert value for property 'cinder_password' [stackops]: c1nd3r
+-(initializing folsom.mysql in environment test) Insert value for property 'keystone_user' [keystone]:
+-(initializing folsom.mysql in environment test) Insert value for property 'cinder_user' [cinder]:
+-(initializing folsom.mysql in environment test) Insert value for property 'automation_password' [stackops]: 4ut0m4t10n
+-(initializing folsom.mysql in environment test) Insert value for property 'nova_user' [nova]:
+-(initializing folsom.mysql in environment test) Insert value for property 'port' []:
+-(initializing folsom.mysql in environment test) Insert value for property 'glance_user' [glance]:
+
+...
+
+-(initializing folsom.mysql in environment test) Insert value for property 'host' [localhost]:
+fabuloso [folsom.mysql/test] &gt;</pre>
+</div>
+<p>To populate properties you can use a custom value or the default value given between <cite>[ ]</cite>.</p>
+</div>
+<div class="section" id="running-a-service">
+<h3>Running a service<a class="headerlink" href="#running-a-service" title="Permalink to this headline">¶</a></h3>
+<p>Right, the component is now initialized and customized for our needs. Now we can run a <cite>service</cite> in order to change the target machine state.</p>
+<p>List the available services:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/test] &gt; list_services
+ * set_quantum
+ * set_keystone
+ * teardown
+ * set_cinder
+ * set_nova
+ * install
+ * set_glance
+ * validate</pre>
+</div>
+<p>Well, lets execute the <cite>install</cite> service:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/test] &gt; execute_service install
+[10.0.0.2] sudo: DEBIAN_FRONTEND=noninteractive apt-get -q --yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install mysql-server
+[10.0.0.2] out: Reading package lists...
+[10.0.0.2] out: Building dependency tree...
+[10.0.0.2] out: Reading state information...
+[10.0.0.2] out: The following extra packages will be installed:
+[10.0.0.2] out:   libdbd-mysql-perl libdbi-perl libhtml-template-perl libnet-daemon-perl libplrpc-perl libterm-readkey-perl mysql-client-5.5
+[10.0.0.2] out:   mysql-client-core-5.5 mysql-server-5.5 mysql-server-core-5.5
+[10.0.0.2] out: Suggested packages:
+[10.0.0.2] out:   libipc-sharedcache-perl tinyca mailx
+[10.0.0.2] out: The following NEW packages will be installed:
+[10.0.0.2] out:   libdbd-mysql-perl libdbi-perl libhtml-template-perl libnet-daemon-perl libplrpc-perl libterm-readkey-perl mysql-client-5.5
+[10.0.0.2] out:   mysql-client-core-5.5 mysql-server mysql-server-5.5 mysql-server-core-5.5
+[10.0.0.2] out: ...</pre>
+</div>
+<p>The <cite>install</cite> service has finished successfully. We can run another service, such as <cite>validate</cite> to check the expected machine state:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/test] &gt; execute_service validate
+...
+
+fabuloso [folsom.mysql/test] &gt;</pre>
+</div>
+<p>Finally, to end the component deployment, run:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/test] &gt; finalize_component
+fabuloso &gt;</pre>
+</div>
+<p>And we are in the initial <cite>FABuloso</cite> prompt again. Ready to deploy whatever component.</p>
+</div>
+</div>
+<div class="section" id="adding-a-new-key-pair">
+<h2>Adding a new key pair<a class="headerlink" href="#adding-a-new-key-pair" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">TODO: The <cite>add_key</cite> command is not implemented yet</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Quickstart</a><ul>
+<li><a class="reference internal" href="#starting-the-shell">Starting the shell</a></li>
+<li><a class="reference internal" href="#listing-components">Listing components</a></li>
+<li><a class="reference internal" href="#adding-a-new-catalog">Adding a new catalog</a></li>
+<li><a class="reference internal" href="#deploying-a-component">Deploying a component</a><ul>
+<li><a class="reference internal" href="#adding-an-environment">Adding an environment</a></li>
+<li><a class="reference internal" href="#initializing-a-component">Initializing a component</a></li>
+<li><a class="reference internal" href="#running-a-service">Running a service</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adding-a-new-key-pair">Adding a new key pair</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="components.html"
+                        title="next chapter">Components</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/quickstart.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, StackOps.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>
