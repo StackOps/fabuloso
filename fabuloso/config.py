@@ -126,6 +126,23 @@ class ConfigureEditor(object):
             with open(self._environments_cfg, 'w') as index_file:
                 config_parser.write(index_file)
 
+    def add_key(self, keypair):
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._keys_cfg)
+
+        name = keypair['name']
+
+        if config_parser.has_section(name):
+            raise exceptions.KeyAlreadyExists({'name': name})
+
+        config_parser.add_section(name)
+
+        for k in ('key_file', 'pub_file'):
+            config_parser.set(name, k, keypair[k])
+
+        with open(self._keys_cfg, 'w') as keys_file:
+            config_parser.write(keys_file)
+
     def del_env(self, name):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._environments_cfg)

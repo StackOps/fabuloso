@@ -56,3 +56,12 @@ class KeyNotFound(Exception):
     def __init__(self, **kwargs):
         super(KeyNotFound, self).__init__(self.message % kwargs)
         self.msg = self.message % kwargs
+
+
+class KeyAlreadyExists(Exception):
+    message = 'Keypair {name} already exists'
+
+    def __init__(self, data):
+        self.msg = self.message.format(**data)
+
+        super(KeyAlreadyExists, self).__init__(self.msg)

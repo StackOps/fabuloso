@@ -53,6 +53,29 @@ class Fabuloso(object):
         self._config_editor.add_env(env)
         return Environment(env)
 
+    def add_key(self, name, key_path, pub_path):
+        key_file, pub_file = self.__store_keypair(name, key_path, pub_path)
+
+        keypair = {
+            'name': name,
+            'key_file': key_file,
+            'pub_file': pub_file
+        }
+
+        self._config_editor.add_key(keypair)
+
+    def __store_keypair(self, name, key_path, pub_path):
+        keys_path = os.path.join(os.path.dirname(
+            self._config_editor._keys_cfg))
+
+        key_file = os.path.join(keys_path, name)
+        pub_file = os.path.join(keys_path, name + '.pub')
+
+        shutil.copy(key_path, key_file)
+        shutil.copy(pub_path, pub_file)
+
+        return key_file, pub_file
+
     def delete_environment(self, name):
         self._config_editor.del_env(name)
 

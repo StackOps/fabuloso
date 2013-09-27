@@ -282,6 +282,20 @@ class FabulosoCmd(cmd.Cmd):
         except exceptions.EnvironmentAlreadyExists as e:
             print e.msg
 
+    def do_add_key(self, args):
+        """Add a new ssh key pair"""
+
+        if args:
+            print "No input arguments needed. Ignored"
+
+        tmp_prompt = "%s-(Adding new keypair)-%s" % (self.OKBLUE, self.ENDC)
+
+        name = raw_input(tmp_prompt + 'Name: ')
+        key_path = raw_input(tmp_prompt + 'Key path: ')
+        pub_path = raw_input(tmp_prompt + 'Pub path: ')
+
+        self.fabuloso.add_key(name, key_path, pub_path)
+
     def do_del_environment(self, args):
         """ Deletes an environment.
 
