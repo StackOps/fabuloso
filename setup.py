@@ -13,6 +13,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+
 import glob
 import os
 import setuptools
@@ -35,6 +36,7 @@ setuptools.setup(name='fabuloso',
                  author='StackOps',
                  author_email='developers@stackops.com',
                  description='StackOps remote executor',
+                 url='https://github.com/StackOps/fabuloso',
                  install_requires=requirements,
                  entry_points={
                      'console_scripts': [
