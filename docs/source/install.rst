@@ -4,12 +4,24 @@ Installation
 From github
 -----------
 
-You can install the latest `FABuloso` from the `github repo <https://github.com/StackOps/fabuloso>`_ using pip::
+We recommend to install *FABuloso* into a *virtualenv*:
 
-    $ pip install -e git+git://github.com/StackOps/fabuloso.git#egg=fabuloso
+.. code-block:: bash
 
-Or manually::
+    $ virtualenv .venv
+    $ source .venv/bin/activate
+    (.venv)$
 
-    $ git clone git://github.com/StackOps/fabuloso.git
-    $ cd fabuloso
-    $ python setup.py install
+You can install the latest `FABuloso` from the `github repo <https://github.com/StackOps/fabuloso>`_ using pip:
+
+.. code-block:: bash
+
+    (.venv)$ pip install -e git+git://github.com/StackOps/fabuloso.git#egg=fabuloso
+
+Or manually:
+
+.. code-block:: bash
+
+    (.venv)$ git clone git://github.com/StackOps/fabuloso.git
+    (.venv)$ cd fabuloso
+    (.venv)$ python setup.py install
