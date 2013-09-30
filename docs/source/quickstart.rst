@@ -23,6 +23,7 @@ The `FABuloso` shell should be started. Type `help` to see all available command
     Available methods are:
 
     * add_environment
+    * add_key
     * add_repository
     * del_environment
     * del_repository
@@ -50,16 +51,7 @@ To list all the available `FABuloso` components run::
     Available components are:
     fabuloso >
 
-No components yet, so lets add our first `catalog`.
-
-Adding a new catalog
---------------------
-
-For this example we're going to add `<https://github.com/StackOps/fabuloso-catalog.git>`_ as the `folsom` catalog::
-
-    fabuloso > add_repository folsom https://github.com/StackOps/fabuloso-catalog.git
-
-Now you can list the new added components::
+No components yet, so lets :ref:`add our first catalog <adding_catalog>`. Now you can list the new added components::
 
     fabuloso > list_components
 
@@ -82,34 +74,13 @@ Now you can list the new added components::
 Deploying a component
 ---------------------
 
-Now that we have some components we can perform our first `OpenStack` deployment.
+Now that we have some components we can perform our first *OpenStack* deployment. First we must :ref:`add a new environment <adding_environment>` in order to connect with the target host over *SSH*.
 
-First add a new `environment` in order to connect with the target host over `SSH`.
-
-Adding an environment
-^^^^^^^^^^^^^^^^^^^^^
-
-Run::
-
-    fabuloso > add_environment
-    -(Adding new environment)- Name: test
-    -(Adding new environment)- Remote username: stackops
-    -(Adding new environment)- Remote host: 10.0.0.2
-    -(Adding new environment)- Remote port: 22
-    -(Adding new environment)- Ssh Key name: nonsecure
-
-A `FABuloso` environment contains a name and the username, host, port and ssh key used to connect over SSH. We used the `nonsecure` key that comes by default with `FABuloso`.
-
-.. note::
-
-    If you want to use another ssh key you must first add a new one as described below.
-
-.. _initializing_component:
 
 Initializing a component
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The first step to deploy a component is to initialize it. The component initialization is where we customize our deployment using the so called `properties` (this is the way components are configurable in `FABuloso`).
+The first step to deploy a component is to :ref:`initialize it <initializing_component>`. The component initialization is where we customize our deployment using the so called *properties* (this is the way components are configurable in *FABuloso*).
 
 So, run the following command and populate the prompted properties::
 
@@ -128,12 +99,14 @@ So, run the following command and populate the prompted properties::
     -(initializing folsom.mysql in environment test) Insert value for property 'host' [localhost]: 
     fabuloso [folsom.mysql/test] >
 
-To populate properties you can use a custom value or the default value given between `[ ]`.
+.. note::
+
+    To populate properties you can use a custom value or the default value given between `[ ]`.
 
 Running a service
 ^^^^^^^^^^^^^^^^^
 
-Right, the component is now initialized and customized for our needs. Now we can run a `service` in order to change the target machine state.
+Right, the component is now initialized and customized for our needs. Now we can :ref:`execute a service <_executing_service>` in order to change the target machine state.
 
 List the available services::
 
@@ -177,10 +150,3 @@ Finally, to end the component deployment, run::
     fabuloso >
 
 And we are in the initial `FABuloso` prompt again. Ready to deploy whatever component.
-
-Adding a new key pair
----------------------
-
-.. warning::
-
-    TODO: The `add_key` command is not implemented yet
