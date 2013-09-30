@@ -14,9 +14,12 @@
 #   limitations under the License.
 
 import uuid
+import shutil
+import os.path
 import ConfigParser
-import MySQLdb
+
 import pika
+import MySQLdb
 from fabric.api import puts, sudo, get, put, local
 from keystoneclient.v2_0 import client
 
@@ -324,3 +327,7 @@ def _callback(ch, method, properties, body):
         print " [x] RECEIVED: %r" % (body)
         print ' [*] Message sent and received successfully....' \
               'Test completed...'
+
+
+def copy(src, dest):
+    return shutil.copy(os.path.expanduser(src), dest)

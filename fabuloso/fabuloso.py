@@ -16,17 +16,13 @@
 
 import os
 import imp
+import shutil
+import UserDict
 
 import yaml
 from sh import git
 
-import component
-import providers
-import utils
-
-import config
-import shutil
-import UserDict
+from . import component, providers, utils, config
 
 
 class Fabuloso(object):
@@ -71,8 +67,8 @@ class Fabuloso(object):
         key_file = os.path.join(keys_path, name)
         pub_file = os.path.join(keys_path, name + '.pub')
 
-        shutil.copy(key_path, key_file)
-        shutil.copy(pub_path, pub_file)
+        utils.copy(key_path, key_file)
+        utils.copy(pub_path, pub_file)
 
         return key_file, pub_file
 
