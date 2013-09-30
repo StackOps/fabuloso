@@ -1,0 +1,8 @@
+pep8==1.4.6
+cuisine==0.6.5
+PyYAML==3.10
+python-keystoneclient==0.3.2
+MySQL-python==1.2.4
+pika==0.9.13
+expects>=0.1,<0.2
+sh==1.09
