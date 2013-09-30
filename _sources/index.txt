@@ -14,7 +14,11 @@ Contents:
 
     install
     quickstart
+    catalogs
     components
+    services
+    keypairs
+    environments
 
 
 Indices and tables

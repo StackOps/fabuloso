@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Environments &mdash; FABuloso 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="prev" title="Key Pairs" href="keypairs.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="keypairs.html" title="Key Pairs"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="environments">
+<h1>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h1>
+<p><strong>Environments</strong> contain the information used by <em>FABuloso</em> to securely connect over SSH to a <em>target host</em>.</p>
+<div class="section" id="listing-environments">
+<h2>Listing environments<a class="headerlink" href="#listing-environments" title="Permalink to this headline">¶</a></h2>
+<p>By default <em>FABuloso</em> does not come with a preconfigured environment, so the <strong>list_environments</strong> command will return nothing:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_environments
+fabuloso &gt;</pre>
+</div>
+<p>Let&#8217;s add a new environment.</p>
+</div>
+<div class="section" id="adding-an-environment">
+<span id="adding-environment"></span><h2>Adding an environment<a class="headerlink" href="#adding-an-environment" title="Permalink to this headline">¶</a></h2>
+<p>Run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; add_environment
+-(Adding new environment)- Name: testing
+-(Adding new environment)- Remote username: stackops
+-(Adding new environment)- Remote host: 10.0.0.2
+-(Adding new environment)- Remote port: 22
+-(Adding new environment)- Ssh Key name: nonsecure
+fabuloso &gt;</pre>
+</div>
+<p>The <strong>name</strong> field is the identifier we&#8217;re going to use to reference our <em>environment</em> when deploying some component. The remaining fields are the data used to connect over <em>SSH</em> to the target host (<strong>username</strong>, <strong>host</strong>, <strong>port</strong> and <strong>key name</strong>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <strong>key name</strong> should be an existent <em>FABuloso</em> keypair. See how to add a new keypair <a class="reference internal" href="keypairs.html#adding-keypair"><em>here</em></a>.</p>
+</div>
+<p>Now listing keys should show the new added environment:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_environments
+ * testing
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="showing-an-environment">
+<h2>Showing an environment<a class="headerlink" href="#showing-an-environment" title="Permalink to this headline">¶</a></h2>
+<p>To see the values of a specific environment we can run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; show_environment testing
+ * Name: testing
+ * Username: stackops
+ * Host: 10.0.0.2
+ * Port: 22
+ * Key: nonsecure
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="removing-an-environment">
+<h2>Removing an environment<a class="headerlink" href="#removing-an-environment" title="Permalink to this headline">¶</a></h2>
+<p>We can remove an environment from our <em>FABuloso</em> installation by running:</p>
+<div class="highlight-python"><pre>fabuloso &gt; del_environment testing
+fabuloso &gt;</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Environments</a><ul>
+<li><a class="reference internal" href="#listing-environments">Listing environments</a></li>
+<li><a class="reference internal" href="#adding-an-environment">Adding an environment</a></li>
+<li><a class="reference internal" href="#showing-an-environment">Showing an environment</a></li>
+<li><a class="reference internal" href="#removing-an-environment">Removing an environment</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="keypairs.html"
+                        title="previous chapter">Key Pairs</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/environments.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="keypairs.html" title="Key Pairs"
+             >previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, StackOps.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

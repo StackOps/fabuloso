@@ -53,13 +53,20 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="from-github">
 <h2>From github<a class="headerlink" href="#from-github" title="Permalink to this headline">¶</a></h2>
+<p>We recommend to install <em>FABuloso</em> into a <em>virtualenv</em>:</p>
+<div class="highlight-bash"><pre>$ virtualenv .venv
+$ source .venv/bin/activate
+(.venv)$</pre>
+</div>
 <p>You can install the latest <cite>FABuloso</cite> from the <a class="reference external" href="https://github.com/StackOps/fabuloso">github repo</a> using pip:</p>
-<div class="highlight-python"><pre>$ pip install -e git+git://github.com/StackOps/fabuloso.git#egg=fabuloso</pre>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>.venv<span class="o">)</span><span class="nv">$ </span>pip install -e git+git://github.com/StackOps/fabuloso.git#egg<span class="o">=</span>fabuloso
+</pre></div>
 </div>
 <p>Or manually:</p>
-<div class="highlight-python"><pre>$ git clone git://github.com/StackOps/fabuloso.git
-$ cd fabuloso
-$ python setup.py install</pre>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>.venv<span class="o">)</span><span class="nv">$ </span>git clone git://github.com/StackOps/fabuloso.git
+<span class="o">(</span>.venv<span class="o">)</span><span class="nv">$ </span><span class="nb">cd </span>fabuloso
+<span class="o">(</span>.venv<span class="o">)</span><span class="nv">$ </span>python setup.py install
+</pre></div>
 </div>
 </div>
 </div>

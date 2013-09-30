@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Key Pairs &mdash; FABuloso 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="next" title="Environments" href="environments.html" />
+    <link rel="prev" title="Services" href="services.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="environments.html" title="Environments"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="services.html" title="Services"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="key-pairs">
+<h1>Key Pairs<a class="headerlink" href="#key-pairs" title="Permalink to this headline">¶</a></h1>
+<p><em>FABuloso</em> can manage <strong>keypairs</strong> in order to securely connect to the target hosts and execute <em>services</em>. <em>Keypairs</em> will be referenced later when <a class="reference internal" href="environments.html#adding-environment"><em>adding environments</em></a>.</p>
+<div class="section" id="listing-keypairs">
+<h2>Listing keypairs<a class="headerlink" href="#listing-keypairs" title="Permalink to this headline">¶</a></h2>
+<p>By default <em>FABuloso</em> comes with the <em>nonsecure</em> keypair. You can list keypairs to see it:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_keys
+ * nonsecure
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="showing-a-keypair">
+<h2>Showing a keypair<a class="headerlink" href="#showing-a-keypair" title="Permalink to this headline">¶</a></h2>
+<p>Also you can get the key info and contents by running:</p>
+<div class="highlight-python"><pre>fabuloso &gt; show_key nonsecure
+ * Name: nonsecure
+ * Key file: /etc/fabuloso/keys/nonsecureid_rsa
+ * Key: -----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAtO4zZwNYOzux [...]
+-----END RSA PRIVATE KEY-----
+
+ * Pub file: /etc/fabuloso/keys/nonsecureid_rsa.pub
+ * Pub: ssh-rsa AAAAB3Nza [...] contactus@stackops.com</pre>
+</div>
+</div>
+<div class="section" id="adding-a-keypair">
+<span id="adding-keypair"></span><h2>Adding a keypair<a class="headerlink" href="#adding-a-keypair" title="Permalink to this headline">¶</a></h2>
+<p>To add a new <em>keypair</em> run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; add_key
+-(Adding new keypair)-Name: my-secure-key
+-(Adding new keypair)-Key path: ~/my-secure-key
+-(Adding new keypair)-Pub path: ~/my-secure-key.pub
+fabuloso &gt;</pre>
+</div>
+<p>Now list the keys to see the new added key:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_keys
+ * nonsecure
+ * my-secure-key
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="removing-a-keypair">
+<h2>Removing a keypair<a class="headerlink" href="#removing-a-keypair" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The <em>del_key</em> command is not implemented yet.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Key Pairs</a><ul>
+<li><a class="reference internal" href="#listing-keypairs">Listing keypairs</a></li>
+<li><a class="reference internal" href="#showing-a-keypair">Showing a keypair</a></li>
+<li><a class="reference internal" href="#adding-a-keypair">Adding a keypair</a></li>
+<li><a class="reference internal" href="#removing-a-keypair">Removing a keypair</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="services.html"
+                        title="previous chapter">Services</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="environments.html"
+                        title="next chapter">Environments</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/keypairs.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="environments.html" title="Environments"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="services.html" title="Services"
+             >previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, StackOps.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

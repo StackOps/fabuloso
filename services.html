@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Services &mdash; FABuloso 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="next" title="Key Pairs" href="keypairs.html" />
+    <link rel="prev" title="Components" href="components.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="keypairs.html" title="Key Pairs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="services">
+<h1>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h1>
+<p>A <strong>service</strong> is the smallest element in a <em>FABuloso component</em>. A <em>component</em> should have atleast one <em>service</em>. <em>Services</em> are defined in the component <em>metadata</em> and could accept <em>properties</em>. To learn more about how to write a component you would take a look at <a class="reference internal" href="components.html#component-structure"><em>the component structure</em></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In order to <strong>list</strong> or <strong>execute</strong> services you need first to  <a class="reference internal" href="components.html#initializing-component"><em>initialize the component</em></a>.</p>
+</div>
+<div class="section" id="listing-services">
+<span id="id1"></span><h2>Listing services<a class="headerlink" href="#listing-services" title="Permalink to this headline">¶</a></h2>
+<p>To list the <em>component services</em> run:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/testing] &gt; list_services
+
+Available services are:
+ * set_quantum
+ * set_keystone
+ * teardown
+ * set_cinder
+ * set_automation
+ * set_accounting
+ * set_nova
+ * install
+ * set_glance
+ * validate
+ * set_portal
+fabuloso [folsom.mysql/testing] &gt;</pre>
+</div>
+<p>Well, let&#8217;s execute some of these services.</p>
+</div>
+<div class="section" id="executing-a-service">
+<span id="executing-service"></span><h2>Executing a service<a class="headerlink" href="#executing-a-service" title="Permalink to this headline">¶</a></h2>
+<p>Run:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/testing] &gt; execute_service install
+[localhost] sudo: echo mysql-server-5.5 mysql-server/root_password password stackops | debconf-set-selections
+[localhost] sudo: echo mysql-server-5.5 mysql-server/root_password_again password stackops | debconf-set-selections
+[localhost] sudo: echo mysql-server-5.5 mysql-server/start_on_boot boolean true | debconf-set-selections
+[localhost] run: dpkg-query -W -f='${Status} ' mysql-server &amp;&amp; echo OK;true
+[localhost] out: install ok installed OK
+[localhost] out:
+
+[localhost] run: dpkg-query -W -f='${Status} ' python-mysqldb &amp;&amp; echo OK;true
+[localhost] out: install ok installed OK
+[localhost] out:
+
+[localhost] sudo: nohup service mysql stop
+
+...
+
+fabuloso [folsom.mysql/testing] &gt;</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Don&#8217;t forget to <a class="reference internal" href="components.html#finalizing-component"><em>finalize the component</em></a> after you finished working with the <em>component</em>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Services</a><ul>
+<li><a class="reference internal" href="#listing-services">Listing services</a></li>
+<li><a class="reference internal" href="#executing-a-service">Executing a service</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="components.html"
+                        title="previous chapter">Components</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="keypairs.html"
+                        title="next chapter">Key Pairs</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/services.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="keypairs.html" title="Key Pairs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             >previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, StackOps.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

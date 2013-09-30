@@ -24,7 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
-    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
+    <link rel="next" title="Services" href="services.html" />
+    <link rel="prev" title="Catalogs" href="catalogs.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,7 +35,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="quickstart.html" title="Quickstart"
+          <a href="services.html" title="Services"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="catalogs.html" title="Catalogs"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -47,9 +51,54 @@
             
   <div class="section" id="components">
 <h1>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h1>
-<p>A <strong>component</strong> is the fundamental configuration element in <cite>FABuloso</cite>. It&#8217;s just a python module defining some functions and a <cite>component.yml</cite> (<a class="reference external" href="http://yaml.org">yaml</a>) defining some <cite>metadata</cite> and <cite>services</cite>. A <cite>service</cite> is a list of functions from that python module that will be executed in the given order.</p>
+<p>A <strong>component</strong> is the fundamental configuration element in <em>FABuloso</em>. It&#8217;s just a python module defining some functions and a <em>component.yml</em> (<a class="reference external" href="http://yaml.org">yaml</a>) defining some <em>metadata</em> and <em>services</em>. A <em>service</em> is a list of functions from that python module that will be executed in the given order.</p>
+<div class="section" id="listing-components">
+<h2>Listing components<a class="headerlink" href="#listing-components" title="Permalink to this headline">¶</a></h2>
+<p>Assuming we have added the <em>folsom</em> catalog as described <a class="reference internal" href="catalogs.html#adding-catalog"><em>here</em></a> we can see all its components by running:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_components
+ * folsom.quantum_plugins
+ * folsom.compute
+ * folsom.nova
+ * folsom.swift
+ * folsom.mysql
+ * folsom.rabbitmq
+ * folsom.cinder
+ * folsom.apache
+ * folsom.glance
+ * folsom.storage
+ * folsom.fake
+ * folsom.quantum
+ * folsom.os
+ * folsom.keystone
+fabuloso &gt;</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><em>Components</em> names are always prefixed by the <em>catalog</em> name.</p>
+</div>
+</div>
+<div class="section" id="initializing-a-component">
+<span id="initializing-component"></span><h2>Initializing a component<a class="headerlink" href="#initializing-a-component" title="Permalink to this headline">¶</a></h2>
+<p>In order to work with a component we need to <strong>initialize</strong> it:</p>
+<div class="highlight-python"><pre>fabuloso &gt; init_component folsom.mysql testing
+fabuloso [folsom.mysql/testing] &gt;</pre>
+</div>
+<p>To <em>initialize</em> a component we need to pass the <em>component name</em> and the target <em>environment</em> where we would like to execute services on. Note that once initialized, the shell prompt will show that we are &#8220;inside&#8221; an initialized component.</p>
+<p>Now we can <a class="reference internal" href="services.html#listing-services"><em>list</em></a> and <a class="reference internal" href="services.html#executing-service"><em>execute</em></a> services.</p>
+</div>
+<div class="section" id="finalizing-a-component">
+<span id="finalizing-component"></span><h2>Finalizing a component<a class="headerlink" href="#finalizing-a-component" title="Permalink to this headline">¶</a></h2>
+<p>When you have finished working with a component you can run <tt class="docutils literal"><span class="pre">finalize_component</span></tt> to go back to the main <em>FABuloso</em> shell:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/testing] &gt; execute_service install
+
+[...]
+
+fabuloso [folsom.mysql/testing] &gt; finalize_component
+fabuloso &gt;</pre>
+</div>
+</div>
 <div class="section" id="component-structure">
-<h2>Component structure<a class="headerlink" href="#component-structure" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Component structure<a class="headerlink" href="#component-structure" title="Permalink to this headline">¶</a></h2>
 <p>To see how a <cite>component</cite> looks like we&#8217;re going to use the <cite>nova</cite> component from <a class="reference external" href="https://github.com/StackOps/fabuloso-catalog/tree/master/nova">https://github.com/StackOps/fabuloso-catalog/tree/master/nova</a>.</p>
 <div class="section" id="component-yml">
 <h3>component.yml<a class="headerlink" href="#component-yml" title="Permalink to this headline">¶</a></h3>
@@ -122,7 +171,7 @@
     <span class="c"># ...</span>
 </pre></div>
 </div>
-<p>During the <a class="reference internal" href="quickstart.html#initializing-component"><em>component initialization</em></a> <cite>FABuloso</cite> will ask you for the values of <cite>properties</cite>. Properties are the arguments of the <cite>services</cite> methods.</p>
+<p>During the <a class="reference internal" href="#initializing-component"><em>component initialization</em></a> <cite>FABuloso</cite> will ask you for the values of <cite>properties</cite>. Properties are the arguments of the <cite>services</cite> methods.</p>
 </div>
 </div>
 </div>
@@ -136,6 +185,9 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Components</a><ul>
+<li><a class="reference internal" href="#listing-components">Listing components</a></li>
+<li><a class="reference internal" href="#initializing-a-component">Initializing a component</a></li>
+<li><a class="reference internal" href="#finalizing-a-component">Finalizing a component</a></li>
 <li><a class="reference internal" href="#component-structure">Component structure</a><ul>
 <li><a class="reference internal" href="#component-yml">component.yml</a></li>
 <li><a class="reference internal" href="#nova-py">nova.py</a></li>
@@ -146,8 +198,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="quickstart.html"
-                        title="previous chapter">Quickstart</a></p>
+  <p class="topless"><a href="catalogs.html"
+                        title="previous chapter">Catalogs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="services.html"
+                        title="next chapter">Services</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/components.txt"
@@ -177,7 +232,10 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="quickstart.html" title="Quickstart"
+          <a href="services.html" title="Services"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="catalogs.html" title="Catalogs"
              >previous</a> |</li>
         <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>
