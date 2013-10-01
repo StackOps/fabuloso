@@ -38,7 +38,7 @@ class Fabuloso(object):
         self._clone_repo(repo_name, repo_url)
         self._load_catalog()
 
-    def add_environment(self, name, username, host, port, key_name): 
+    def add_environment(self, name, username, host, port, key_name):
         self.get_key(key_name)
 
         env = {'name': name,
@@ -87,7 +87,9 @@ class Fabuloso(object):
                             " of Environment class")
         comp = self._catalog[component_name]
         comp.set_properties(properties)
-        environment.data['ssh_key_file'] = self.get_key(environment.data['key_name']).key_file
+        environment.data['ssh_key_file'] = self.get_key(
+            environment.data['key_name']).key_file
+
         comp.set_environment(environment)
         return comp
 
@@ -121,7 +123,9 @@ class Fabuloso(object):
                 params = comp._get_method_params(method)
                 for param in params:
                     if not param in service_props:
-                        service_props[param] = comp._get_param_default(param, method)
+                        service_props[param] = comp._get_param_default(
+                            param, method)
+
             props[service] = service_props
         return props
 
@@ -149,7 +153,6 @@ class Fabuloso(object):
             ret_data.append(Repository(repo))
         return ret_data
 
-
     def _load_catalog(self):
         """Returns a dict that maps the component name with the module."""
         catalog_dir = self._config_editor.get_catalog_dir()
@@ -168,10 +171,9 @@ class Fabuloso(object):
                         # Skip the failing components
                         continue
 
-
     def _get_subdirectories(self, dir):
-        return [name for name in os.listdir(dir) 
-                        if os.path.isdir(os.path.join(dir, name))]
+        return [name for name in os.listdir(dir)
+                if os.path.isdir(os.path.join(dir, name))]
 
     def _load_component(self, repo, comp_dir):
         """ Based on the definition file, build the component.
@@ -225,6 +227,7 @@ class Fabuloso(object):
             # TODO: implement for private repos
             git.clone(url, path)
 
+
 class Environment(UserDict.UserDict):
 
     def __repr__(self):
@@ -236,16 +239,18 @@ class Environment(UserDict.UserDict):
         config_editor = config.ConfigureEditor()
         return cls(config_editor.get_env(name))
 
+
 class Repository(UserDict.UserDict):
 
     def __repr__(self):
-        return ("<Repository '%(name)s': type=%(type)s, url=%(url)s " % self.data)
-
+        return ("<Repository '%(name)s': type=%(type)s, url=%(url)s " %
+                self.data)
 
     @classmethod
     def import_repo(cls, name):
         config_editor = config.ConfigureEditor()
         return cls(config_editor.get_repo(name))
+
 
 class SshKey(object):
     """ Manage a ssh key"""

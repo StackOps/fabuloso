@@ -13,11 +13,13 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-from fabric.context_managers import settings, hide
+
+from fabric.context_managers import settings
 
 
 class Provider(object):
     """Base provider class"""
+
     def set_environment(self, env):
         self.env = env
 
@@ -28,6 +30,7 @@ class Provider(object):
 
 class FabricProvider(Provider):
     """Fabric Provider that wraps any call setting environment variables"""
+
     def __init__(self):
         super(FabricProvider, self).__init__()
 
@@ -44,6 +47,7 @@ class DummyProvider(Provider):
     This provider does not actually do nothing and it is just developed for
     test purposes.
     """
+
     def __init__(self, env):
         super(DummyProvider, self).__init__()
 

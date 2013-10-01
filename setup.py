@@ -14,12 +14,9 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import glob
 import os
-import setuptools
-import subprocess
 import sys
-import unittest
+from setuptools import setup
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -30,37 +27,39 @@ elif sys.version_info < (2, 6):
     raise 'Must use python 2.6 or greater'
 
 
-setuptools.setup(name='fabuloso',
-                 packages=['fabuloso'],
-                 author='StackOps',
-                 author_email='developers@stackops.com',
-                 description='StackOps remote executor',
-                 url='https://github.com/StackOps/fabuloso',
-                 install_requires=requirements,
-                 entry_points={
-                     'console_scripts': [
-                         'fabuloso = fabuloso.main:main'
-                     ]
-                 },
-                 data_files=[
-                     (os.path.join(os.path.expanduser('~'),
-                                   '.config/fabuloso/keys'),
-                      ['keys/nonsecureid_rsa', 'keys/nonsecureid_rsa.pub']),
-                     (os.path.join(os.path.expanduser('~/.config/fabuloso')),
-                      ['keys/keys.cfg'])
-                 ],
-                 version='0.1',
-                 license='Apache License 2.0',
-                 classifiers=[
-                     "Development Status :: 2 - Pre-Alpha",
-                     "Environment :: Console",
-                     "Intended Audience :: Developers",
-                     "Intended Audience :: Information Technology",
-                     "License :: OSI Approved :: Apache Software License",
-                     "Natural Language :: English",
-                     "Operating System :: POSIX :: Linux",
-                     "Programming Language :: Python",
-                     "Programming Language :: Python :: 2",
-                     "Programming Language :: Python :: 2.7",
-                     "Topic :: System"
-                 ])
+setup(
+    name='fabuloso',
+    version='0.1',
+    author='StackOps',
+    author_email='developers@stackops.com',
+    description='StackOps remote executor',
+    url='https://github.com/StackOps/fabuloso',
+    install_requires=requirements,
+    packages=['fabuloso'],
+    entry_points={
+        'console_scripts': [
+            'fabuloso = fabuloso.main:main'
+        ]
+    },
+    data_files=[
+        (os.path.join(os.path.expanduser('~'),
+                      '.config/fabuloso/keys'),
+         ['keys/nonsecureid_rsa', 'keys/nonsecureid_rsa.pub']),
+        (os.path.join(os.path.expanduser('~/.config/fabuloso')),
+         ['keys/keys.cfg'])
+    ],
+    license='Apache License 2.0',
+    classifiers=[
+        "Development Status :: 2 - Pre-Alpha",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Information Technology",
+        "License :: OSI Approved :: Apache Software License",
+        "Natural Language :: English",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Topic :: System"
+    ]
+)

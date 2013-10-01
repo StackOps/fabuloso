@@ -249,7 +249,7 @@ def validate_database(database_type, username, password, host, port,
             db.close()
             print con, con_test, con_test_user
         except Exception, e:
-            import traceback
+            #import traceback
             #logging.error(traceback.format_exc())
             #logging.error('Database Failed test...%s' % e)
             raise Exception('Database Failed test... %s' % e)

@@ -13,7 +13,13 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-class EnvironmentNotFound(Exception):
+
+
+class FabulosoError(Exception):
+    pass
+
+
+class EnvironmentNotFound(FabulosoError):
 
     message = "Environment '%(env_name)s' not found."
 
@@ -22,7 +28,7 @@ class EnvironmentNotFound(Exception):
         self.msg = self.message % kwargs
 
 
-class EnvironmentAlreadyExists(Exception):
+class EnvironmentAlreadyExists(FabulosoError):
 
     message = "Environment '%(env_name)s' already exists. Choose another name."
 
@@ -31,7 +37,7 @@ class EnvironmentAlreadyExists(Exception):
         self.msg = self.message % kwargs
 
 
-class RepositoryNotFound(Exception):
+class RepositoryNotFound(FabulosoError):
 
     message = "Repository '%(repo_name)s' not found."
 
@@ -40,7 +46,7 @@ class RepositoryNotFound(Exception):
         self.msg = self.message % kwargs
 
 
-class RepositoryAlreadyExists(Exception):
+class RepositoryAlreadyExists(FabulosoError):
 
     message = "Repository '%(repo_name)s' already exists. Choose another name."
 
@@ -49,7 +55,7 @@ class RepositoryAlreadyExists(Exception):
         self.msg = self.message % kwargs
 
 
-class KeyNotFound(Exception):
+class KeyNotFound(FabulosoError):
 
     message = "Key '%(key_name)s' not found."
 
@@ -58,7 +64,7 @@ class KeyNotFound(Exception):
         self.msg = self.message % kwargs
 
 
-class KeyAlreadyExists(Exception):
+class KeyAlreadyExists(FabulosoError):
     message = 'Keypair {name} already exists'
 
     def __init__(self, data):

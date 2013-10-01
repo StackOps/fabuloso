@@ -13,10 +13,12 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-import ConfigParser
-import os
 
-import exceptions
+import os
+import ConfigParser
+
+from . import exceptions
+
 
 class ConfigureEditor(object):
     """Object that handles the read and write actions
@@ -27,7 +29,9 @@ class ConfigureEditor(object):
     def __new__(cls, *args, **kwargs):
         """ This class is a singleton. """
         if not cls._instance:
-            cls._instance = super(ConfigureEditor, cls).__new__(cls, *args, **kwargs)
+            cls._instance = super(ConfigureEditor, cls).__new__(cls, *args,
+                                                                **kwargs)
+
         return cls._instance
 
     def __init__(self):
@@ -54,7 +58,9 @@ class ConfigureEditor(object):
             # create empty file
             open(self._repos_cfg, 'a').close()
 
-        self._environments_cfg = os.path.join(self._base_dir, 'environments.cfg')
+        self._environments_cfg = os.path.join(self._base_dir,
+                                              'environments.cfg')
+
         if not os.path.exists(self._environments_cfg):
             open(self._environments_cfg, 'a').close()
 
@@ -71,26 +77,28 @@ class ConfigureEditor(object):
             with open(self._repos_cfg, 'w') as index_file:
                 config_parser.write(index_file)
         else:
-            excp_data = { 'repo_name': name }
+            excp_data = {'repo_name': name}
             raise exceptions.RepositoryAlreadyExists(**excp_data)
 
     def del_repo(self, name):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._repos_cfg)
+
         if not config_parser.has_section(name):
-            excp_data = { 'repo_name': name }
+            excp_data = {'repo_name': name}
             raise exceptions.RepositoryNotFound(**excp_data)
-        else:
-            config_parser.remove_section(name)
-            with open(self._repos_cfg, 'w') as index_file:
-                config_parser.write(index_file)
+
+        config_parser.remove_section(name)
+
+        with open(self._repos_cfg, 'w') as index_file:
+            config_parser.write(index_file)
 
     def get_key(self, name):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._keys_cfg)
 
         if not config_parser.has_section(name):
-            excp_data = { 'key_name': name }
+            excp_data = {'key_name': name}
             raise exceptions.KeyNotFound(**excp_data)
 
         return self.__get_key(name, config_parser)
@@ -99,32 +107,40 @@ class ConfigureEditor(object):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._keys_cfg)
 
-        return [self.__get_key(name, config_parser) for name in config_parser.sections()]
+        return [self.__get_key(name, config_parser) for name in
+                config_parser.sections()]
 
     def __get_key(self, name, config_parser):
-        file_path = os.path.join(os.path.abspath(os.path.dirname(self._keys_cfg)), 'keys')
+        file_path = os.path.join(os.path.abspath(
+            os.path.dirname(self._keys_cfg)), 'keys')
 
         return {
             'name': name,
-            'key_file': os.path.join(file_path, config_parser.get(name, 'key_file')),
-            'pub_file': os.path.join(file_path, config_parser.get(name, 'pub_file'))
+            'key_file': os.path.join(file_path,
+                                     config_parser.get(name, 'key_file')),
+
+            'pub_file': os.path.join(file_path,
+                                     config_parser.get(name, 'pub_file'))
         }
 
     def add_env(self, env):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._environments_cfg)
-        name = env['name']
-        if config_parser.has_section(name):
-            excp_data = { 'env_name': name }
-            raise exceptions.EnvironmentAlreadyExists(**excp_data)
-        else:
-            config_parser.add_section(name)
-            for key in env.keys():
-                if key is not 'name':
-                    config_parser.set(name, key, env[key])
 
-            with open(self._environments_cfg, 'w') as index_file:
-                config_parser.write(index_file)
+        name = env['name']
+
+        if config_parser.has_section(name):
+            excp_data = {'env_name': name}
+            raise exceptions.EnvironmentAlreadyExists(**excp_data)
+
+        config_parser.add_section(name)
+
+        for key in env.keys():
+            if key is not 'name':
+                config_parser.set(name, key, env[key])
+
+        with open(self._environments_cfg, 'w') as index_file:
+            config_parser.write(index_file)
 
     def add_key(self, keypair):
         config_parser = ConfigParser.ConfigParser()
@@ -181,22 +197,31 @@ class ConfigureEditor(object):
     def list_envs(self):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._environments_cfg)
+
         list_environments = []
+
         for section in config_parser.sections():
-            env = { 'name': section }
+            env = {'name': section}
+
             for item in config_parser.items(section):
                 env[item[0]] = item[1]
-            list_environments.append(env)
-        return list_environments
 
+            list_environments.append(env)
+
+        return list_environments
 
     def list_repos(self):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._repos_cfg)
+
         list_environments = []
+
         for section in config_parser.sections():
-            env = { 'name': section }
+            env = {'name': section}
+
             for item in config_parser.items(section):
                 env[item[0]] = item[1]
+
             list_environments.append(env)
+
         return list_environments

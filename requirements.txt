@@ -1,4 +1,4 @@
-pep8==1.4.6
+flake8==2.0
 cuisine==0.6.5
 PyYAML==3.10
 python-keystoneclient==0.3.2
