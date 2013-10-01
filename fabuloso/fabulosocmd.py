@@ -41,6 +41,18 @@ class FabulosoCmd(cmd.Cmd):
     def default(self, line):
         print("Unknow command")
 
+    def emptyline(self):
+        pass
+
+    def get_names(self):
+        """Overriden function to return all the methods.
+
+        The base class (cmd.Cmd) only return the names defined
+        by the __class__ and hence, does not return the dinamically
+        inserted.
+        """
+        return dir(self)
+
     def do_list_components(self, args):
         """ Return the list of available components. """
         print "\nAvailable components are:"
@@ -353,15 +365,6 @@ class FabulosoCmd(cmd.Cmd):
     def do_quit(self, args):
         """ Exit shell"""
         return -1
-
-    def get_names(self):
-        """Overriden function to return all the methods.
-
-        The base class (cmd.Cmd) only return the names defined
-        by the __class__ and hence, does not return the dinamically
-        inserted.
-        """
-        return dir(self)
 
     def do_help(self, arg):
         """Override the help in a prettier way"""
