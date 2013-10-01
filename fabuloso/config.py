@@ -159,16 +159,31 @@ class ConfigureEditor(object):
         with open(self._keys_cfg, 'w') as keys_file:
             config_parser.write(keys_file)
 
+    def del_key(self, name):
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._keys_cfg)
+
+        if not config_parser.has_section(name):
+            excp_data = {'key_name': name}
+            raise exceptions.KeyNotFound(**excp_data)
+
+        config_parser.remove_section(name)
+
+        with open(self._keys_cfg, 'w') as keys_file:
+            config_parser.write(keys_file)
+
     def del_env(self, name):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._environments_cfg)
+
         if not config_parser.has_section(name):
             excp_data = {'env_name': name}
             raise exceptions.EnvironmentNotFound(**excp_data)
-        else:
-            config_parser.remove_section(name)
-            with open(self._environments_cfg, 'w') as index_file:
-                config_parser.write(index_file)
+
+        config_parser.remove_section(name)
+
+        with open(self._environments_cfg, 'w') as index_file:
+            config_parser.write(index_file)
 
     def get_env(self, name):
         config_parser = ConfigParser.ConfigParser()

@@ -72,6 +72,14 @@ class Fabuloso(object):
 
         return key_file, pub_file
 
+    def delete_key(self, name):
+        keypair = self.get_key(name)
+
+        os.remove(keypair.key_file)
+        os.remove(keypair.pub_file)
+
+        self._config_editor.del_key(name)
+
     def delete_environment(self, name):
         self._config_editor.del_env(name)
 

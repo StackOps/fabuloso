@@ -335,6 +335,31 @@ class FabulosoCmd(cmd.Cmd):
 
         self.fabuloso.add_key(name, key_path, pub_path)
 
+    def do_del_key(self, args):
+        """Deletes a keypair"""
+
+        msg_error = ("'del_key' command needs just one parameter to run. "
+                     "Type 'help del_key' for more info")
+
+        if not args:
+            print "del_key command needs just one parameter"
+
+        try:
+            arg_split = tuple(args.split())
+            if len(arg_split) != 1:
+                print msg_error
+                return
+
+            name = arg_split[0]
+        except ValueError:
+            print msg_error
+            return
+
+        try:
+            self.fabuloso.delete_key(name)
+        except exceptions.KeyNotFound as error:
+            print error.msg
+
     def do_del_environment(self, args):
         """Deletes an environment.
 
