@@ -84,20 +84,20 @@ The first step to deploy a component is to :ref:`initialize it <initializing_com
 
 So, run the following command and populate the prompted properties::
 
-    fabuloso > init_component folsom.mysql test
-    -(initializing folsom.mysql in environment test) Insert value for property 'drop_schema' [None]: 
-    -(initializing folsom.mysql in environment test) Insert value for property 'cinder_password' [stackops]: c1nd3r
-    -(initializing folsom.mysql in environment test) Insert value for property 'keystone_user' [keystone]: 
-    -(initializing folsom.mysql in environment test) Insert value for property 'cinder_user' [cinder]: 
-    -(initializing folsom.mysql in environment test) Insert value for property 'automation_password' [stackops]: 4ut0m4t10n
-    -(initializing folsom.mysql in environment test) Insert value for property 'nova_user' [nova]: 
-    -(initializing folsom.mysql in environment test) Insert value for property 'port' []: 
-    -(initializing folsom.mysql in environment test) Insert value for property 'glance_user' [glance]: 
+    fabuloso > init_component folsom.mysql testing
+    -(initializing folsom.mysql in environment testing) Insert value for property 'drop_schema' [None]: 
+    -(initializing folsom.mysql in environment testing) Insert value for property 'cinder_password' [stackops]: c1nd3r
+    -(initializing folsom.mysql in environment testing) Insert value for property 'keystone_user' [keystone]: 
+    -(initializing folsom.mysql in environment testing) Insert value for property 'cinder_user' [cinder]: 
+    -(initializing folsom.mysql in environment testing) Insert value for property 'automation_password' [stackops]: 4ut0m4t10n
+    -(initializing folsom.mysql in environment testing) Insert value for property 'nova_user' [nova]: 
+    -(initializing folsom.mysql in environment testing) Insert value for property 'port' []: 
+    -(initializing folsom.mysql in environment testing) Insert value for property 'glance_user' [glance]: 
 
     ...
 
-    -(initializing folsom.mysql in environment test) Insert value for property 'host' [localhost]: 
-    fabuloso [folsom.mysql/test] >
+    -(initializing folsom.mysql in environment testing) Insert value for property 'host' [localhost]: 
+    fabuloso [folsom.mysql/testing] >
 
 .. note::
 
