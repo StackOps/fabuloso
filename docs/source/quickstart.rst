@@ -106,7 +106,7 @@ So, run the following command and populate the prompted properties::
 Running a service
 ^^^^^^^^^^^^^^^^^
 
-Right, the component is now initialized and customized for our needs. Now we can :ref:`execute a service <_executing_service>` in order to change the target machine state.
+Right, the component is now initialized and customized for our needs. Now we can :ref:`execute a service <executing_service>` in order to change the target machine state.
 
 List the available services::
 
