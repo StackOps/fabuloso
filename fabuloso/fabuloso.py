@@ -62,7 +62,7 @@ class Fabuloso(object):
 
     def __store_keypair(self, name, key_path, pub_path):
         keys_path = os.path.join(os.path.dirname(
-            self._config_editor._keys_cfg))
+            self._config_editor._keys_cfg), 'keys')
 
         key_file = os.path.join(keys_path, name)
         pub_file = os.path.join(keys_path, name + '.pub')
