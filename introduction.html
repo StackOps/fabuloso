@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Components &mdash; FABuloso 0.1 documentation</title>
+    <title>Introduction &mdash; FABuloso 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
-    <link rel="next" title="Services" href="services.html" />
-    <link rel="prev" title="Catalogs" href="catalogs.html" /> 
+    <link rel="next" title="Installation" href="install.html" />
+    <link rel="prev" title="FABuloso: OpenStack deployments" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,10 +35,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="services.html" title="Services"
+          <a href="install.html" title="Installation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="catalogs.html" title="Catalogs"
+          <a href="index.html" title="FABuloso: OpenStack deployments"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -49,59 +49,26 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="components">
-<h1>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h1>
-<p>A <strong>component</strong> is the fundamental configuration element in <em>FABuloso</em>. It&#8217;s just a python module defining some functions and a <em>component.yml</em> (<a class="reference external" href="http://yaml.org">yaml</a>) defining some <em>metadata</em> and <em>services</em>. A <em>service</em> is a list of functions from that python module that will be executed in the given order.</p>
-<div class="section" id="listing-components">
-<h2>Listing components<a class="headerlink" href="#listing-components" title="Permalink to this headline">¶</a></h2>
-<p>Assuming we have added the <em>folsom</em> catalog as described <a class="reference internal" href="catalogs.html#adding-catalog"><em>here</em></a> we can see all its components by running:</p>
-<div class="highlight-python"><pre>fabuloso &gt; list_components
- * folsom.quantum_plugins
- * folsom.compute
- * folsom.nova
- * folsom.swift
- * folsom.mysql
- * folsom.rabbitmq
- * folsom.cinder
- * folsom.apache
- * folsom.glance
- * folsom.storage
- * folsom.fake
- * folsom.quantum
- * folsom.os
- * folsom.keystone
-fabuloso &gt;</pre>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last"><em>Components</em> names are always prefixed by the <em>catalog</em> name.</p>
+  <div class="section" id="introduction">
+<span id="id1"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p><strong>FABuloso</strong> is a python tool to easily organize and deploy an <a class="reference external" href="http://www.openstack.org">OpenStack</a> architecture using <a class="reference external" href="http://docs.fabfile.org/">Fabric</a>. <em>FABuloso</em> manages configuration with <strong>components</strong> within <strong>catalogs</strong>.</p>
+<div class="section" id="catalogs">
+<h2>Catalogs<a class="headerlink" href="#catalogs" title="Permalink to this headline">¶</a></h2>
+<p>A <strong>catalog</strong> in <em>FABuloso</em> is a collection of <em>components</em> with certain characteristics in common to deploy an OpenStack architecture. For example, a sample catalog could be <em>folsom</em> which would contain all the components needed to deploy OpenStack Folsom.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Currently we only manage <em>catalogs</em> as git repositories. In the future more options will be supported.</p>
 </div>
 </div>
-<div class="section" id="initializing-a-component">
-<span id="initializing-component"></span><h2>Initializing a component<a class="headerlink" href="#initializing-a-component" title="Permalink to this headline">¶</a></h2>
-<p>In order to work with a component we need to <strong>initialize</strong> it:</p>
-<div class="highlight-python"><pre>fabuloso &gt; init_component folsom.mysql testing
-fabuloso [folsom.mysql/testing] &gt;</pre>
-</div>
-<p>To <em>initialize</em> a component we need to pass the <em>component name</em> and the target <em>environment</em> where we would like to execute services on. Note that once initialized, the shell prompt will show that we are &#8220;inside&#8221; an initialized component.</p>
-<p>Now we can <a class="reference internal" href="services.html#listing-services"><em>list</em></a> and <a class="reference internal" href="services.html#executing-service"><em>execute</em></a> services.</p>
-</div>
-<div class="section" id="finalizing-a-component">
-<span id="finalizing-component"></span><h2>Finalizing a component<a class="headerlink" href="#finalizing-a-component" title="Permalink to this headline">¶</a></h2>
-<p>When you have finished working with a component you can run <tt class="docutils literal"><span class="pre">finalize_component</span></tt> to go back to the main <em>FABuloso</em> shell:</p>
-<div class="highlight-python"><pre>fabuloso [folsom.mysql/testing] &gt; execute_service install
-
-[...]
-
-fabuloso [folsom.mysql/testing] &gt; finalize_component
-fabuloso &gt;</pre>
-</div>
-</div>
+<div class="section" id="components">
+<h2>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h2>
+<p>A <strong>component</strong> is the most fundamental configuration element in <em>FABuloso</em>. It&#8217;s just a python module defining some functions and a <em>component.yml</em> (<a class="reference external" href="http://yaml.org">yaml</a>) defining some <em>metadata</em> and <em>services</em>. A <em>service</em> is a list of functions from that python module that will be executed in the given order.</p>
+<p>Components are written in Python using Fabric and can be used to install software, edit its configuration files, create users, enable and start system services, and in short, do anything you could do through Fabric.</p>
 <div class="section" id="component-structure">
-<span id="id1"></span><h2>Component structure<a class="headerlink" href="#component-structure" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h3>Component structure<a class="headerlink" href="#component-structure" title="Permalink to this headline">¶</a></h3>
 <p>To see how a <cite>component</cite> looks like we&#8217;re going to use the <cite>nova</cite> component from <a class="reference external" href="https://github.com/StackOps/fabuloso-catalog/tree/master/nova">https://github.com/StackOps/fabuloso-catalog/tree/master/nova</a>.</p>
 <div class="section" id="component-yml">
-<h3>component.yml<a class="headerlink" href="#component-yml" title="Permalink to this headline">¶</a></h3>
+<h4>component.yml<a class="headerlink" href="#component-yml" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">nova</span>
 <span class="l-Scalar-Plain">file</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">nova.py</span>
 <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Operations over OpenStack Nova service</span>
@@ -143,7 +110,7 @@ fabuloso &gt;</pre>
 </ul>
 </div>
 <div class="section" id="nova-py">
-<h3>nova.py<a class="headerlink" href="#nova-py" title="Permalink to this headline">¶</a></h3>
+<h4>nova.py<a class="headerlink" href="#nova-py" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">install</span><span class="p">(</span><span class="n">cluster</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate nova configuration. Execute on both servers&quot;&quot;&quot;</span>
 
@@ -171,8 +138,21 @@ fabuloso &gt;</pre>
     <span class="c"># ...</span>
 </pre></div>
 </div>
-<p>During the <a class="reference internal" href="#initializing-component"><em>component initialization</em></a> <cite>FABuloso</cite> will ask you for the values of <cite>properties</cite>. Properties are the arguments of the <cite>services</cite> methods.</p>
+<p>During the <a class="reference internal" href="shell.html#initializing-component"><em>component initialization</em></a> <cite>FABuloso</cite> will ask you for the values of <cite>properties</cite>. Properties are the arguments of the <cite>services</cite> methods.</p>
 </div>
+</div>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<p>A <strong>service</strong> is the smallest element in a <em>FABuloso component</em>. A <em>component</em> should have atleast one <em>service</em>. <em>Services</em> are defined in the component <em>metadata</em> and could accept <em>properties</em>. To learn more about how to write a component you would take a look at <a class="reference internal" href="#component-structure"><em>the component structure</em></a>.</p>
+</div>
+<div class="section" id="environments">
+<h2>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h2>
+<p><strong>Environments</strong> contain the information used by <em>FABuloso</em> to securely connect over SSH to a <em>target host</em>.</p>
+</div>
+<div class="section" id="key-pairs">
+<h2>Key Pairs<a class="headerlink" href="#key-pairs" title="Permalink to this headline">¶</a></h2>
+<p><em>FABuloso</em> can manage <strong>keypairs</strong> in order to securely connect to the target hosts and execute <em>services</em>. <em>Keypairs</em> will be referenced later when <a class="reference internal" href="shell.html#adding-environment"><em>adding environments</em></a>.</p>
 </div>
 </div>
 
@@ -184,10 +164,9 @@ fabuloso &gt;</pre>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Components</a><ul>
-<li><a class="reference internal" href="#listing-components">Listing components</a></li>
-<li><a class="reference internal" href="#initializing-a-component">Initializing a component</a></li>
-<li><a class="reference internal" href="#finalizing-a-component">Finalizing a component</a></li>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#catalogs">Catalogs</a></li>
+<li><a class="reference internal" href="#components">Components</a><ul>
 <li><a class="reference internal" href="#component-structure">Component structure</a><ul>
 <li><a class="reference internal" href="#component-yml">component.yml</a></li>
 <li><a class="reference internal" href="#nova-py">nova.py</a></li>
@@ -195,17 +174,22 @@ fabuloso &gt;</pre>
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#services">Services</a></li>
+<li><a class="reference internal" href="#environments">Environments</a></li>
+<li><a class="reference internal" href="#key-pairs">Key Pairs</a></li>
+</ul>
+</li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="catalogs.html"
-                        title="previous chapter">Catalogs</a></p>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">FABuloso: OpenStack deployments</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="services.html"
-                        title="next chapter">Services</a></p>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Installation</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/components.txt"
+    <li><a href="_sources/introduction.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -232,10 +216,10 @@ fabuloso &gt;</pre>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="services.html" title="Services"
+          <a href="install.html" title="Installation"
              >next</a> |</li>
         <li class="right" >
-          <a href="catalogs.html" title="Catalogs"
+          <a href="index.html" title="FABuloso: OpenStack deployments"
              >previous</a> |</li>
         <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>

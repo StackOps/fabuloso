@@ -1,7 +1,28 @@
 Installation
 ============
 
-From github
+
+From Apt
+--------
+
+*FABuloso* can be installed through the *StackOps* apt repos. Just add the repos to your ``sources.list``:
+
+.. code-block:: bash
+
+    echo 'deb http://repos.stackops.net/ folsom main' >> /etc/apt/sources.list
+    echo 'deb http://repos.stackops.net/ folsom-updates main' >> /etc/apt/sources.list
+    echo 'deb http://repos.stackops.net/ folsom-security main' >> /etc/apt/sources.list
+    echo 'deb http://repos.stackops.net/ folsom-backports main' >> /etc/apt/sources.list
+
+And now you can run ``update`` and install *python-fabuloso*:
+
+.. code-block:: bash
+
+    sudo apt-get update
+    sudo apt-get install python-fabuloso
+
+
+From Github
 -----------
 
 We recommend to install *FABuloso* into a *virtualenv*:

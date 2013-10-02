@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>FABuloso &mdash; FABuloso 0.1 documentation</title>
+    <title>FABuloso: OpenStack deployments &mdash; FABuloso 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FABuloso 0.1 documentation" href="#" />
-    <link rel="next" title="Installation" href="install.html" /> 
+    <link rel="next" title="Introduction" href="introduction.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,7 +34,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="install.html" title="Installation"
+          <a href="introduction.html" title="Introduction"
              accesskey="N">next</a> |</li>
         <li><a href="#">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -45,26 +45,25 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="fabuloso">
-<h1>FABuloso<a class="headerlink" href="#fabuloso" title="Permalink to this headline">¶</a></h1>
-<p><strong>FABuloso</strong> is a python tool to deploy <a class="reference external" href="http://www.openstack.org">OpenStack</a> using <a class="reference external" href="http://docs.fabfile.org/">Fabric</a>. <em>FABuloso</em> manages configuration with <strong>components</strong> within <strong>catalogs</strong>.</p>
-<p>A <em>component</em> is the most fundamental configuration element in FABuloso. Components are written in Python using Fabric and can be used to install software, edit its configuration files, create users, enable and start system services, and in short, do anything you could do through Fabric. In turn, a component is divided into <em>services</em> which accept <strong>properties</strong>.</p>
-<p>A <em>catalog</em> is a collection of <em>components</em> with something in common to deploy an OpenStack architecture. For example, in an hypothetical <em>folsom</em> catalog we could have mysql, keystone, nova and so on, components.</p>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>Just run:</p>
-<div class="highlight-python"><pre>$ python setup.py install</pre>
-</div>
-</div>
-<div class="section" id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
-<p>Apache 2.0</p>
-<p>Now you can take a look at the <a class="reference external" href="install.html">installation</a> and <a class="reference external" href="quickstart.html">quickstart</a> guides.</p>
+  <div class="section" id="fabuloso-openstack-deployments">
+<h1>FABuloso: OpenStack deployments<a class="headerlink" href="#fabuloso-openstack-deployments" title="Permalink to this headline">¶</a></h1>
+<p><strong>FABuloso</strong> is a python tool to easily organize and deploy an <a class="reference external" href="http://www.openstack.org">OpenStack</a> architecture using <a class="reference external" href="http://docs.fabfile.org/">Fabric</a>. <em>FABuloso</em> manages configuration with <strong>components</strong> within <strong>catalogs</strong>. For a more deeper insight about what <em>FABuloso</em> does and how it does, take a look at the diagram bellow and the <a class="reference internal" href="introduction.html#introduction"><em>introduction</em></a> page, where we explain the different parts that build <em>FABuloso</em>.</p>
+<img alt="FABuloso architecture" class="align-center" src="_images/fabuloso.png" />
+<p>Once you understand what <em>FABuloso</em> does, you can see the <a class="reference external" href="install.html">installation</a> and <a class="reference external" href="quickstart.html">quickstart</a> guides to start deploying your first OpenStack architecture.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#catalogs">Catalogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#components">Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#environments">Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#key-pairs">Key Pairs</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#from-github">From github</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-apt">From Apt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-github">From Github</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
@@ -73,41 +72,24 @@
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#deploying-a-component">Deploying a component</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Catalogs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="catalogs.html#listing-catalogs">Listing catalogs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="catalogs.html#adding-a-catalog">Adding a catalog</a></li>
-<li class="toctree-l2"><a class="reference internal" href="catalogs.html#showing-a-catalog">Showing a catalog</a></li>
-<li class="toctree-l2"><a class="reference internal" href="catalogs.html#removing-a-catalog">Removing a catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shell.html">Shell</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#catalogs">Catalogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#components">Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#environments">Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shell.html#keypairs">Keypairs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="components.html">Components</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="components.html#listing-components">Listing components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components.html#initializing-a-component">Initializing a component</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components.html#finalizing-a-component">Finalizing a component</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components.html#component-structure">Component structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python-api.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="python-api.html#catalogs">Catalogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api.html#components">Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api.html#environments">Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api.html#keypairs">Keypairs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="services.html">Services</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="services.html#listing-services">Listing services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="services.html#executing-a-service">Executing a service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="keypairs.html">Key Pairs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="keypairs.html#listing-keypairs">Listing keypairs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="keypairs.html#showing-a-keypair">Showing a keypair</a></li>
-<li class="toctree-l2"><a class="reference internal" href="keypairs.html#adding-a-keypair">Adding a keypair</a></li>
-<li class="toctree-l2"><a class="reference internal" href="keypairs.html#removing-a-keypair">Removing a keypair</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="environments.html">Environments</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="environments.html#listing-environments">Listing environments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments.html#adding-an-environment">Adding an environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments.html#showing-an-environment">Showing an environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments.html#removing-an-environment">Removing an environment</a></li>
-</ul>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -127,19 +109,15 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">FABuloso</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#license">License</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#">FABuloso: OpenStack deployments</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="install.html"
-                        title="next chapter">Installation</a></p>
+  <p class="topless"><a href="introduction.html"
+                        title="next chapter">Introduction</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -169,7 +147,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="install.html" title="Installation"
+          <a href="introduction.html" title="Introduction"
              >next</a> |</li>
         <li><a href="#">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>

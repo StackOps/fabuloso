@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
     <link rel="next" title="Quickstart" href="quickstart.html" />
-    <link rel="prev" title="FABuloso" href="index.html" /> 
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,7 +38,7 @@
           <a href="quickstart.html" title="Quickstart"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="FABuloso"
+          <a href="introduction.html" title="Introduction"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -51,8 +51,23 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="from-apt">
+<h2>From Apt<a class="headerlink" href="#from-apt" title="Permalink to this headline">¶</a></h2>
+<p><em>FABuloso</em> can be installed through the <em>StackOps</em> apt repos. Just add the repos to your <tt class="docutils literal"><span class="pre">sources.list</span></tt>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">echo</span> <span class="s1">&#39;deb http://repos.stackops.net/ folsom main&#39;</span> &gt;&gt; /etc/apt/sources.list
+<span class="nb">echo</span> <span class="s1">&#39;deb http://repos.stackops.net/ folsom-updates main&#39;</span> &gt;&gt; /etc/apt/sources.list
+<span class="nb">echo</span> <span class="s1">&#39;deb http://repos.stackops.net/ folsom-security main&#39;</span> &gt;&gt; /etc/apt/sources.list
+<span class="nb">echo</span> <span class="s1">&#39;deb http://repos.stackops.net/ folsom-backports main&#39;</span> &gt;&gt; /etc/apt/sources.list
+</pre></div>
+</div>
+<p>And now you can run <tt class="docutils literal"><span class="pre">update</span></tt> and install <em>python-fabuloso</em>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get update
+sudo apt-get install python-fabuloso
+</pre></div>
+</div>
+</div>
 <div class="section" id="from-github">
-<h2>From github<a class="headerlink" href="#from-github" title="Permalink to this headline">¶</a></h2>
+<h2>From Github<a class="headerlink" href="#from-github" title="Permalink to this headline">¶</a></h2>
 <p>We recommend to install <em>FABuloso</em> into a <em>virtualenv</em>:</p>
 <div class="highlight-bash"><pre>$ virtualenv .venv
 $ source .venv/bin/activate
@@ -80,14 +95,15 @@ $ source .venv/bin/activate
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
-<li><a class="reference internal" href="#from-github">From github</a></li>
+<li><a class="reference internal" href="#from-apt">From Apt</a></li>
+<li><a class="reference internal" href="#from-github">From Github</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">FABuloso</a></p>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Introduction</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="quickstart.html"
                         title="next chapter">Quickstart</a></p>
@@ -123,7 +139,7 @@ $ source .venv/bin/activate
           <a href="quickstart.html" title="Quickstart"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="FABuloso"
+          <a href="introduction.html" title="Introduction"
              >previous</a> |</li>
         <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>

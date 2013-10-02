@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
-    <link rel="next" title="Catalogs" href="catalogs.html" />
+    <link rel="next" title="Shell" href="shell.html" />
     <link rel="prev" title="Installation" href="install.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="catalogs.html" title="Catalogs"
+          <a href="shell.html" title="Shell"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="install.html" title="Installation"
@@ -55,7 +55,7 @@
 <p class="first admonition-title">Note</p>
 <p class="last">First you need to <a class="reference external" href="install.html">install</a> <cite>FABuloso</cite> on your system. Once installed you can follow this quickstart guide to start deploying OpenStack.</p>
 </div>
-<p>In order to deploy some <cite>components</cite> we will use the builtin <cite>FABuloso</cite> shell.</p>
+<p>In order to deploy some <em>components</em> we will use the builtin <a class="reference internal" href="shell.html#fabuloso-shell"><em>FABuloso shell</em></a>.</p>
 <div class="section" id="starting-the-shell">
 <h2>Starting the shell<a class="headerlink" href="#starting-the-shell" title="Permalink to this headline">¶</a></h2>
 <p>Just open a terminal and type:</p>
@@ -95,7 +95,7 @@ fabuloso &gt;</pre>
 Available components are:
 fabuloso &gt;</pre>
 </div>
-<p>No components yet, so lets <a class="reference internal" href="catalogs.html#adding-catalog"><em>add our first catalog</em></a>. Now you can list the new added components:</p>
+<p>No components yet, so lets <a class="reference internal" href="shell.html#adding-catalog"><em>add our first catalog</em></a>. Now you can list the new added components:</p>
 <div class="highlight-python"><pre>fabuloso &gt; list_components
 
 Available components are:
@@ -117,25 +117,25 @@ Available components are:
 </div>
 <div class="section" id="deploying-a-component">
 <h2>Deploying a component<a class="headerlink" href="#deploying-a-component" title="Permalink to this headline">¶</a></h2>
-<p>Now that we have some components we can perform our first <em>OpenStack</em> deployment. First we must <a class="reference internal" href="environments.html#adding-environment"><em>add a new environment</em></a> in order to connect with the target host over <em>SSH</em>.</p>
+<p>Now that we have some components we can perform our first <em>OpenStack</em> deployment. First we must <a class="reference internal" href="shell.html#adding-environment"><em>add a new environment</em></a> in order to connect with the target host over <em>SSH</em>.</p>
 <div class="section" id="initializing-a-component">
 <h3>Initializing a component<a class="headerlink" href="#initializing-a-component" title="Permalink to this headline">¶</a></h3>
-<p>The first step to deploy a component is to <a class="reference internal" href="components.html#initializing-component"><em>initialize it</em></a>. The component initialization is where we customize our deployment using the so called <em>properties</em> (this is the way components are configurable in <em>FABuloso</em>).</p>
+<p>The first step to deploy a component is to <a class="reference internal" href="shell.html#initializing-component"><em>initialize it</em></a>. The component initialization is where we customize our deployment using the so called <em>properties</em> (this is the way components are configurable in <em>FABuloso</em>).</p>
 <p>So, run the following command and populate the prompted properties:</p>
-<div class="highlight-python"><pre>fabuloso &gt; init_component folsom.mysql test
--(initializing folsom.mysql in environment test) Insert value for property 'drop_schema' [None]:
--(initializing folsom.mysql in environment test) Insert value for property 'cinder_password' [stackops]: c1nd3r
--(initializing folsom.mysql in environment test) Insert value for property 'keystone_user' [keystone]:
--(initializing folsom.mysql in environment test) Insert value for property 'cinder_user' [cinder]:
--(initializing folsom.mysql in environment test) Insert value for property 'automation_password' [stackops]: 4ut0m4t10n
--(initializing folsom.mysql in environment test) Insert value for property 'nova_user' [nova]:
--(initializing folsom.mysql in environment test) Insert value for property 'port' []:
--(initializing folsom.mysql in environment test) Insert value for property 'glance_user' [glance]:
+<div class="highlight-python"><pre>fabuloso &gt; init_component folsom.mysql testing
+-(initializing folsom.mysql in environment testing) Insert value for property 'drop_schema' [None]:
+-(initializing folsom.mysql in environment testing) Insert value for property 'cinder_password' [stackops]: c1nd3r
+-(initializing folsom.mysql in environment testing) Insert value for property 'keystone_user' [keystone]:
+-(initializing folsom.mysql in environment testing) Insert value for property 'cinder_user' [cinder]:
+-(initializing folsom.mysql in environment testing) Insert value for property 'automation_password' [stackops]: 4ut0m4t10n
+-(initializing folsom.mysql in environment testing) Insert value for property 'nova_user' [nova]:
+-(initializing folsom.mysql in environment testing) Insert value for property 'port' []:
+-(initializing folsom.mysql in environment testing) Insert value for property 'glance_user' [glance]:
 
 ...
 
--(initializing folsom.mysql in environment test) Insert value for property 'host' [localhost]:
-fabuloso [folsom.mysql/test] &gt;</pre>
+-(initializing folsom.mysql in environment testing) Insert value for property 'host' [localhost]:
+fabuloso [folsom.mysql/testing] &gt;</pre>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -144,7 +144,7 @@ fabuloso [folsom.mysql/test] &gt;</pre>
 </div>
 <div class="section" id="running-a-service">
 <h3>Running a service<a class="headerlink" href="#running-a-service" title="Permalink to this headline">¶</a></h3>
-<p>Right, the component is now initialized and customized for our needs. Now we can <em class="xref std std-ref">execute a service</em> in order to change the target machine state.</p>
+<p>Right, the component is now initialized and customized for our needs. Now we can <a class="reference internal" href="shell.html#executing-service"><em>execute a service</em></a> in order to change the target machine state.</p>
 <p>List the available services:</p>
 <div class="highlight-python"><pre>fabuloso [folsom.mysql/test] &gt; list_services
  * set_quantum
@@ -211,8 +211,8 @@ fabuloso &gt;</pre>
   <p class="topless"><a href="install.html"
                         title="previous chapter">Installation</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="catalogs.html"
-                        title="next chapter">Catalogs</a></p>
+  <p class="topless"><a href="shell.html"
+                        title="next chapter">Shell</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/quickstart.txt"
@@ -242,7 +242,7 @@ fabuloso &gt;</pre>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="catalogs.html" title="Catalogs"
+          <a href="shell.html" title="Shell"
              >next</a> |</li>
         <li class="right" >
           <a href="install.html" title="Installation"

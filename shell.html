@@ -1,0 +1,422 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Shell &mdash; FABuloso 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="next" title="Python API" href="python-api.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="python-api.html" title="Python API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quickstart"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="shell">
+<span id="fabuloso-shell"></span><h1>Shell<a class="headerlink" href="#shell" title="Permalink to this headline">¶</a></h1>
+<p><em>FABuloso</em> comes with an <em>interactive shell</em> to help working with it. The first step is to start the <em>shell</em>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>fabuloso
+</pre></div>
+</div>
+<p>This opens the <em>FABuloso</em> shell with the <tt class="docutils literal"><span class="pre">fabuloso</span> <span class="pre">&gt;</span></tt> prompt. You can type <tt class="docutils literal"><span class="pre">help</span></tt> to see all the available commands:</p>
+<div class="highlight-python"><pre>fabuloso &gt; help
+Available methods are:
+
+* add_environment
+* add_key
+* add_repository
+* del_environment
+* del_key
+* del_repository
+* execute_service
+* finalize_component
+* init_component
+* list_components
+* list_environments
+* list_keys
+* list_repositories
+* list_services
+* show_environment
+* show_key
+* show_repository</pre>
+</div>
+<p>Now, take a look at the sections bellow to see all these commands in action.</p>
+<div class="section" id="catalogs">
+<h2>Catalogs<a class="headerlink" href="#catalogs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-catalogs">
+<h3>Listing catalogs<a class="headerlink" href="#listing-catalogs" title="Permalink to this headline">¶</a></h3>
+<p>To list all catalogs run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_repositories
+fabuloso &gt;</pre>
+</div>
+<p>If no catalogs were shown then it&#8217;s time to add our first catalog.</p>
+</div>
+<div class="section" id="adding-a-catalog">
+<span id="adding-catalog"></span><h3>Adding a catalog<a class="headerlink" href="#adding-a-catalog" title="Permalink to this headline">¶</a></h3>
+<p>We are going to add <a class="reference external" href="https://github.com/StackOps/fabuloso-catalog.git">https://github.com/StackOps/fabuloso-catalog.git</a>  as the <em>folsom</em> catalog:</p>
+<div class="highlight-python"><pre>fabuloso &gt; add_repository folsom https://github.com/StackOps/fabuloso-catalog.git
+fabuloso &gt;</pre>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If you want to register a <em>catalog</em> from a private repo (using ssh for example) you should be able to clone that repo from the machine where <em>FABuloso</em> is installed. In the future secure connections could be made using  the <em>FABuloso</em> keypairs, but currently is not supported. Instead you can forward the authentication agent when connecting over SSH to the <em>FABuloso</em> machine.</p>
+</div>
+<p>Now if we <em>list</em> our catalogs then we should see the new <em>folsom</em>:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_repositories
+ * folsom
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="showing-a-catalog">
+<h3>Showing a catalog<a class="headerlink" href="#showing-a-catalog" title="Permalink to this headline">¶</a></h3>
+<p>Showing a catalog will show us some info about it:</p>
+<div class="highlight-python"><pre>fabuloso &gt; show_repository folsom
+ * Name: folsom
+ * Type: git
+ * Url: https://github.com/StackOps/fabuloso-catalog.git
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="removing-a-catalog">
+<h3>Removing a catalog<a class="headerlink" href="#removing-a-catalog" title="Permalink to this headline">¶</a></h3>
+<p>We can remove a previously registered <em>catalog</em> by running:</p>
+<div class="highlight-python"><pre>fabuloso &gt; del_repository folsom
+fabuloso &gt;</pre>
+</div>
+</div>
+</div>
+<div class="section" id="components">
+<h2>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-components">
+<h3>Listing components<a class="headerlink" href="#listing-components" title="Permalink to this headline">¶</a></h3>
+<p>Assuming we have added the <em>folsom</em> catalog as described <a class="reference internal" href="#adding-catalog"><em>here</em></a> we can see all its components by running:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_components
+ * folsom.quantum_plugins
+ * folsom.compute
+ * folsom.nova
+ * folsom.swift
+ * folsom.mysql
+ * folsom.rabbitmq
+ * folsom.cinder
+ * folsom.apache
+ * folsom.glance
+ * folsom.storage
+ * folsom.fake
+ * folsom.quantum
+ * folsom.os
+ * folsom.keystone
+fabuloso &gt;</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><em>Components</em> names are always prefixed by the <em>catalog</em> name.</p>
+</div>
+</div>
+<div class="section" id="initializing-a-component">
+<span id="initializing-component"></span><h3>Initializing a component<a class="headerlink" href="#initializing-a-component" title="Permalink to this headline">¶</a></h3>
+<p>In order to work with a component we need to <strong>initialize</strong> it:</p>
+<div class="highlight-python"><pre>fabuloso &gt; init_component folsom.mysql testing
+fabuloso [folsom.mysql/testing] &gt;</pre>
+</div>
+<p>To <em>initialize</em> a component we need to pass the <em>component name</em> and the target <em>environment</em> where we would like to execute services on. Note that once initialized, the shell prompt will show that we are &#8220;inside&#8221; an initialized component.</p>
+<p>Now we can <a class="reference internal" href="#listing-services"><em>list</em></a> and <a class="reference internal" href="#executing-service"><em>execute</em></a> services.</p>
+</div>
+<div class="section" id="finalizing-a-component">
+<span id="finalizing-component"></span><h3>Finalizing a component<a class="headerlink" href="#finalizing-a-component" title="Permalink to this headline">¶</a></h3>
+<p>When you have finished working with a component you can run <tt class="docutils literal"><span class="pre">finalize_component</span></tt> to go back to the main <em>FABuloso</em> shell:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/testing] &gt; execute_service install
+
+[...]
+
+fabuloso [folsom.mysql/testing] &gt; finalize_component
+fabuloso &gt;</pre>
+</div>
+</div>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-services">
+<span id="id1"></span><h3>Listing services<a class="headerlink" href="#listing-services" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In order to <strong>list</strong> or <strong>execute</strong> services you need first to  <a class="reference internal" href="#initializing-component"><em>initialize the component</em></a>.</p>
+</div>
+<p>To list the <em>component services</em> run:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/testing] &gt; list_services
+
+Available services are:
+ * set_quantum
+ * set_keystone
+ * teardown
+ * set_cinder
+ * set_automation
+ * set_accounting
+ * set_nova
+ * install
+ * set_glance
+ * validate
+ * set_portal
+fabuloso [folsom.mysql/testing] &gt;</pre>
+</div>
+<p>Well, let&#8217;s execute some of these services.</p>
+</div>
+<div class="section" id="executing-a-service">
+<span id="executing-service"></span><h3>Executing a service<a class="headerlink" href="#executing-a-service" title="Permalink to this headline">¶</a></h3>
+<p>Run:</p>
+<div class="highlight-python"><pre>fabuloso [folsom.mysql/testing] &gt; execute_service install
+[localhost] sudo: echo mysql-server-5.5 mysql-server/root_password password stackops | debconf-set-selections
+[localhost] sudo: echo mysql-server-5.5 mysql-server/root_password_again password stackops | debconf-set-selections
+[localhost] sudo: echo mysql-server-5.5 mysql-server/start_on_boot boolean true | debconf-set-selections
+[localhost] run: dpkg-query -W -f='${Status} ' mysql-server &amp;&amp; echo OK;true
+[localhost] out: install ok installed OK
+[localhost] out:
+
+[localhost] run: dpkg-query -W -f='${Status} ' python-mysqldb &amp;&amp; echo OK;true
+[localhost] out: install ok installed OK
+[localhost] out:
+
+[localhost] sudo: nohup service mysql stop
+
+...
+
+fabuloso [folsom.mysql/testing] &gt;</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Don&#8217;t forget to <a class="reference internal" href="#finalizing-component"><em>finalize the component</em></a> after you finished working with the <em>component</em>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="environments">
+<h2>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-environments">
+<h3>Listing environments<a class="headerlink" href="#listing-environments" title="Permalink to this headline">¶</a></h3>
+<p>By default <em>FABuloso</em> does not come with a preconfigured environment, so the <strong>list_environments</strong> command will return nothing:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_environments
+fabuloso &gt;</pre>
+</div>
+<p>Let&#8217;s add a new environment.</p>
+</div>
+<div class="section" id="adding-an-environment">
+<span id="adding-environment"></span><h3>Adding an environment<a class="headerlink" href="#adding-an-environment" title="Permalink to this headline">¶</a></h3>
+<p>Run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; add_environment
+-(Adding new environment)- Name: testing
+-(Adding new environment)- Remote username: stackops
+-(Adding new environment)- Remote host: 10.0.0.2
+-(Adding new environment)- Remote port: 22
+-(Adding new environment)- Ssh Key name: nonsecure
+fabuloso &gt;</pre>
+</div>
+<p>The <strong>name</strong> field is the identifier we&#8217;re going to use to reference our <em>environment</em> when deploying some component. The remaining fields are the data used to connect over <em>SSH</em> to the target host (<strong>username</strong>, <strong>host</strong>, <strong>port</strong> and <strong>key name</strong>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <strong>key name</strong> should be an existent <em>FABuloso</em> keypair. See how to add a new keypair <a class="reference internal" href="#adding-keypair"><em>here</em></a>.</p>
+</div>
+<p>Now listing keys should show the new added environment:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_environments
+ * testing
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="showing-an-environment">
+<h3>Showing an environment<a class="headerlink" href="#showing-an-environment" title="Permalink to this headline">¶</a></h3>
+<p>To see the values of a specific environment we can run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; show_environment testing
+ * Name: testing
+ * Username: stackops
+ * Host: 10.0.0.2
+ * Port: 22
+ * Key: nonsecure
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="removing-an-environment">
+<h3>Removing an environment<a class="headerlink" href="#removing-an-environment" title="Permalink to this headline">¶</a></h3>
+<p>We can remove an environment from our <em>FABuloso</em> installation by running:</p>
+<div class="highlight-python"><pre>fabuloso &gt; del_environment testing
+fabuloso &gt;</pre>
+</div>
+</div>
+</div>
+<div class="section" id="keypairs">
+<h2>Keypairs<a class="headerlink" href="#keypairs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-keypairs">
+<h3>Listing keypairs<a class="headerlink" href="#listing-keypairs" title="Permalink to this headline">¶</a></h3>
+<p>By default <em>FABuloso</em> comes with the <em>nonsecure</em> keypair. You can list keypairs to see it:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_keys
+ * nonsecure
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="showing-a-keypair">
+<h3>Showing a keypair<a class="headerlink" href="#showing-a-keypair" title="Permalink to this headline">¶</a></h3>
+<p>Also you can get the key info and contents by running:</p>
+<div class="highlight-python"><pre>fabuloso &gt; show_key nonsecure
+ * Name: nonsecure
+ * Key file: /etc/fabuloso/keys/nonsecureid_rsa
+ * Key: -----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAtO4zZwNYOzux [...]
+-----END RSA PRIVATE KEY-----
+
+ * Pub file: /etc/fabuloso/keys/nonsecureid_rsa.pub
+ * Pub: ssh-rsa AAAAB3Nza [...] contactus@stackops.com</pre>
+</div>
+</div>
+<div class="section" id="adding-a-keypair">
+<span id="adding-keypair"></span><h3>Adding a keypair<a class="headerlink" href="#adding-a-keypair" title="Permalink to this headline">¶</a></h3>
+<p>To add a new <em>keypair</em> run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; add_key
+-(Adding new keypair)-Name: my-secure-key
+-(Adding new keypair)-Key path: ~/my-secure-key
+-(Adding new keypair)-Pub path: ~/my-secure-key.pub
+fabuloso &gt;</pre>
+</div>
+<p>Now list the keys to see the new added key:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_keys
+ * nonsecure
+ * my-secure-key
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="removing-a-keypair">
+<h3>Removing a keypair<a class="headerlink" href="#removing-a-keypair" title="Permalink to this headline">¶</a></h3>
+<p>In order to remove an existing <em>keypair</em> just type the <tt class="docutils literal"><span class="pre">del_key</span></tt> command followed by the key name:</p>
+<div class="highlight-python"><pre>fabuloso &gt; del_key my-secure-key
+fabuloso &gt;</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Shell</a><ul>
+<li><a class="reference internal" href="#catalogs">Catalogs</a><ul>
+<li><a class="reference internal" href="#listing-catalogs">Listing catalogs</a></li>
+<li><a class="reference internal" href="#adding-a-catalog">Adding a catalog</a></li>
+<li><a class="reference internal" href="#showing-a-catalog">Showing a catalog</a></li>
+<li><a class="reference internal" href="#removing-a-catalog">Removing a catalog</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#components">Components</a><ul>
+<li><a class="reference internal" href="#listing-components">Listing components</a></li>
+<li><a class="reference internal" href="#initializing-a-component">Initializing a component</a></li>
+<li><a class="reference internal" href="#finalizing-a-component">Finalizing a component</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#services">Services</a><ul>
+<li><a class="reference internal" href="#listing-services">Listing services</a></li>
+<li><a class="reference internal" href="#executing-a-service">Executing a service</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#environments">Environments</a><ul>
+<li><a class="reference internal" href="#listing-environments">Listing environments</a></li>
+<li><a class="reference internal" href="#adding-an-environment">Adding an environment</a></li>
+<li><a class="reference internal" href="#showing-an-environment">Showing an environment</a></li>
+<li><a class="reference internal" href="#removing-an-environment">Removing an environment</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#keypairs">Keypairs</a><ul>
+<li><a class="reference internal" href="#listing-keypairs">Listing keypairs</a></li>
+<li><a class="reference internal" href="#showing-a-keypair">Showing a keypair</a></li>
+<li><a class="reference internal" href="#adding-a-keypair">Adding a keypair</a></li>
+<li><a class="reference internal" href="#removing-a-keypair">Removing a keypair</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="previous chapter">Quickstart</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="python-api.html"
+                        title="next chapter">Python API</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/shell.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="python-api.html" title="Python API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quickstart"
+             >previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, StackOps.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Python API &mdash; FABuloso 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Shell" href="shell.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="shell.html" title="Shell"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="python-api">
+<h1>Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">¶</a></h1>
+<p><em>FABuloso</em> also comes with a <em>Python API</em> that can be used to automate some tasks from a custom Python script.</p>
+<p>Let&#8217;s import <tt class="docutils literal"><span class="pre">fabuloso</span></tt> from you Python interpreter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">fabuloso</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>The core logic of the <em>Python API</em> resides in the <tt class="docutils literal"><span class="pre">Fabuloso</span></tt> class, so before start working with the <em>API</em> we need to instantiate it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span> <span class="o">=</span> <span class="n">fabuloso</span><span class="o">.</span><span class="n">Fabuloso</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span>
+<span class="go">&lt;fabuloso.Fabuloso object at 0x7feec5abf4d0&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Now we can perform the following operations.</p>
+<div class="section" id="catalogs">
+<h2>Catalogs<a class="headerlink" href="#catalogs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-catalogs">
+<h3>Listing catalogs<a class="headerlink" href="#listing-catalogs" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">list_repositories</span></tt> method returns a list of <tt class="docutils literal"><span class="pre">Repository</span></tt> objects:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">catalog</span> <span class="ow">in</span> <span class="n">FAB</span><span class="o">.</span><span class="n">list_repositories</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">catalog</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">],</span> <span class="n">catalog</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">],</span> <span class="n">catalog</span><span class="p">[</span><span class="s">&#39;url&#39;</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="go">folsom git https://github.com/StackOps/fabuloso-catalog.git</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-a-catalog">
+<h3>Adding a catalog<a class="headerlink" href="#adding-a-catalog" title="Permalink to this headline">¶</a></h3>
+<p>To add a new <em>catalog</em> we can use the <tt class="docutils literal"><span class="pre">add_repository</span></tt> method, which accepts the repo <strong>name</strong> and <strong>url</strong> as arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">add_repository</span><span class="p">(</span><span class="s">&#39;grizzly&#39;</span><span class="p">,</span> <span class="s">&#39;https://github.com/StackOps/fabuloso-catalog.git&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="removing-a-catalog">
+<h3>Removing a catalog<a class="headerlink" href="#removing-a-catalog" title="Permalink to this headline">¶</a></h3>
+<p>To remove a <em>catalog</em> use the <tt class="docutils literal"><span class="pre">delete_repository</span></tt> method with the <strong>name</strong> of the catalog you want to remove:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">delete_repository</span><span class="p">(</span><span class="s">&#39;grizzly&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="components">
+<h2>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-components">
+<h3>Listing components<a class="headerlink" href="#listing-components" title="Permalink to this headline">¶</a></h3>
+<p>To get all the catalogs components just run:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">FAB</span><span class="o">.</span><span class="n">list_components</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">component</span>
+<span class="gp">...</span>
+<span class="go">&lt;Component:folsom.quantum_plugins&gt;</span>
+<span class="go">&lt;Component:folsom.compute&gt;</span>
+<span class="go">&lt;Component:folsom.nova&gt;</span>
+<span class="go">&lt;Component:folsom.swift&gt;</span>
+<span class="go">&lt;Component:folsom.mysql&gt;</span>
+<span class="go">[...]</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="initializing-a-component">
+<h3>Initializing a component<a class="headerlink" href="#initializing-a-component" title="Permalink to this headline">¶</a></h3>
+<p>To <em>initialize a component</em> you should call the <tt class="docutils literal"><span class="pre">init_component</span></tt> method with the component <strong>name</strong>, <strong>properties</strong> and target <strong>environment</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nova</span> <span class="o">=</span> <span class="n">FAB</span><span class="o">.</span><span class="n">init_component</span><span class="p">(</span><span class="s">&#39;folsom.nova&#39;</span><span class="p">,</span> <span class="n">properties_dict</span><span class="p">,</span> <span class="n">environment</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">nova</span>
+<span class="go">&lt;Component:folsom.nova&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="executing-a-service">
+<h3>Executing a service<a class="headerlink" href="#executing-a-service" title="Permalink to this headline">¶</a></h3>
+<p>In order to <strong>execute a service</strong> you first need to have an initialized component (see above). The <em>component</em> should have a <em>method</em> for each defined <em>service</em>, so to execute a service you should call a method with the service <em>name</em>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nova</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+<span class="go">[localhost] run: dpkg-query -W -f=&#39;${Status} &#39; nova-api &amp;&amp; echo OK;true</span>
+<span class="go">[localhost] sudo: apt-get install -y nova-api</span>
+<span class="go">[localhost] out: ...</span>
+
+<span class="go">[...]</span>
+
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="environments">
+<h2>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-environments">
+<h3>Listing environments<a class="headerlink" href="#listing-environments" title="Permalink to this headline">¶</a></h3>
+<p>To list all the available <em>environments</em> execute the <tt class="docutils literal"><span class="pre">list_environments</span></tt> method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="n">FAB</span><span class="o">.</span><span class="n">list_environments</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">env</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">],</span> <span class="n">env</span><span class="p">[</span><span class="s">&#39;key_name&#39;</span><span class="p">],</span> <span class="n">env</span><span class="p">[</span><span class="s">&#39;host&#39;</span><span class="p">],</span> <span class="n">env</span><span class="p">[</span><span class="s">&#39;port&#39;</span><span class="p">],</span> <span class="n">env</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span>
+<span class="go">localhost nonsecure localhost 22 stackops</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-an-environment">
+<h3>Adding an environment<a class="headerlink" href="#adding-an-environment" title="Permalink to this headline">¶</a></h3>
+<p>In order to add a new <em>environment</em> you should call the <tt class="docutils literal"><span class="pre">add_environment</span></tt> with the environemnt <strong>name</strong> and the <strong>username</strong>, <strong>host</strong>, <strong>port</strong> and <strong>key_name</strong> arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">add_environment</span><span class="p">(</span><span class="s">&#39;testing&#39;</span><span class="p">,</span> <span class="s">&#39;stackops&#39;</span><span class="p">,</span> <span class="s">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">2222</span><span class="p">,</span> <span class="s">&#39;nonsecure&#39;</span><span class="p">)</span>
+<span class="go">&lt;Environment &#39;testing&#39;: user=stackops, host=localhost, port=2222, key=nonsecure&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="removing-an-environment">
+<h3>Removing an environment<a class="headerlink" href="#removing-an-environment" title="Permalink to this headline">¶</a></h3>
+<p>To <em>delete</em> an existent <em>environment</em> execute the <tt class="docutils literal"><span class="pre">delete_environment</span></tt> method with the environment <strong>name</strong> as argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">delete_environment</span><span class="p">(</span><span class="s">&#39;testing&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="keypairs">
+<h2>Keypairs<a class="headerlink" href="#keypairs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="listing-keypairs">
+<h3>Listing keypairs<a class="headerlink" href="#listing-keypairs" title="Permalink to this headline">¶</a></h3>
+<p>To list all the available <em>keypairs</em> run the <tt class="docutils literal"><span class="pre">list_keys</span></tt> method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">list_keys</span><span class="p">()</span>
+<span class="go">[&lt;SshKey: nonsecure, /etc/fabuloso/keys/nonsecureid_rsa, /etc/fabuloso/keys/nonsecureid_rsa.pub&gt;]</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="showing-a-keypair">
+<h3>Showing a keypair<a class="headerlink" href="#showing-a-keypair" title="Permalink to this headline">¶</a></h3>
+<p>To get an especific <em>keypair</em> run the <tt class="docutils literal"><span class="pre">get_key</span></tt> method with the key <strong>name</strong> as argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="s">&#39;nonsecure&#39;</span><span class="p">)</span>
+<span class="go">&lt;SshKey: nonsecure, /etc/fabuloso/keys/nonsecureid_rsa, /etc/fabuloso/keys/nonsecureid_rsa.pub&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-a-keypair">
+<h3>Adding a keypair<a class="headerlink" href="#adding-a-keypair" title="Permalink to this headline">¶</a></h3>
+<p>If you want to add a new <em>keypair</em> you need to call the <tt class="docutils literal"><span class="pre">add_key</span></tt> method with the key <strong>name</strong>, <strong>key_path</strong> and <strong>pub_path</strong> values as arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">add_key</span><span class="p">(</span><span class="s">&#39;my-secure-key&#39;</span><span class="p">,</span> <span class="s">&#39;~/secureid&#39;</span><span class="p">,</span> <span class="s">&#39;~/secureid.pub&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="removing-a-keypair">
+<h3>Removing a keypair<a class="headerlink" href="#removing-a-keypair" title="Permalink to this headline">¶</a></h3>
+<p>Finally, to remove a <em>keypair</em> use the <tt class="docutils literal"><span class="pre">delete_key</span></tt> method with the key <strong>name</strong> as argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">delete_key</span><span class="p">(</span><span class="s">&#39;my-secure-key&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Python API</a><ul>
+<li><a class="reference internal" href="#catalogs">Catalogs</a><ul>
+<li><a class="reference internal" href="#listing-catalogs">Listing catalogs</a></li>
+<li><a class="reference internal" href="#adding-a-catalog">Adding a catalog</a></li>
+<li><a class="reference internal" href="#removing-a-catalog">Removing a catalog</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#components">Components</a><ul>
+<li><a class="reference internal" href="#listing-components">Listing components</a></li>
+<li><a class="reference internal" href="#initializing-a-component">Initializing a component</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#services">Services</a><ul>
+<li><a class="reference internal" href="#executing-a-service">Executing a service</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#environments">Environments</a><ul>
+<li><a class="reference internal" href="#listing-environments">Listing environments</a></li>
+<li><a class="reference internal" href="#adding-an-environment">Adding an environment</a></li>
+<li><a class="reference internal" href="#removing-an-environment">Removing an environment</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#keypairs">Keypairs</a><ul>
+<li><a class="reference internal" href="#listing-keypairs">Listing keypairs</a></li>
+<li><a class="reference internal" href="#showing-a-keypair">Showing a keypair</a></li>
+<li><a class="reference internal" href="#adding-a-keypair">Adding a keypair</a></li>
+<li><a class="reference internal" href="#removing-a-keypair">Removing a keypair</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="shell.html"
+                        title="previous chapter">Shell</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="next chapter">Examples</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/python-api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="shell.html" title="Shell"
+             >previous</a> |</li>
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, StackOps.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+    </div>
+  </body>
+</html>
