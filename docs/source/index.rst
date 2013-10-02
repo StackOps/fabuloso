@@ -14,6 +14,7 @@ Contents:
 
     install
     quickstart
+    shell
     catalogs
     components
     services

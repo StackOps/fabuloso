@@ -4,63 +4,6 @@ Components
 A **component** is the fundamental configuration element in *FABuloso*. It's just a python module defining some functions and a *component.yml* (`yaml <http://yaml.org>`_) defining some *metadata* and *services*. A *service* is a list of functions from that python module that will be executed in the given order.
 
 
-Listing components
-------------------
-
-Assuming we have added the *folsom* catalog as described :ref:`here <adding_catalog>` we can see all its components by running::
-
-    fabuloso > list_components
-     * folsom.quantum_plugins
-     * folsom.compute
-     * folsom.nova
-     * folsom.swift
-     * folsom.mysql
-     * folsom.rabbitmq
-     * folsom.cinder
-     * folsom.apache
-     * folsom.glance
-     * folsom.storage
-     * folsom.fake
-     * folsom.quantum
-     * folsom.os
-     * folsom.keystone
-    fabuloso >
-
-.. note::
-
-    *Components* names are always prefixed by the *catalog* name.
-
-
-.. _initializing_component:
-
-Initializing a component
-------------------------
-
-In order to work with a component we need to **initialize** it::
-
-    fabuloso > init_component folsom.mysql testing
-    fabuloso [folsom.mysql/testing] >
-
-To *initialize* a component we need to pass the *component name* and the target *environment* where we would like to execute services on. Note that once initialized, the shell prompt will show that we are "inside" an initialized component.
-
-Now we can :ref:`list <listing_services>` and :ref:`execute <executing_service>` services.
-
-
-.. _finalizing_component:
-
-Finalizing a component
----------------------
-
-When you have finished working with a component you can run ``finalize_component`` to go back to the main *FABuloso* shell::
-
-    fabuloso [folsom.mysql/testing] > execute_service install
-
-    [...]
-
-    fabuloso [folsom.mysql/testing] > finalize_component
-    fabuloso >
-
-
 .. _component_structure:
 
 Component structure

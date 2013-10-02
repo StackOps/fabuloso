@@ -5,7 +5,7 @@ Quickstart
 
     First you need to `install <install.html>`_ `FABuloso` on your system. Once installed you can follow this quickstart guide to start deploying OpenStack.
 
-In order to deploy some `components` we will use the builtin `FABuloso` shell.
+In order to deploy some *components* we will use the builtin :ref:`FABuloso shell <fabuloso_shell>`.
 
 Starting the shell
 ------------------
