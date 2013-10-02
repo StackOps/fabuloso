@@ -1,20 +1,32 @@
 FABuloso
 ========
 
-**FABuloso** is a python tool to deploy `OpenStack <http://www.openstack.org>`_ using `Fabric <http://docs.fabfile.org/>`_. *FABuloso* manages configuration with **components** within **catalogs**.
+**FABuloso** is a python tool to easily organize and deploy an `OpenStack <http://www.openstack.org>`_ architecture using `Fabric <http://docs.fabfile.org/>`_. *FABuloso* manages configuration with **components** within **catalogs**. For a more deeper insight about what *FABuloso* does and how it does, take a look at the documentation `introduction <http://fabuloso.stackops.org/introduction.html>`_.
 
-A *component* is the most fundamental configuration element in FABuloso. Components are written in Python using Fabric and can be used to install software, edit its configuration files, create users, enable and start system services, and in short, do anything you could do through Fabric. In turn, a component is divided into *services* which accept **properties**.
 
-A *catalog* is a collection of *components* with something in common to deploy an OpenStack architecture. For example, in an hypothetical *folsom* catalog we could have mysql, keystone, nova and so on, components.
+Documentation
+-------------
+
+The *FABuloso* docs are hosted `here <http://fabuloso.stackops.org>`_.
+
 
 Installation
 ------------
 
-Just run::
+From the source code you can just run::
 
     $ python setup.py install
+
+
+Tests
+-----
+
+Although we have not tests yet, you can execute the ``run_tests.sh`` script in order to check the code with *flake8*::
+
+    $ ./run_tests.sh
+
 
 License
 -------
 
-Apache 2.0
+*FABuloso* is released under the *Apache 2.0* license.

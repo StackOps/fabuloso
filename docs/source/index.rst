@@ -3,23 +3,22 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. include:: ../../README.rst
+FABuloso: OpenStack deployments
+===============================
 
-Now you can take a look at the `installation <install.html>`_ and `quickstart <quickstart.html>`_ guides.
+**FABuloso** is a python tool to easily organize and deploy an `OpenStack <http://www.openstack.org>`_ architecture using `Fabric <http://docs.fabfile.org/>`_. *FABuloso* manages configuration with **components** within **catalogs**. For a more deeper insight about what *FABuloso* does and how it does, take a look at the :ref:`introduction <introduction>`, where we explain the different parts that build *FABuloso*.
+
+Once you understand what *FABuloso* does, you can see the `installation <install.html>`_ and `quickstart <quickstart.html>`_ guides to start deploying your OpenStack architecture.
 
 Contents:
 
 .. toctree::
     :maxdepth: 2
 
+    introduction
     install
     quickstart
     shell
-    catalogs
-    components
-    services
-    keypairs
-    environments
 
 
 Indices and tables

@@ -1,18 +1,37 @@
+.. _introduction:
+
+Introduction
+============
+
+**FABuloso** is a python tool to easily organize and deploy an `OpenStack <http://www.openstack.org>`_ architecture using `Fabric <http://docs.fabfile.org/>`_. *FABuloso* manages configuration with **components** within **catalogs**.
+
+
+Catalogs
+--------
+
+A **catalog** in *FABuloso* is a collection of *components* with certain characteristics in common to deploy an OpenStack architecture. For example, a sample catalog could be *folsom* which would contain all the components needed to deploy OpenStack Folsom.
+
+.. warning::
+
+    Currently we only manage *catalogs* as git repositories. In the future more options will be supported.
+
+
 Components
-==========
+----------
 
-A **component** is the fundamental configuration element in *FABuloso*. It's just a python module defining some functions and a *component.yml* (`yaml <http://yaml.org>`_) defining some *metadata* and *services*. A *service* is a list of functions from that python module that will be executed in the given order.
+A **component** is the most fundamental configuration element in *FABuloso*. It's just a python module defining some functions and a *component.yml* (`yaml <http://yaml.org>`_) defining some *metadata* and *services*. A *service* is a list of functions from that python module that will be executed in the given order.
 
+Components are written in Python using Fabric and can be used to install software, edit its configuration files, create users, enable and start system services, and in short, do anything you could do through Fabric.
 
 .. _component_structure:
 
 Component structure
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 To see how a `component` looks like we're going to use the `nova` component from `<https://github.com/StackOps/fabuloso-catalog/tree/master/nova>`_.
 
 component.yml
-^^^^^^^^^^^^^
+"""""""""""""
 
 .. code-block:: yaml
 
@@ -56,7 +75,7 @@ A service requires the following fields:
 
 
 nova.py
-^^^^^^^
+"""""""
 
 .. code-block:: python
 
@@ -87,3 +106,21 @@ nova.py
         # ...
 
 During the :ref:`component initialization <initializing_component>` `FABuloso` will ask you for the values of `properties`. Properties are the arguments of the `services` methods.
+
+
+Services
+--------
+
+A **service** is the smallest element in a *FABuloso component*. A *component* should have atleast one *service*. *Services* are defined in the component *metadata* and could accept *properties*. To learn more about how to write a component you would take a look at :ref:`the component structure <component_structure>`.
+
+
+Environments
+------------
+
+**Environments** contain the information used by *FABuloso* to securely connect over SSH to a *target host*.
+
+
+Key Pairs
+---------
+
+*FABuloso* can manage **keypairs** in order to securely connect to the target hosts and execute *services*. *Keypairs* will be referenced later when :ref:`adding environments <adding_environment>`.
