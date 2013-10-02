@@ -24,6 +24,7 @@ Contents:
     quickstart
     shell
     python-api
+    examples
 
 
 Indices and tables
