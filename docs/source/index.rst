@@ -23,6 +23,7 @@ Contents:
     install
     quickstart
     shell
+    python-api
 
 
 Indices and tables
