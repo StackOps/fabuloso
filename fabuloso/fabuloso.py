@@ -137,9 +137,20 @@ class Fabuloso(object):
             props[service] = service_props
         return props
 
-    def list_components(self):
+    def list_components(self, repo_name=None):
         """ Return the catalog in a string/json way."""
-        return self._catalog.values()
+
+        if repo_name is None:
+            return self._catalog.values()
+
+        # Ensure the repo exists
+        repo = self.get_repo(repo_name)
+
+        return [comp for name, comp in self._catalog.items()
+                if name.startswith('{}.'.format(repo['name']))]
+
+    def get_repo(self, name):
+        return Repository.import_repo(name)
 
     def list_keys(self):
         return [SshKey(**key) for key in self._config_editor.list_keys()]

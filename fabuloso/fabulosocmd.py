@@ -55,9 +55,33 @@ class FabulosoCmd(cmd.Cmd):
         return dir(self)
 
     def do_list_components(self, args):
-        """ Return the list of available components. """
+        """Return the list of available components. An optional
+        `repo_name` argument can be passed to list only the components
+        of the given repo if any.
+
+        Usage: list_components [repo_name]
+        """
+
+        if args:
+            args = args.split()
+
+            if len(args) != 1:
+                print "'list_components' takes at most 1 argument"
+                return
+
+            repo = args[0]
+        else:
+            repo = None
+
+        try:
+            components = self.fabuloso.list_components(repo)
+        except exceptions.RepositoryNotFound as error:
+            print error.msg
+            return
+
         print "\nAvailable components are:"
-        for component in self.fabuloso.list_components():
+
+        for component in components:
             print " * %s%s%s" % (self.HEADER, component._name, self.ENDC)
 
     def do_list_keys(self, args):
@@ -172,13 +196,14 @@ class FabulosoCmd(cmd.Cmd):
             return
 
         try:
-            repo = fabuloso.Repository.import_repo(repo_name)
-            print " * %sName: %s%s" % (self.HEADER, self.ENDC, repo['name'])
-            print " * %sType: %s%s" % (self.HEADER, self.ENDC, repo['type'])
-            print " * %sUrl: %s%s" % (self.HEADER, self.ENDC, repo['url'])
+            repo = self.fabuloso.get_repo(repo_name)
         except exceptions.RepositoryNotFound as e:
             print(e.msg + " Use 'list_repositories' to see available "
                   "repositories.")
+        else:
+            print " * %sName: %s%s" % (self.HEADER, self.ENDC, repo['name'])
+            print " * %sType: %s%s" % (self.HEADER, self.ENDC, repo['type'])
+            print " * %sUrl: %s%s" % (self.HEADER, self.ENDC, repo['url'])
 
     def do_list_environments(self, args):
         """ Return the list of available environments. """
