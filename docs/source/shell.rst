@@ -97,6 +97,8 @@ Listing components
 Assuming we have added the *folsom* catalog as described :ref:`here <adding_catalog>` we can see all its components by running::
 
     fabuloso > list_components
+
+    Available components are:
      * folsom.quantum_plugins
      * folsom.compute
      * folsom.nova
@@ -111,6 +113,27 @@ Assuming we have added the *folsom* catalog as described :ref:`here <adding_cata
      * folsom.quantum
      * folsom.os
      * folsom.keystone
+     * grizzly.apache
+     * grizzly.glance
+     * grizzly.storage
+     * grizzly.quantum
+     * grizzly.os
+     * grizzly.keystone
+     [...]
+    fabuloso >
+
+Also you can filter components by catalog **name** as follows::
+
+    fabuloso > list_components grizzly
+
+    Available components are:
+     * grizzly.apache
+     * grizzly.glance
+     * grizzly.storage
+     * grizzly.quantum
+     * grizzly.os
+     * grizzly.keystone
+     [...]
     fabuloso >
 
 .. note::

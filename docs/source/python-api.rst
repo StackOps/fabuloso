@@ -68,6 +68,17 @@ To get all the catalogs components just run::
     [...]
     >>>
 
+You can also list components by *catalog* by passing the catalog **name** as the first ``list_components`` method argument::
+
+    >>> for component in FAB.list_components('grizzly'):
+    ...     print component
+    ...
+    <Component:grizzly.quantum_plugins>
+    <Component:grizzly.compute>
+    <Component:grizzly.nova>
+    [...]
+    >>>
+
 Initializing a component
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
