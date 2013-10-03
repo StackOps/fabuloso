@@ -42,11 +42,10 @@ setup(
         ]
     },
     data_files=[
-        (os.path.join(os.path.expanduser('~'),
-                      '.config/fabuloso/keys'),
-         ['keys/nonsecureid_rsa', 'keys/nonsecureid_rsa.pub']),
-        (os.path.join(os.path.expanduser('~/.config/fabuloso')),
-         ['keys/keys.cfg'])
+        (os.path.expanduser('~/.config/fabuloso'),
+         ['etc/keys.cfg', 'etc/environments.cfg']),
+        (os.path.expanduser('~/.config/fabuloso/keys'),
+         ['etc/keys/nonsecureid_rsa', 'etc/keys/nonsecureid_rsa.pub'])
     ],
     license='Apache License 2.0',
     classifiers=[
