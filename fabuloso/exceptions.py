@@ -55,6 +55,14 @@ class RepositoryAlreadyExists(FabulosoError):
         self.msg = self.message % kwargs
 
 
+class RepositoryCloneFailed(FabulosoError):
+    message = 'Failed to clone repository {url}'
+
+    def __init__(self, data):
+        self.msg = self.message.format(**data)
+        super(RepositoryCloneFailed, self).__init__(self.msg)
+
+
 class KeyNotFound(FabulosoError):
 
     message = "Key '%(key_name)s' not found."

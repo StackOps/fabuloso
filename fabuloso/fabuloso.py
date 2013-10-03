@@ -22,7 +22,7 @@ import UserDict
 import yaml
 from sh import git
 
-from . import component, providers, utils, config
+from . import component, providers, utils, config, exceptions
 
 
 class Fabuloso(object):
@@ -35,8 +35,14 @@ class Fabuloso(object):
 
     def add_repository(self, repo_name, repo_url, auth_keys=None):
         self._config_editor.add_repo(repo_name, repo_url)
-        self._clone_repo(repo_name, repo_url)
-        self._load_catalog()
+
+        try:
+            self._clone_repo(repo_name, repo_url)
+        except:
+            self._config_editor.del_repo(repo_name)
+            raise exceptions.RepositoryCloneFailed({'url': repo_url})
+        else:
+            self._load_catalog()
 
     def add_environment(self, name, username, host, port, key_name):
         self.get_key(key_name)

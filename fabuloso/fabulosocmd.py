@@ -309,6 +309,7 @@ class FabulosoCmd(cmd.Cmd):
 
             Currently ssh_key does not work
         """
+
         try:
             repo_name, repo_url = tuple(args.split())
         except ValueError:
@@ -319,7 +320,7 @@ class FabulosoCmd(cmd.Cmd):
 
         try:
             self.fabuloso.add_repository(repo_name, repo_url)
-        except exceptions.RepositoryAlreadyExists as e:
+        except exceptions.FabulosoError as e:
             print e.msg
 
     def do_add_environment(self, args):
