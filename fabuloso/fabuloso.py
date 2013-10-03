@@ -44,6 +44,8 @@ class Fabuloso(object):
         else:
             self._load_catalog()
 
+        return self.get_repository(repo_name)
+
     def add_environment(self, name, username, host, port, key_name):
         self.get_key(key_name)
 
@@ -65,6 +67,8 @@ class Fabuloso(object):
         }
 
         self._config_editor.add_key(keypair)
+
+        return self.get_key(name)
 
     def __store_keypair(self, name, key_path, pub_path):
         keys_path = os.path.join(os.path.dirname(
@@ -153,14 +157,14 @@ class Fabuloso(object):
             components = self._catalog.values()
         else:
             # Ensure the repo exists
-            repo = self.get_repo(repo_name)
+            repo = self.get_repository(repo_name)
 
             components = [comp for name, comp in self._catalog.items()
                           if name.startswith('{}.'.format(repo['name']))]
 
         return sorted(components, key=lambda comp: comp._name)
 
-    def get_repo(self, name):
+    def get_repository(self, name):
         return Repository.import_repo(name)
 
     def list_keys(self):
@@ -175,6 +179,9 @@ class Fabuloso(object):
         for env in envs:
             ret_data.append(Environment(env))
         return ret_data
+
+    def get_environment(self, name):
+        return Environment.import_environment(name)
 
     def list_repositories(self):
         repos = self._config_editor.list_repos()
