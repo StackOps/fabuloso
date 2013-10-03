@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
 #   Copyright 2012-2013 STACKOPS TECHNOLOGIES S.L.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ import fabuloso
 import exceptions
 
 
-class FabulosoCmd(cmd.Cmd):
+class FabulosoShell(cmd.Cmd, object):
     """Override the Cmd class.
 
     This class offers the command-line shell for fabuloso.
@@ -34,10 +34,11 @@ class FabulosoCmd(cmd.Cmd):
     HEADER = '\033[95m'
     prompt = OKGREEN + 'fabuloso' + ENDC + ' > '
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(FabulosoShell, self).__init__(*args, **kwargs)
+
         self.fabuloso = fabuloso.Fabuloso()
         self.current_comp = None
-        cmd.Cmd.__init__(self)
 
     def default(self, line):
         print("Unknow command")
@@ -494,3 +495,7 @@ class FabulosoCmd(cmd.Cmd):
             for doc in cmds_doc:
                 if doc not in ['help', 'quit']:
                     print "* %s%s%s" % (HEADER, doc, ENDC)
+
+
+def main():
+    FabulosoShell().cmdloop()
