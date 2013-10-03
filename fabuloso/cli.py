@@ -8,8 +8,13 @@ Usage:
     fabuloso add_repository <name> <url>
     fabuloso del_repository <name>
     fabuloso list_components [<name>]
-    fabuloso list_services <component> [--environment=<name>]
-    fabuloso execute_service <component> <service> [--environment=<name>] [--properties <file>]...
+    fabuloso list_services [--environment=<name>]
+                           <component>
+
+    fabuloso execute_service [--environment=<name>]
+                             [--properties=<file>]...
+                             <component> <service>
+
     fabuloso list_environments
     fabuloso show_environment <name>
     fabuloso add_environment <name> <username> <host> <port> <key>
@@ -68,7 +73,8 @@ def main():
 
         log.debug('Properties: {}'.format(properties))
 
-        component = FAB.init_component(args['<component>'], properties, environment)
+        component = FAB.init_component(args['<component>'], properties,
+                                       environment)
         getattr(component, args['<service>'])()
     elif args['list_environments']:
         for environment in FAB.list_environments():
@@ -77,7 +83,8 @@ def main():
         print FAB.get_environment(args['<name>'])
     elif args['add_environment']:
         print FAB.add_environment(args['<name>'], args['<username>'],
-                                  args['<host>'], args['<port>'], args['<key>'])
+                                  args['<host>'], args['<port>'],
+                                  args['<key>'])
     elif args['del_environment']:
         FAB.delete_environment(args['<name>'])
     elif args['list_keys']:
