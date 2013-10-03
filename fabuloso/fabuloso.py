@@ -138,16 +138,21 @@ class Fabuloso(object):
         return props
 
     def list_components(self, repo_name=None):
-        """ Return the catalog in a string/json way."""
+        """Returns a list of components, optionaly filtered by
+        `repo_name`, and sorted by component name.
+
+        """
 
         if repo_name is None:
-            return self._catalog.values()
+            components = self._catalog.values()
+        else:
+            # Ensure the repo exists
+            repo = self.get_repo(repo_name)
 
-        # Ensure the repo exists
-        repo = self.get_repo(repo_name)
+            components = [comp for name, comp in self._catalog.items()
+                          if name.startswith('{}.'.format(repo['name']))]
 
-        return [comp for name, comp in self._catalog.items()
-                if name.startswith('{}.'.format(repo['name']))]
+        return sorted(components, key=lambda comp: comp._name)
 
     def get_repo(self, name):
         return Repository.import_repo(name)
