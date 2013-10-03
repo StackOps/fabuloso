@@ -237,9 +237,10 @@ Environments
 Listing environments
 ^^^^^^^^^^^^^^^^^^^^
 
-By default *FABuloso* does not come with a preconfigured environment, so the **list_environments** command will return nothing::
+By default *FABuloso* comes with the ``localhost`` environment preconfigured, so the **list_environments** command will return only that environment::
 
     fabuloso > list_environments
+     * localhost
     fabuloso >
 
 Let's add a new environment.
@@ -268,6 +269,7 @@ The **name** field is the identifier we're going to use to reference our *enviro
 Now listing keys should show the new added environment::
 
     fabuloso > list_environments
+     * localhost
      * testing
     fabuloso >
 
@@ -276,10 +278,10 @@ Showing an environment
 
 To see the values of a specific environment we can run::
 
-    fabuloso > show_environment testing
-     * Name: testing
+    fabuloso > show_environment localhost
+     * Name: localhost
      * Username: stackops
-     * Host: 10.0.0.2
+     * Host: localhost
      * Port: 22
      * Key: nonsecure
     fabuloso >
