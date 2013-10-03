@@ -97,6 +97,8 @@ Listing components
 Assuming we have added the *folsom* catalog as described :ref:`here <adding_catalog>` we can see all its components by running::
 
     fabuloso > list_components
+
+    Available components are:
      * folsom.quantum_plugins
      * folsom.compute
      * folsom.nova
@@ -111,6 +113,27 @@ Assuming we have added the *folsom* catalog as described :ref:`here <adding_cata
      * folsom.quantum
      * folsom.os
      * folsom.keystone
+     * grizzly.apache
+     * grizzly.glance
+     * grizzly.storage
+     * grizzly.quantum
+     * grizzly.os
+     * grizzly.keystone
+     [...]
+    fabuloso >
+
+Also you can filter components by catalog **name** as follows::
+
+    fabuloso > list_components grizzly
+
+    Available components are:
+     * grizzly.apache
+     * grizzly.glance
+     * grizzly.storage
+     * grizzly.quantum
+     * grizzly.os
+     * grizzly.keystone
+     [...]
     fabuloso >
 
 .. note::
@@ -214,9 +237,10 @@ Environments
 Listing environments
 ^^^^^^^^^^^^^^^^^^^^
 
-By default *FABuloso* does not come with a preconfigured environment, so the **list_environments** command will return nothing::
+By default *FABuloso* comes with the ``localhost`` environment preconfigured, so the **list_environments** command will return only that environment::
 
     fabuloso > list_environments
+     * localhost
     fabuloso >
 
 Let's add a new environment.
@@ -245,6 +269,7 @@ The **name** field is the identifier we're going to use to reference our *enviro
 Now listing keys should show the new added environment::
 
     fabuloso > list_environments
+     * localhost
      * testing
     fabuloso >
 
@@ -253,10 +278,10 @@ Showing an environment
 
 To see the values of a specific environment we can run::
 
-    fabuloso > show_environment testing
-     * Name: testing
+    fabuloso > show_environment localhost
+     * Name: localhost
      * Username: stackops
-     * Host: 10.0.0.2
+     * Host: localhost
      * Port: 22
      * Key: nonsecure
     fabuloso >

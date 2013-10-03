@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +14,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -128,6 +129,8 @@ fabuloso &gt;</pre>
 <h3>Listing components<a class="headerlink" href="#listing-components" title="Permalink to this headline">¶</a></h3>
 <p>Assuming we have added the <em>folsom</em> catalog as described <a class="reference internal" href="#adding-catalog"><em>here</em></a> we can see all its components by running:</p>
 <div class="highlight-python"><pre>fabuloso &gt; list_components
+
+Available components are:
  * folsom.quantum_plugins
  * folsom.compute
  * folsom.nova
@@ -142,6 +145,26 @@ fabuloso &gt;</pre>
  * folsom.quantum
  * folsom.os
  * folsom.keystone
+ * grizzly.apache
+ * grizzly.glance
+ * grizzly.storage
+ * grizzly.quantum
+ * grizzly.os
+ * grizzly.keystone
+ [...]
+fabuloso &gt;</pre>
+</div>
+<p>Also you can filter components by catalog <strong>name</strong> as follows:</p>
+<div class="highlight-python"><pre>fabuloso &gt; list_components grizzly
+
+Available components are:
+ * grizzly.apache
+ * grizzly.glance
+ * grizzly.storage
+ * grizzly.quantum
+ * grizzly.os
+ * grizzly.keystone
+ [...]
 fabuloso &gt;</pre>
 </div>
 <div class="admonition note">
@@ -228,8 +251,9 @@ fabuloso [folsom.mysql/testing] &gt;</pre>
 <h2>Environments<a class="headerlink" href="#environments" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="listing-environments">
 <h3>Listing environments<a class="headerlink" href="#listing-environments" title="Permalink to this headline">¶</a></h3>
-<p>By default <em>FABuloso</em> does not come with a preconfigured environment, so the <strong>list_environments</strong> command will return nothing:</p>
+<p>By default <em>FABuloso</em> comes with the <tt class="docutils literal"><span class="pre">localhost</span></tt> environment preconfigured, so the <strong>list_environments</strong> command will return only that environment:</p>
 <div class="highlight-python"><pre>fabuloso &gt; list_environments
+ * localhost
 fabuloso &gt;</pre>
 </div>
 <p>Let&#8217;s add a new environment.</p>
@@ -252,6 +276,7 @@ fabuloso &gt;</pre>
 </div>
 <p>Now listing keys should show the new added environment:</p>
 <div class="highlight-python"><pre>fabuloso &gt; list_environments
+ * localhost
  * testing
 fabuloso &gt;</pre>
 </div>
@@ -259,10 +284,10 @@ fabuloso &gt;</pre>
 <div class="section" id="showing-an-environment">
 <h3>Showing an environment<a class="headerlink" href="#showing-an-environment" title="Permalink to this headline">¶</a></h3>
 <p>To see the values of a specific environment we can run:</p>
-<div class="highlight-python"><pre>fabuloso &gt; show_environment testing
- * Name: testing
+<div class="highlight-python"><pre>fabuloso &gt; show_environment localhost
+ * Name: localhost
  * Username: stackops
- * Host: 10.0.0.2
+ * Host: localhost
  * Port: 22
  * Key: nonsecure
 fabuloso &gt;</pre>
@@ -416,7 +441,7 @@ fabuloso &gt;</pre>
     </div>
     <div class="footer">
         &copy; Copyright 2013, StackOps.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
