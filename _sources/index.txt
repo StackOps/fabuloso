@@ -23,6 +23,7 @@ Contents:
     install
     quickstart
     shell
+    cli
     python-api
     examples
 

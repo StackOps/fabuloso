@@ -14,7 +14,7 @@ Just open a terminal and type:
 
 .. code-block:: bash
 
-    $ fabuloso
+    $ fabuloso-shell
 
 The `FABuloso` shell should be started. Type `help` to see all available commands::
 
