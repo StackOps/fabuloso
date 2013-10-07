@@ -10,11 +10,9 @@ Usage:
     fabuloso list_components [<name>]
     fabuloso list_services [--environment=<name>]
                            <component>
-
     fabuloso execute_service [--environment=<name>]
                              [--properties=<file>]...
                              <component> <service>
-
     fabuloso list_environments
     fabuloso show_environment <name>
     fabuloso add_environment <name> <username> <host> <port> <key>
@@ -36,6 +34,7 @@ import yaml
 from docopt import docopt
 
 import fabuloso
+from fabuloso import utils
 
 
 def main():
@@ -48,53 +47,79 @@ def main():
     FAB = fabuloso.Fabuloso()
 
     if args['list_repositories']:
-        for repo in FAB.list_repositories():
-            print repo
+        utils.print_list(FAB.list_repositories(), ['Name', 'Type', 'URL'])
+
     elif args['show_repository']:
-        print FAB.get_repository(args['<name>'])
+        utils.print_dict(FAB.get_repository(args['<name>']))
+
     elif args['add_repository']:
-        print FAB.add_repository(args['<name>'], args['<url>'])
+        utils.print_dict(FAB.add_repository(args['<name>'], args['<url>']))
+
     elif args['del_repository']:
         FAB.delete_repository(args['<name>'])
+
     elif args['list_components']:
-        for component in FAB.list_components(args['<name>']):
-            print component
+        # Components aren't dicts so we need to convert them first
+
+        utils.print_list(
+            [comp.to_dict() for comp in FAB.list_components(args['<name>'])],
+            ['Name'])
+
     elif args['list_services']:
         environment = FAB.get_environment(args['--environment'])
 
         # Initialize component without properties
         component = FAB.init_component(args['<component>'], {}, environment)
 
-        for service in component._services:
-            print service
+        # Services aren't dicts so we need to convert them first
+        utils.print_list(
+            [{'name': service} for service in component._services],
+            ['Name'])
+
     elif args['execute_service']:
         environment = FAB.get_environment(args['--environment'])
+
         properties = __load_properties(args)
 
         log.debug('Properties: {}'.format(properties))
 
-        component = FAB.init_component(args['<component>'], properties,
-                                       environment)
-        getattr(component, args['<service>'])()
+        component = FAB.init_component(
+            args['<component>'], properties, environment)
+
+        component.execute_service(args['<service>'])
+
     elif args['list_environments']:
-        for environment in FAB.list_environments():
-            print environment
+        utils.print_list(FAB.list_environments(),
+                         ['Name', 'Username', 'Host', 'Port', 'Key Name'])
+
     elif args['show_environment']:
-        print FAB.get_environment(args['<name>'])
+        utils.print_dict(FAB.get_environment(args['<name>']))
+
     elif args['add_environment']:
-        print FAB.add_environment(args['<name>'], args['<username>'],
-                                  args['<host>'], args['<port>'],
-                                  args['<key>'])
+        utils.print_dict(FAB.add_environment(
+            args['<name>'], args['<username>'],
+            args['<host>'], args['<port>'],
+            args['<key>']))
+
     elif args['del_environment']:
         FAB.delete_environment(args['<name>'])
+
     elif args['list_keys']:
-        for key in FAB.list_keys():
-            print key
+        # SshKeys aren't dicts so we need to convert them first
+
+        utils.print_list(
+            [key.to_dict() for key in FAB.list_keys()],
+            ['Name', 'Key file', 'Pub file'])
+
     elif args['show_key']:
-        print FAB.get_key(args['<name>'])
+        # SshKeys aren't dicts so we need to convert them first
+
+        utils.print_dict(FAB.get_key(args['<name>']).to_dict())
+
     elif args['add_key']:
-        print FAB.add_key(args['<name>'], args['<key_path>'],
-                          args['<pub_path>'])
+        utils.print_dict(FAB.add_key(
+            args['<name>'], args['<key_path>'], args['<pub_path>']).to_dict())
+
     elif args['del_key']:
         FAB.delete_key(args['<name>'])
     else:

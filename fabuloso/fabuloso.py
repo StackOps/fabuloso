@@ -307,3 +307,10 @@ class SshKey(object):
     def __repr__(self):
         return '<SshKey: {}, {}, {}>'.format(self.name, self.key_file,
                                              self.pub_file)
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'key_file': self.key_file,
+            'pub_file': self.pub_file
+        }

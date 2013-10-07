@@ -6,3 +6,4 @@ pika==0.9.13
 expects>=0.1,<0.2
 sh==1.09
 docopt==0.6.1
+PrettyTable>=0.6,<0.8
