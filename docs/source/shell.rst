@@ -1,13 +1,13 @@
 .. _fabuloso_shell:
 
-Shell
-=====
+Interactive shell
+=================
 
 *FABuloso* comes with an *interactive shell* to help working with it. The first step is to start the *shell*:
 
 .. code-block:: bash
 
-    $ fabuloso
+    $ fabuloso-shell
 
 This opens the *FABuloso* shell with the ``fabuloso >`` prompt. You can type ``help`` to see all the available commands::
 

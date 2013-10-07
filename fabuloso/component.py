@@ -119,3 +119,8 @@ class Component(object):
 
     def __repr__(self):
         return "<Component:%s>" % (self._name)
+
+    def to_dict(self):
+        return {
+            'name': self._name
+        }

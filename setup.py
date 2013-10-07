@@ -38,7 +38,8 @@ setup(
     packages=['fabuloso'],
     entry_points={
         'console_scripts': [
-            'fabuloso = fabuloso.main:main'
+            'fabuloso-shell = fabuloso.shell:main',
+            'fabuloso = fabuloso.cli:main'
         ]
     },
     data_files=[

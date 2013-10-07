@@ -20,6 +20,7 @@ import ConfigParser
 
 import pika
 import MySQLdb
+import prettytable
 from fabric.api import puts, sudo, get, put, local
 from keystoneclient.v2_0 import client
 
@@ -331,3 +332,30 @@ def _callback(ch, method, properties, body):
 
 def copy(src, dest):
     return shutil.copy(os.path.expanduser(src), dest)
+
+
+def print_dict(obj):
+    table = prettytable.PrettyTable(['Property', 'Value'])
+
+    for k, v in obj.items():
+        table.add_row([k, v])
+
+    print table
+
+
+def print_list(objs, fields):
+    table = prettytable.PrettyTable(fields)
+
+    for obj in objs:
+        row = []
+
+        for field in fields:
+            key_name = field.lower().replace(' ', '_')
+
+            row.append(obj[key_name])
+
+        table.add_row(row)
+
+    print table
+
+
