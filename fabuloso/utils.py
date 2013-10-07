@@ -357,5 +357,3 @@ def print_list(objs, fields):
         table.add_row(row)
 
     print table
-
-
