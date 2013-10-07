@@ -61,7 +61,8 @@ def main():
         FAB.delete_repository(args['<name>'])
 
     elif args['list_components']:
-        # Components aren't dicts so we need to convert them first
+        # TODO(jaimegildesagredo): Components aren't dicts so we need to
+        #                          convert them first
 
         utils.print_list(
             [comp.to_dict() for comp in FAB.list_components(args['<name>'])],
@@ -73,7 +74,9 @@ def main():
         # Initialize component without properties
         component = FAB.init_component(args['<component>'], {}, environment)
 
-        # Services aren't dicts so we need to convert them first
+        # TODO(jaimegildesagredo): Services aren't dicts so we need to
+        #                          convert them first
+
         utils.print_list(
             [{'name': service} for service in component._services],
             ['Name'])
@@ -107,18 +110,23 @@ def main():
         FAB.delete_environment(args['<name>'])
 
     elif args['list_keys']:
-        # SshKeys aren't dicts so we need to convert them first
+        # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
+        #                          convert them first
 
         utils.print_list(
             [key.to_dict() for key in FAB.list_keys()],
             ['Name', 'Key file', 'Pub file'])
 
     elif args['show_key']:
-        # SshKeys aren't dicts so we need to convert them first
+        # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
+        #                          convert them first
 
         utils.print_dict(FAB.get_key(args['<name>']).to_dict())
 
     elif args['add_key']:
+        # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
+        #                          convert them first
+
         utils.print_dict(FAB.add_key(
             args['<name>'], args['<key_path>'], args['<pub_path>']).to_dict())
 
