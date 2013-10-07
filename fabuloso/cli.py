@@ -3,26 +3,28 @@
 """FABuloso: OpenStack deployments
 
 Usage:
-    fabuloso list_repositories
-    fabuloso show_repository <name>
-    fabuloso add_repository <name> <url>
-    fabuloso del_repository <name>
-    fabuloso list_components [<name>]
-    fabuloso list_services [--environment=<name>]
-                           <component>
-    fabuloso execute_service [--environment=<name>]
-                             [--properties=<file>]...
-                             <component> <service>
-    fabuloso list_environments
-    fabuloso show_environment <name>
-    fabuloso add_environment <name> <username> <host> <port> <key>
-    fabuloso del_environment <name>
-    fabuloso list_keys
-    fabuloso show_key <name>
-    fabuloso add_key <name> <key_path> <pub_path>
-    fabuloso del_key <name>
+    fabuloso [--debug] list_repositories
+    fabuloso [--debug] show_repository <name>
+    fabuloso [--debug] add_repository <name> <url>
+    fabuloso [--debug] del_repository <name>
+    fabuloso [--debug] list_components [<name>]
+    fabuloso [--debug] list_services [--environment=<name>]
+                                     <component>
+    fabuloso [--debug] execute_service [--environment=<name>]
+                                       [--properties=<file>]...
+                                       <component> <service>
+    fabuloso [--debug] list_environments
+    fabuloso [--debug] show_environment <name>
+    fabuloso [--debug] add_environment <name> <username> <host> <port> <key>
+    fabuloso [--debug] del_environment <name>
+    fabuloso [--debug] list_keys
+    fabuloso [--debug] show_key <name>
+    fabuloso [--debug] add_key <name> <key_path> <pub_path>
+    fabuloso [--debug] del_key <name>
 
     Options:
+        -h --help                   Show this screen
+        --debug                     Show debug info
         --environment=<name>        Environment [default: localhost]
         --properties=<file>         Properties file in yaml format
 """
@@ -40,7 +42,7 @@ from fabuloso import utils
 def main():
     args = __parse_args()
 
-    log = __get_logger()
+    log = __get_logger(args)
 
     log.debug('Command-line arguments: {}'.format(dict(args)))
 
@@ -130,9 +132,9 @@ def __parse_args():
     return docopt(__doc__)
 
 
-def __get_logger():
+def __get_logger(args):
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.DEBUG if args['--debug'] else logging.INFO)
     logger.addHandler(logging.StreamHandler())
 
     return logger
