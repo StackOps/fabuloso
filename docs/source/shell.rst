@@ -65,7 +65,11 @@ We are going to add `<https://github.com/StackOps/fabuloso-catalog.git>`_  as th
 Now if we *list* our catalogs then we should see the new *folsom*::
 
     fabuloso > list_repositories
-     * folsom
+    +---------+------+--------------------------------------------------+
+    |   Name  | Type |                       URL                        |
+    +---------+------+--------------------------------------------------+
+    |  folsom | git  | https://github.com/StackOps/fabuloso-catalog.git |
+    +---------+------+--------------------------------------------------+
     fabuloso >
 
 Showing a catalog
@@ -74,9 +78,13 @@ Showing a catalog
 Showing a catalog will show us some info about it::
 
     fabuloso > show_repository folsom
-     * Name: folsom
-     * Type: git
-     * Url: https://github.com/StackOps/fabuloso-catalog.git
+    +----------+--------------------------------------------------+
+    | Property |                      Value                       |
+    +----------+--------------------------------------------------+
+    |   url    | https://github.com/StackOps/fabuloso-catalog.git |
+    |   type   |                       git                        |
+    |   name   |                      folsom                      |
+    +----------+--------------------------------------------------+
     fabuloso >
 
 Removing a catalog
@@ -97,29 +105,31 @@ Listing components
 Assuming we have added the *folsom* catalog as described :ref:`here <adding_catalog>` we can see all its components by running::
 
     fabuloso > list_components
-
-    Available components are:
-     * folsom.quantum_plugins
-     * folsom.compute
-     * folsom.nova
-     * folsom.swift
-     * folsom.mysql
-     * folsom.rabbitmq
-     * folsom.cinder
-     * folsom.apache
-     * folsom.glance
-     * folsom.storage
-     * folsom.fake
-     * folsom.quantum
-     * folsom.os
-     * folsom.keystone
-     * grizzly.apache
-     * grizzly.glance
-     * grizzly.storage
-     * grizzly.quantum
-     * grizzly.os
-     * grizzly.keystone
-     [...]
+    +-------------------------+
+    |           Name          |
+    +-------------------------+
+    |      folsom.apache      |
+    |      folsom.cinder      |
+    |      folsom.compute     |
+    |       folsom.fake       |
+    |      folsom.glance      |
+    |     folsom.keystone     |
+    |       folsom.mysql      |
+    |       folsom.nova       |
+    |        folsom.os        |
+    |      folsom.quantum     |
+    |  folsom.quantum_plugins |
+    |     folsom.rabbitmq     |
+    |      folsom.storage     |
+    |       folsom.swift      |
+    |      grizzly.apache     |
+    |      grizzly.cinder     |
+    |     grizzly.compute     |
+    |       grizzly.fake      |
+    |      grizzly.glance     |
+    |     grizzly.keystone    |
+    |            ...          |
+    +-------------------------+
     fabuloso >
 
 Also you can filter components by catalog **name** as follows::
@@ -127,13 +137,17 @@ Also you can filter components by catalog **name** as follows::
     fabuloso > list_components grizzly
 
     Available components are:
-     * grizzly.apache
-     * grizzly.glance
-     * grizzly.storage
-     * grizzly.quantum
-     * grizzly.os
-     * grizzly.keystone
-     [...]
+    +------------------+
+    |       Name       |
+    +------------------+
+    |  grizzly.apache  |
+    |  grizzly.cinder  |
+    | grizzly.compute  |
+    |   grizzly.fake   |
+    |  grizzly.glance  |
+    | grizzly.keystone |
+    |        ...       |
+    +------------------+
     fabuloso >
 
 .. note::
@@ -184,19 +198,21 @@ Listing services
 To list the *component services* run::
 
     fabuloso [folsom.mysql/testing] > list_services
-
-    Available services are:
-     * set_quantum
-     * set_keystone
-     * teardown
-     * set_cinder
-     * set_automation
-     * set_accounting
-     * set_nova
-     * install
-     * set_glance
-     * validate
-     * set_portal
+    +----------------+
+    |      Name      |
+    +----------------+
+    |  set_quantum   |
+    |  set_keystone  |
+    |    teardown    |
+    |   set_cinder   |
+    | set_automation |
+    | set_accounting |
+    |    set_nova    |
+    |    install     |
+    |   set_glance   |
+    |    validate    |
+    |   set_portal   |
+    +----------------+
     fabuloso [folsom.mysql/testing] >
 
 Well, let's execute some of these services.
@@ -240,7 +256,11 @@ Listing environments
 By default *FABuloso* comes with the ``localhost`` environment preconfigured, so the **list_environments** command will return only that environment::
 
     fabuloso > list_environments
-     * localhost
+    +-----------+----------+-----------+------+-----------+
+    |    Name   | Username |    Host   | Port |  Key Name |
+    +-----------+----------+-----------+------+-----------+
+    | localhost | stackops | localhost |  22  | nonsecure |
+    +-----------+----------+-----------+------+-----------+
     fabuloso >
 
 Let's add a new environment.
@@ -258,6 +278,15 @@ Run::
     -(Adding new environment)- Remote host: 10.0.0.2
     -(Adding new environment)- Remote port: 22
     -(Adding new environment)- Ssh Key name: nonsecure
+    +----------+-----------+
+    | Property |   Value   |
+    +----------+-----------+
+    | username | stackops  |
+    | key_name | nonsecure |
+    |   host   | 10.0.0.2  |
+    |   name   |  testing  |
+    |   port   |     22    |
+    +----------+-----------+
     fabuloso >
 
 The **name** field is the identifier we're going to use to reference our *environment* when deploying some component. The remaining fields are the data used to connect over *SSH* to the target host (**username**, **host**, **port** and **key name**).
@@ -269,8 +298,12 @@ The **name** field is the identifier we're going to use to reference our *enviro
 Now listing keys should show the new added environment::
 
     fabuloso > list_environments
-     * localhost
-     * testing
+    +-----------+----------+-----------+------+-----------+
+    |    Name   | Username |    Host   | Port |  Key Name |
+    +-----------+----------+-----------+------+-----------+
+    | localhost | stackops | localhost |  22  | nonsecure |
+    |  testing  | stackops | 10.0.0.2  |  22  | nonsecure |
+    +-----------+----------+-----------+------+-----------+
     fabuloso >
 
 Showing an environment
@@ -279,11 +312,15 @@ Showing an environment
 To see the values of a specific environment we can run::
 
     fabuloso > show_environment localhost
-     * Name: localhost
-     * Username: stackops
-     * Host: localhost
-     * Port: 22
-     * Key: nonsecure
+    +----------+-----------+
+    | Property |   Value   |
+    +----------+-----------+
+    | username |  stackops |
+    | key_name | nonsecure |
+    |   host   | localhost |
+    |   name   | localhost |
+    |   port   |     22    |
+    +----------+-----------+
     fabuloso >
 
 Removing an environment
@@ -304,7 +341,11 @@ Listing keypairs
 By default *FABuloso* comes with the *nonsecure* keypair. You can list keypairs to see it::
 
     fabuloso > list_keys
-     * nonsecure
+    +-----------+------------------------------------+----------------------------------------+
+    |    Name   |               Key file             |               Pub file                 |
+    +-----------+------------------------------------+----------------------------------------+
+    | nonsecure | /etc/fabuloso/keys/nonsecureid_rsa | /etc/fabuloso/keys/nonsecureid_rsa.pub |
+    +-----------+------------------------------------+----------------------------------------+
     fabuloso >
 
 Showing a keypair
@@ -313,14 +354,14 @@ Showing a keypair
 Also you can get the key info and contents by running::
 
     fabuloso > show_key nonsecure
-     * Name: nonsecure
-     * Key file: /etc/fabuloso/keys/nonsecureid_rsa
-     * Key: -----BEGIN RSA PRIVATE KEY-----
-    MIIEowIBAAKCAQEAtO4zZwNYOzux [...]
-    -----END RSA PRIVATE KEY-----
-
-     * Pub file: /etc/fabuloso/keys/nonsecureid_rsa.pub
-     * Pub: ssh-rsa AAAAB3Nza [...] contactus@stackops.com
+    +----------+----------------------------------------+
+    | Property |                  Value                 |
+    +----------+----------------------------------------+
+    | key_file |   /etc/fabuloso/keys/nonsecureid_rsa   |
+    |   name   |                 nonsecure              |
+    | pub_file | /etc/fabuloso/keys/nonsecureid_rsa.pub |
+    +----------+----------------------------------------+
+    fabuloso >
 
 .. _adding_keypair:
 
@@ -333,13 +374,25 @@ To add a new *keypair* run::
     -(Adding new keypair)-Name: my-secure-key
     -(Adding new keypair)-Key path: ~/my-secure-key
     -(Adding new keypair)-Pub path: ~/my-secure-key.pub
+    +----------+----------------------------------------+
+    | Property |                  Value                 |
+    +----------+----------------------------------------+
+    | key_file |    /etc/fabuloso/keys/my-secure-key    |
+    |   name   |               my-secure-key            |
+    | pub_file |  /etc/fabuloso/keys/my-secure-key.pub  |
+    +----------+----------------------------------------+
     fabuloso >
 
 Now list the keys to see the new added key::
 
     fabuloso > list_keys
-     * nonsecure
-     * my-secure-key
+    +---------------+------------------------------------+----------------------------------------+
+    |      Name     |               Key file             |               Pub file                 |
+    +---------------+------------------------------------+----------------------------------------+
+    |   nonsecure   | /etc/fabuloso/keys/nonsecureid_rsa | /etc/fabuloso/keys/nonsecureid_rsa.pub |
+    +---------------+------------------------------------+----------------------------------------+
+    | my-secure-key |  /etc/fabuloso/keys/my-secure-key  |  /etc/fabuloso/keys/my-secure-key.pub  |
+    +---------------+------------------------------------+----------------------------------------+
     fabuloso >
 
 Removing a keypair
