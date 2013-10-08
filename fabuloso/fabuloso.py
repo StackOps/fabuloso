@@ -220,9 +220,9 @@ class Fabuloso(object):
             definition = yaml.load(f.read())
 
         # load the module that belongs to this component
-        component_name = repo + '.' + definition['name']
+        component_name = '{}.{}'.format(repo, definition['name'])
         module_path = os.path.join(comp_dir, definition['file'])
-        module = imp.load_source(definition['name'], module_path)
+        module = imp.load_source(component_name, module_path)
 
         # TODO: read also from the configuration file, now we have
         # only a provider, so we hard core it
