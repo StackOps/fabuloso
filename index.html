@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FABuloso 0.1 documentation" href="#" />
-    <link rel="next" title="Introduction" href="introduction.html" /> 
+    <link rel="next" title="Overview" href="overview.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="introduction.html" title="Introduction"
+          <a href="overview.html" title="Overview"
              accesskey="N">next</a> |</li>
         <li><a href="#">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -48,18 +48,41 @@
             
   <div class="section" id="fabuloso-openstack-deployments">
 <h1>FABuloso: OpenStack deployments<a class="headerlink" href="#fabuloso-openstack-deployments" title="Permalink to this headline">¶</a></h1>
-<p><strong>FABuloso</strong> is a python tool to easily organize and deploy an <a class="reference external" href="http://www.openstack.org">OpenStack</a> architecture using <a class="reference external" href="http://docs.fabfile.org/">Fabric</a>. <em>FABuloso</em> manages configuration with <strong>components</strong> within <strong>catalogs</strong>. For a more deeper insight about what <em>FABuloso</em> does and how it does, take a look at the diagram bellow and the <a class="reference internal" href="introduction.html#introduction"><em>introduction</em></a> page, where we explain the different parts that build <em>FABuloso</em>.</p>
+<p><strong>FABuloso</strong> is a python tool to easily organize and deploy an <a class="reference external" href="http://www.openstack.org">OpenStack</a> architecture using <a class="reference external" href="http://docs.fabfile.org/">Fabric</a>. <em>FABuloso</em> manages configuration with <strong>components</strong> within <strong>catalogs</strong> (take a look at the <a class="reference internal" href="overview.html#overview"><em>overview</em></a> for more info about the different parts of <em>FABuloso</em>).</p>
 <img alt="FABuloso architecture" class="align-center" src="_images/fabuloso.png" />
+<div class="section" id="why-another-deployment-tool-for-openstack">
+<h2>Why another deployment tool for OpenStack?<a class="headerlink" href="#why-another-deployment-tool-for-openstack" title="Permalink to this headline">¶</a></h2>
+<p>We know there are really cool tools out there, but we think we have to focus on doing things <strong>simpler</strong> and <strong>easier</strong>. That&#8217;s because we started developing <em>FABuloso</em> to deploy OpenStack clouds at <em>StackOps</em>. We think the OpenStack community suffers of the &#8216;Golden Hammer&#8217; syndrome about all these nice deployment tools. FABuloso only does what it does, and it does it very well.</p>
+</div>
+<div class="section" id="why-fabric">
+<h2>Why Fabric?<a class="headerlink" href="#why-fabric" title="Permalink to this headline">¶</a></h2>
+<p><em>Fabric</em> is a Python (&gt;= 2.5) library and command-line tool for streamlining the use of SSH for <em>application deployment</em> or <em>systems administration tasks</em>. It provides a basic suite of operations for executing <em>local</em> or <em>remote</em> shell commands (normally or via sudo) and <em>uploading/downloading</em> files, as well as some auxiliary functionality that helps in such tasks. You can learn more from <a class="reference external" href="http://docs.fabfile.org">its website</a>.</p>
+<p><em>Fabric</em> helps us achieve our goals by providing us with a thin layer to communicate with the target server and execute commands on it, with the only requirement of having a base OS installed with a SSH server configured and running. Moreover, being a <strong>push</strong> system gives us full control on the deployment process.</p>
+</div>
+<div class="section" id="which-os-are-supported">
+<h2>Which OS are supported?<a class="headerlink" href="#which-os-are-supported" title="Permalink to this headline">¶</a></h2>
+<p>Currently, we provide support for <a class="reference external" href="http://releases.ubuntu.com/12.04">Ubuntu 12.04 LTS</a> to all our <a class="reference internal" href="catalogs.html#catalogs"><em>catalogs</em></a>, but support for more ubuntu versions and other Linux systems is planned in future releases.</p>
+</div>
+<div class="section" id="which-openstack-versions-are-supported">
+<h2>Which OpenStack versions are supported?<a class="headerlink" href="#which-openstack-versions-are-supported" title="Permalink to this headline">¶</a></h2>
+<p>Right now <strong>Folsom</strong> is actively supported and we are working to also support <strong>Grizzly</strong> and <strong>Habana</strong> as soon as possible. Future OpenStack versions will be supported as well.</p>
+</div>
+<div class="section" id="where-can-i-get-help">
+<h2>Where can I get help?<a class="headerlink" href="#where-can-i-get-help" title="Permalink to this headline">¶</a></h2>
+<p>To ask for <em>help</em>, <em>propose</em> new features, <em>report</em> bugs or whatever you have to tell about <em>FABuloso</em> you can use our discussion mailing at <a class="reference external" href="https://groups.google.com/d/forum/fabuloso-discussion">https://groups.google.com/d/forum/fabuloso-discussion</a>.</p>
+</div>
+</div>
+<div class="section" id="user-guides">
+<h1>User Guides<a class="headerlink" href="#user-guides" title="Permalink to this headline">¶</a></h1>
 <p>Once you understand what <em>FABuloso</em> does, you can see the <a class="reference external" href="install.html">installation</a> and <a class="reference external" href="quickstart.html">quickstart</a> guides to start deploying your first OpenStack architecture.</p>
-<p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#catalogs">Catalogs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#components">Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#services">Services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#environments">Environments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#key-pairs">Key Pairs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#catalogs">Catalogs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#components">Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#environments">Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#key-pairs">Key Pairs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
@@ -73,6 +96,7 @@
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#deploying-a-component">Deploying a component</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Supported Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="shell.html">Interactive shell</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="shell.html#catalogs">Catalogs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shell.html#components">Components</a></li>
@@ -119,14 +143,22 @@
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">FABuloso: OpenStack deployments</a><ul>
+<li><a class="reference internal" href="#why-another-deployment-tool-for-openstack">Why another deployment tool for OpenStack?</a></li>
+<li><a class="reference internal" href="#why-fabric">Why Fabric?</a></li>
+<li><a class="reference internal" href="#which-os-are-supported">Which OS are supported?</a></li>
+<li><a class="reference internal" href="#which-openstack-versions-are-supported">Which OpenStack versions are supported?</a></li>
+<li><a class="reference internal" href="#where-can-i-get-help">Where can I get help?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#user-guides">User Guides</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="introduction.html"
-                        title="next chapter">Introduction</a></p>
+  <p class="topless"><a href="overview.html"
+                        title="next chapter">Overview</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -156,7 +188,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="introduction.html" title="Introduction"
+          <a href="overview.html" title="Overview"
              >next</a> |</li>
         <li><a href="#">FABuloso 0.1 documentation</a> &raquo;</li> 
       </ul>

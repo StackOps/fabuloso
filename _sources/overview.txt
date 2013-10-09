@@ -1,7 +1,7 @@
-.. _introduction:
+.. _overview:
 
-Introduction
-============
+Overview
+========
 
 **FABuloso** is a python tool to easily organize and deploy an `OpenStack <http://www.openstack.org>`_ architecture using `Fabric <http://docs.fabfile.org/>`_. *FABuloso* manages configuration with **components** within **catalogs**.
 
