@@ -25,8 +25,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
     <link rel="next" title="CLI" href="cli.html" />
-    <link rel="prev" title="Supported Catalogs" href="catalogs.html" /> 
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,9 +40,10 @@
           <a href="cli.html" title="CLI"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="catalogs.html" title="Supported Catalogs"
+          <a href="quickstart.html" title="Quickstart"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -68,6 +70,7 @@ Available methods are:
 * del_repository
 * execute_service
 * finalize_component
+* gen_key
 * init_component
 * list_components
 * list_environments
@@ -368,7 +371,7 @@ fabuloso &gt;</pre>
 </div>
 <div class="section" id="adding-a-keypair">
 <span id="adding-keypair"></span><h3>Adding a keypair<a class="headerlink" href="#adding-a-keypair" title="Permalink to this headline">¶</a></h3>
-<p>To add a new <em>keypair</em> run:</p>
+<p>To add an existent <em>keypair</em> run:</p>
 <div class="highlight-python"><pre>fabuloso &gt; add_key
 -(Adding new keypair)-Name: my-secure-key
 -(Adding new keypair)-Key path: ~/my-secure-key
@@ -391,6 +394,20 @@ fabuloso &gt;</pre>
 +---------------+------------------------------------+----------------------------------------+
 | my-secure-key |  /etc/fabuloso/keys/my-secure-key  |  /etc/fabuloso/keys/my-secure-key.pub  |
 +---------------+------------------------------------+----------------------------------------+
+fabuloso &gt;</pre>
+</div>
+</div>
+<div class="section" id="generating-a-keypair">
+<h3>Generating a keypair<a class="headerlink" href="#generating-a-keypair" title="Permalink to this headline">¶</a></h3>
+<p>To generate a new <em>keypair</em> run:</p>
+<div class="highlight-python"><pre>fabuloso &gt; gen_key my-new-key
++----------+-----------------------------------+
+| Property |              Value                |
++----------+-----------------------------------+
+| key_file |   /etc/fabuloso/keys/my-new-key   |
+|   name   |           my-new-key              |
+| pub_file | /etc/fabuloso/keys/my-new-key.pub |
++----------+-----------------------------------+
 fabuloso &gt;</pre>
 </div>
 </div>
@@ -442,6 +459,7 @@ fabuloso &gt;</pre>
 <li><a class="reference internal" href="#listing-keypairs">Listing keypairs</a></li>
 <li><a class="reference internal" href="#showing-a-keypair">Showing a keypair</a></li>
 <li><a class="reference internal" href="#adding-a-keypair">Adding a keypair</a></li>
+<li><a class="reference internal" href="#generating-a-keypair">Generating a keypair</a></li>
 <li><a class="reference internal" href="#removing-a-keypair">Removing a keypair</a></li>
 </ul>
 </li>
@@ -450,8 +468,8 @@ fabuloso &gt;</pre>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="catalogs.html"
-                        title="previous chapter">Supported Catalogs</a></p>
+  <p class="topless"><a href="quickstart.html"
+                        title="previous chapter">Quickstart</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="cli.html"
                         title="next chapter">CLI</a></p>
@@ -487,9 +505,10 @@ fabuloso &gt;</pre>
           <a href="cli.html" title="CLI"
              >next</a> |</li>
         <li class="right" >
-          <a href="catalogs.html" title="Supported Catalogs"
+          <a href="quickstart.html" title="Quickstart"
              >previous</a> |</li>
-        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

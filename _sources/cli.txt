@@ -28,6 +28,7 @@ First of all, run ``fabuloso`` without arguments to see all available commands:
         fabuloso [--debug] list_keys
         fabuloso [--debug] show_key <name>
         fabuloso [--debug] add_key <name> <key_path> <pub_path>
+        fabuloso [--debug] gen_key <name>
         fabuloso [--debug] del_key <name>
     $
 
@@ -288,7 +289,7 @@ Also you can get the key info and contents by running::
 Adding a keypair
 ^^^^^^^^^^^^^^^^
 
-To add a new *keypair* run::
+To add an existent *keypair* run::
 
     $ fabuloso add_key my-secure-key ~/my-secure-key ~/my-secure-key.pub
     +----------+----------------------------------------+
@@ -310,6 +311,21 @@ Now list the keys to see the new added key::
     +---------------+------------------------------------+----------------------------------------+
     | my-secure-key |  /etc/fabuloso/keys/my-secure-key  |  /etc/fabuloso/keys/my-secure-key.pub  |
     +---------------+------------------------------------+----------------------------------------+
+    $
+
+Generating a keypair
+^^^^^^^^^^^^^^^^^^^^
+
+You can also generate a completely new *keypair* with the ``gen_key`` command::
+
+    $ fabuloso gen_key my-new-key
+    +----------+-----------------------------------+
+    | Property |              Value                |
+    +----------+-----------------------------------+
+    | key_file |   /etc/fabuloso/keys/my-new-key   |
+    |   name   |           my-new-key              |
+    | pub_file | /etc/fabuloso/keys/my-new-key.pub |
+    +----------+-----------------------------------+
     $
 
 Removing a keypair

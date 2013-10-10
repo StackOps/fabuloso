@@ -25,6 +25,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="FABuloso 0.1 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
     <link rel="next" title="Python API" href="python-api.html" />
     <link rel="prev" title="Interactive shell" href="shell.html" /> 
   </head>
@@ -41,7 +42,8 @@
         <li class="right" >
           <a href="shell.html" title="Interactive shell"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -73,6 +75,7 @@ Usage:
     fabuloso [--debug] list_keys
     fabuloso [--debug] show_key &lt;name&gt;
     fabuloso [--debug] add_key &lt;name&gt; &lt;key_path&gt; &lt;pub_path&gt;
+    fabuloso [--debug] gen_key &lt;name&gt;
     fabuloso [--debug] del_key &lt;name&gt;
 $</pre>
 </div>
@@ -308,7 +311,7 @@ $</pre>
 </div>
 <div class="section" id="adding-a-keypair">
 <h3>Adding a keypair<a class="headerlink" href="#adding-a-keypair" title="Permalink to this headline">¶</a></h3>
-<p>To add a new <em>keypair</em> run:</p>
+<p>To add an existent <em>keypair</em> run:</p>
 <div class="highlight-python"><pre>$ fabuloso add_key my-secure-key ~/my-secure-key ~/my-secure-key.pub
 +----------+----------------------------------------+
 | Property |                  Value                 |
@@ -328,6 +331,20 @@ $</pre>
 +---------------+------------------------------------+----------------------------------------+
 | my-secure-key |  /etc/fabuloso/keys/my-secure-key  |  /etc/fabuloso/keys/my-secure-key.pub  |
 +---------------+------------------------------------+----------------------------------------+
+$</pre>
+</div>
+</div>
+<div class="section" id="generating-a-keypair">
+<h3>Generating a keypair<a class="headerlink" href="#generating-a-keypair" title="Permalink to this headline">¶</a></h3>
+<p>You can also generate a completely new <em>keypair</em> with the <tt class="docutils literal"><span class="pre">gen_key</span></tt> command:</p>
+<div class="highlight-python"><pre>$ fabuloso gen_key my-new-key
++----------+-----------------------------------+
+| Property |              Value                |
++----------+-----------------------------------+
+| key_file |   /etc/fabuloso/keys/my-new-key   |
+|   name   |           my-new-key              |
+| pub_file | /etc/fabuloso/keys/my-new-key.pub |
++----------+-----------------------------------+
 $</pre>
 </div>
 </div>
@@ -377,6 +394,7 @@ $</pre>
 <li><a class="reference internal" href="#listing-keypairs">Listing keypairs</a></li>
 <li><a class="reference internal" href="#showing-a-keypair">Showing a keypair</a></li>
 <li><a class="reference internal" href="#adding-a-keypair">Adding a keypair</a></li>
+<li><a class="reference internal" href="#generating-a-keypair">Generating a keypair</a></li>
 <li><a class="reference internal" href="#removing-a-keypair">Removing a keypair</a></li>
 </ul>
 </li>
@@ -424,7 +442,8 @@ $</pre>
         <li class="right" >
           <a href="shell.html" title="Interactive shell"
              >previous</a> |</li>
-        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">FABuloso 0.1 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
