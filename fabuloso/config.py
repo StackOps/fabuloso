@@ -67,6 +67,9 @@ class ConfigureEditor(object):
     def get_catalog_dir(self):
         return self._repos_dir
 
+    def get_keys_dir(self):
+        return self._keys_dir
+
     def add_repo(self, name, url):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._repos_cfg)

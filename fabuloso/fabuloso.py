@@ -20,9 +20,12 @@ import shutil
 import UserDict
 
 import yaml
+import sh
 from sh import git
 
 from . import component, providers, utils, config, exceptions
+
+ssh_keygen = getattr(sh, 'ssh-keygen')
 
 
 class Fabuloso(object):
@@ -58,8 +61,13 @@ class Fabuloso(object):
         return Environment(env)
 
     def add_key(self, name, key_path, pub_path):
-        key_file, pub_file = self.__store_keypair(name, key_path, pub_path)
+        return self._add_key(
+            name, *self.__store_keypair(name, key_path, pub_path))
 
+    def gen_key(self, name):
+        return self._add_key(name, *self.__gen_keypair(name))
+
+    def _add_key(self, name, key_file, pub_file):
         keypair = {
             'name': name,
             'key_file': key_file,
@@ -71,14 +79,19 @@ class Fabuloso(object):
         return self.get_key(name)
 
     def __store_keypair(self, name, key_path, pub_path):
-        keys_path = os.path.join(os.path.dirname(
-            self._config_editor._keys_cfg), 'keys')
-
-        key_file = os.path.join(keys_path, name)
-        pub_file = os.path.join(keys_path, name + '.pub')
+        key_file = os.path.join(self._config_editor.get_keys_dir(), name)
+        pub_file = key_file + '.pub'
 
         utils.copy(key_path, key_file)
         utils.copy(pub_path, pub_file)
+
+        return key_file, pub_file
+
+    def __gen_keypair(self, name):
+        key_file = os.path.join(self._config_editor.get_keys_dir(), name)
+        pub_file = key_file + '.pub'
+
+        ssh_keygen('-b', 2048, '-f', key_file, '-N', '')
 
         return key_file, pub_file
 

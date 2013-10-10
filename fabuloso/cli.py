@@ -20,6 +20,7 @@ Usage:
     fabuloso [--debug] list_keys
     fabuloso [--debug] show_key <name>
     fabuloso [--debug] add_key <name> <key_path> <pub_path>
+    fabuloso [--debug] gen_key <name>
     fabuloso [--debug] del_key <name>
 
     Options:
@@ -130,8 +131,15 @@ def main():
         utils.print_dict(FAB.add_key(
             args['<name>'], args['<key_path>'], args['<pub_path>']).to_dict())
 
+    elif args['gen_key']:
+        # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
+        #                          convert them first
+
+        utils.print_dict(FAB.gen_key(args['<name>']).to_dict())
+
     elif args['del_key']:
         FAB.delete_key(args['<name>'])
+
     else:
         sys.exit(1)
 

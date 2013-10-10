@@ -149,6 +149,33 @@ class FabulosoShell(cmd.Cmd, object):
         utils.print_dict(
             self.fabuloso.add_key(name, key_path, pub_path).to_dict())
 
+    def do_gen_key(self, args):
+        """Generates a new key pair"""
+
+        msg_error = ("'gen_key' command needs just one parameter to run. "
+                     "Type 'help gen_key' for more info")
+
+        if not args:
+            print msg_error
+            return
+
+        try:
+            arg_split = tuple(args.split())
+
+            if len(arg_split) != 1:
+                print msg_error
+                return
+
+            name = arg_split[0]
+        except ValueError:
+            print msg_error
+            return
+
+        # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
+        #                          convert them first
+
+        utils.print_dict(self.fabuloso.gen_key(name).to_dict())
+
     def do_del_key(self, args):
         """Deletes a keypair"""
 
@@ -156,7 +183,8 @@ class FabulosoShell(cmd.Cmd, object):
                      "Type 'help del_key' for more info")
 
         if not args:
-            print "del_key command needs just one parameter"
+            print msg_error
+            return
 
         try:
             arg_split = tuple(args.split())

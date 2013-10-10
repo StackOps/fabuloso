@@ -22,6 +22,7 @@ This opens the *FABuloso* shell with the ``fabuloso >`` prompt. You can type ``h
     * del_repository
     * execute_service
     * finalize_component
+    * gen_key
     * init_component
     * list_components
     * list_environments
@@ -368,7 +369,7 @@ Also you can get the key info and contents by running::
 Adding a keypair
 ^^^^^^^^^^^^^^^^
 
-To add a new *keypair* run::
+To add an existent *keypair* run::
 
     fabuloso > add_key
     -(Adding new keypair)-Name: my-secure-key
@@ -393,6 +394,21 @@ Now list the keys to see the new added key::
     +---------------+------------------------------------+----------------------------------------+
     | my-secure-key |  /etc/fabuloso/keys/my-secure-key  |  /etc/fabuloso/keys/my-secure-key.pub  |
     +---------------+------------------------------------+----------------------------------------+
+    fabuloso >
+
+Generating a keypair
+^^^^^^^^^^^^^^^^^^^^
+
+To generate a new *keypair* run::
+
+    fabuloso > gen_key my-new-key
+    +----------+-----------------------------------+
+    | Property |              Value                |
+    +----------+-----------------------------------+
+    | key_file |   /etc/fabuloso/keys/my-new-key   |
+    |   name   |           my-new-key              |
+    | pub_file | /etc/fabuloso/keys/my-new-key.pub |
+    +----------+-----------------------------------+
     fabuloso >
 
 Removing a keypair
