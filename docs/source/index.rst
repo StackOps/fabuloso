@@ -40,21 +40,16 @@ Where can I get help?
 To ask for *help*, *propose* new features, *report* bugs or whatever you have to tell about *FABuloso* you can use our discussion mailing at `https://groups.google.com/d/forum/fabuloso-discussion <https://groups.google.com/d/forum/fabuloso-discussion>`_.
 
 
-User Guides
-===========
+User Guide
+==========
 
 Once you understand what *FABuloso* does, you can see the `installation <install.html>`_ and `quickstart <quickstart.html>`_ guides to start deploying your first OpenStack architecture.
 
 .. toctree::
     :maxdepth: 2
 
-    overview
-    install
-    quickstart
+    reference
     catalogs
-    shell
-    cli
-    python-api
     examples
 
 
