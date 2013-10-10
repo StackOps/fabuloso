@@ -213,16 +213,16 @@ class Fabuloso(object):
                 if os.path.isdir(os.path.join(dir, name))]
 
     def _load_component(self, repo, comp_dir):
-        """ Based on the definition file, build the component.
-        """
+        """ Based on the definition file, build the component."""
+
         definition_path = os.path.join(comp_dir, 'component.yml')
+
         with open(definition_path) as f:
             definition = yaml.load(f.read())
 
         # load the module that belongs to this component
-        component_name = '{}.{}'.format(repo, definition['name'])
-        module_path = os.path.join(comp_dir, definition['file'])
-        module = imp.load_source(component_name, module_path)
+        module = imp.load_source('{}/{}'.format(repo, definition['name']),
+                                 os.path.join(comp_dir, definition['file']))
 
         # TODO: read also from the configuration file, now we have
         # only a provider, so we hard core it
@@ -237,8 +237,9 @@ class Fabuloso(object):
                 list_methods.append(method)
             comp_services[name] = (description, list_methods)
 
-        comp = component.Component(component_name, module, comp_services,
-                                   provider)
+        comp = component.Component('{}.{}'.format(repo, definition['name']),
+                                   module, comp_services, provider)
+
         return comp
 
     def validate_credentials(self, user, password, tenant, endpoint,
