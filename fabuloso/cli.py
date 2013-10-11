@@ -57,7 +57,9 @@ def main():
 
     elif args['add_repository']:
         if args['<key>']:
-            utils.print_dict(FAB.add_repository(args['<name>'], args['<url>'], args['<key>']))
+            utils.print_dict(FAB.add_repository(args['<name>'],
+                                                args['<url>'],
+                                                args['<key>']))
         else:
             utils.print_dict(FAB.add_repository(args['<name>'], args['<url>']))
 
