@@ -70,6 +70,12 @@ class ConfigureEditor(object):
     def get_keys_dir(self):
         return self._keys_dir
 
+    def get_config_ssh_file(self):
+        return os.path.join(self._keys_dir, 'config_ssh')
+
+    def get_git_ssh_script(self):
+        return os.path.join(self._keys_dir, 'git_ssh')
+
     def add_repo(self, name, url):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._repos_cfg)

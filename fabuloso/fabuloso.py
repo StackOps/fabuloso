@@ -36,17 +36,17 @@ class Fabuloso(object):
         """ Init with catalog dir"""
         self._load_catalog()
 
-    def add_repository(self, repo_name, repo_url, auth_keys=None):
-        self._config_editor.add_repo(repo_name, repo_url)
+    def add_repository(self, repo_name, repo_url, auth_keys='nonsecure'):
 
         try:
-            self._clone_repo(repo_name, repo_url)
-        except:
-            self._config_editor.del_repo(repo_name)
-            raise exceptions.RepositoryCloneFailed({'url': repo_url})
+            self._clone_repo(repo_name, repo_url, auth_keys)
+        except Exception as e:
+            raise exceptions.RepositoryCloneFailed({'url': repo_url,
+                                                    'reason': e})
         else:
             self._load_catalog()
 
+        self._config_editor.add_repo(repo_name, repo_url)
         return self.get_repository(repo_name)
 
     def add_environment(self, name, username, host, port, key_name):
@@ -96,6 +96,10 @@ class Fabuloso(object):
         return key_file, pub_file
 
     def delete_key(self, name):
+
+        if name == 'nonsecure':
+            raise exceptions.ReadOnlyKey()
+
         keypair = self.get_key(name)
 
         os.remove(keypair.key_file)
@@ -270,13 +274,14 @@ class Fabuloso(object):
         utils.send_rabbitMQ(service_type, host, port, user, password,
                             virtual_host)
 
-    def _clone_repo(self, name, url, auth_tuple=None):
+    def _clone_repo(self, name, url, auth_key):
+
         path = os.path.join(self._config_editor.get_catalog_dir(), name)
-        if not auth_tuple:
-            git.clone(url, path)
-        else:
-            # TODO: implement for private repos
-            git.clone(url, path)
+        new_env = os.environ.copy()
+        new_env["PKEY"] = SshKey.import_key(auth_key).key_file
+        new_env["CONFIG_SSH"] = self._config_editor.get_config_ssh_file()
+        new_env["GIT_SSH"] = self._config_editor.get_git_ssh_script()
+        git.clone(url, path, _env=new_env)
 
 
 class Environment(UserDict.UserDict):

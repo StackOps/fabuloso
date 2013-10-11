@@ -46,7 +46,10 @@ setup(
         (os.path.expanduser('~/.config/fabuloso'),
          ['etc/keys.cfg', 'etc/environments.cfg']),
         (os.path.expanduser('~/.config/fabuloso/keys'),
-         ['etc/keys/nonsecureid_rsa', 'etc/keys/nonsecureid_rsa.pub'])
+         ['etc/keys/nonsecureid_rsa',
+          'etc/keys/nonsecureid_rsa.pub',
+          'etc/keys/config_ssh',
+          'etc/keys/git_ssh'])
     ],
     license='Apache License 2.0',
     classifiers=[

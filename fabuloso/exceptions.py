@@ -56,11 +56,20 @@ class RepositoryAlreadyExists(FabulosoError):
 
 
 class RepositoryCloneFailed(FabulosoError):
-    message = 'Failed to clone repository {url}'
+    message = 'Failed to clone repository %(url)s. Reason: %(reason)s'
 
     def __init__(self, data):
-        self.msg = self.message.format(**data)
+        self.msg = self.message % data
         super(RepositoryCloneFailed, self).__init__(self.msg)
+
+
+class ReadOnlyKey(FabulosoError):
+
+    message = "'nonsecure' is a read-only key. Can not be deleted"
+
+    def __init__(self, **kwargs):
+        super(ReadOnlyKey, self).__init__(self.message)
+        self.msg = self.message
 
 
 class KeyNotFound(FabulosoError):

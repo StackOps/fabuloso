@@ -337,19 +337,22 @@ class FabulosoShell(cmd.Cmd, object):
             Usage:
                 $ add_repository {repo_name} {repo_url} {ssh_key:optional}
 
-            Currently ssh_key does not work
         """
-
-        try:
-            repo_name, repo_url = tuple(args.split())
-        except ValueError:
-            print("'add_repository' command needs two parameters to run. "
+        list_args = args.split()
+        if len(list_args) == 2:
+            # If there are only two arguments, insert the default key
+            list_args.append('nonsecure')
+        elif len(list_args) == 3:
+            pass
+        else:
+            print("'add_repository' command needs two or three "
+                  "parameters to run. "
                   "Type 'help add_repository' for more info")
 
             return
 
         try:
-            repo = self.fabuloso.add_repository(repo_name, repo_url)
+            repo = self.fabuloso.add_repository(*tuple(list_args))
         except exceptions.FabulosoError as e:
             print e.msg
         else:
