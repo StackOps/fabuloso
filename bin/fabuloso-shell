@@ -6,10 +6,10 @@
 #     This is just an invocation wrapper. (Done for faster start-up.)
 #     The main body of the client is in fabuloso.py
 # --
-from fabuloso import cli
+from fabuloso import shell
 
 if __name__ == "__main__":
     try:
-        cli.main()
+        shell.main()
     except KeyboardInterrupt:
         print "\n\nReceived Ctrl-C or other break signal. Exiting."
