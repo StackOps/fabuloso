@@ -19,6 +19,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends},
  python-cuisine,
  python-yaml,
  python-sh,
+ python-docopt,
  git,
  pep8
 Description: StackOps remote executor
