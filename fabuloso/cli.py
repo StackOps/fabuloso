@@ -13,6 +13,7 @@ Usage:
     fabuloso [--debug] execute_service [--environment=<name>]
                                        [--properties=<file>]...
                                        <component> <service>
+    fabuloso [--debug] get_template <component>
     fabuloso [--debug] list_environments
     fabuloso [--debug] show_environment <name>
     fabuloso [--debug] add_environment <name> <username> <host> <port> <key>
@@ -31,6 +32,7 @@ Usage:
 """
 
 import sys
+import json
 import logging
 
 import yaml
@@ -98,6 +100,9 @@ def main():
             args['<component>'], properties, environment)
 
         component.execute_service(args['<service>'])
+
+    elif args['get_template']:
+        print json.dumps(FAB.get_template(args['<component>']), indent=4)
 
     elif args['list_environments']:
         utils.print_list(FAB.list_environments(),
