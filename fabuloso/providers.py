@@ -15,6 +15,7 @@
 #   limitations under the License.
 
 from fabric.context_managers import settings
+from exceptions import FabulosoError
 
 
 class Provider(object):
@@ -35,10 +36,13 @@ class FabricProvider(Provider):
         super(FabricProvider, self).__init__()
 
     def execute_method(self, method, **kwargs):
-        with settings(warn_only=True, host_string=self.env['host'],
-                      key_filename=self.env['ssh_key_file'],
-                      port=self.env['port'], user=self.env['username']):
-            return method(**kwargs)
+        try:
+            with settings(host_string=self.env['host'],
+                          key_filename=self.env['ssh_key_file'],
+                          port=self.env['port'], user=self.env['username']):
+                return method(**kwargs)
+        except SystemExit:
+            raise FabulosoError
 
 
 class DummyProvider(Provider):
