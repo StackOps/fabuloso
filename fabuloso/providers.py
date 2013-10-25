@@ -16,6 +16,7 @@
 
 from fabric.context_managers import settings
 from exceptions import FabulosoError
+import traceback
 
 
 class Provider(object):
@@ -42,6 +43,7 @@ class FabricProvider(Provider):
                           port=self.env['port'], user=self.env['username']):
                 return method(**kwargs)
         except SystemExit:
+            traceback.print_exc()
             raise FabulosoError
 
 
