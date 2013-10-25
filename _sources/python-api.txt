@@ -89,6 +89,46 @@ To *initialize a component* you should call the ``init_component`` method with t
     <Component:folsom.nova>
     >>>
 
+The ``properties_dict`` argument passed to the ``init_component`` method above should be a *dict* containing all the properties for the given component. This could be the generated with the ``get_template`` method explained below.
+
+Component template
+^^^^^^^^^^^^^^^^^^
+
+To generate a template dict with the all component properties and its default values we can call the ``get_template`` method with the component name as the first positional argument::
+
+    >>> FAB.get_template('folsom.nova')
+    {'admin_token': '',
+     'auth_host': '127.0.0.1',
+     'auth_port': '35357',
+     'auth_protocol': 'http',
+     'cluster': False,
+     'database_type': '',
+     'drop_schema': None,
+     'endpoint': '',
+     'host': '',
+     'install_database': None,
+     'management_ip': '',
+     'mysql_host': '127.0.0.1',
+     'mysql_password': 'stackops',
+     'mysql_port': '3306',
+     'mysql_schema': 'nova',
+     'mysql_username': 'nova',
+     'password': '',
+     'port': '',
+     'props': '',
+     'rpassword': None,
+     'rport': None,
+     'ruser': None,
+     'schema': '',
+     'service_type': '',
+     'tenant': '',
+     'user': '',
+     'username': '',
+     'virtual_host': None}
+     >>>
+
+The returned dict can be stored, modified and finally used to *initialize a component* and then run some of its services.
+
 
 Services
 --------

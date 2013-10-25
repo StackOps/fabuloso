@@ -68,6 +68,7 @@ Usage:
     fabuloso [--debug] execute_service [--environment=&lt;name&gt;]
                                        [--properties=&lt;file&gt;]...
                                        &lt;component&gt; &lt;service&gt;
+    fabuloso [--debug] get_template &lt;component&gt;
     fabuloso [--debug] list_environments
     fabuloso [--debug] show_environment &lt;name&gt;
     fabuloso [--debug] add_environment &lt;name&gt; &lt;username&gt; &lt;host&gt; &lt;port&gt; &lt;key&gt;
@@ -178,6 +179,44 @@ $</pre>
 $</pre>
 </div>
 </div>
+<div class="section" id="component-template">
+<h3>Component template<a class="headerlink" href="#component-template" title="Permalink to this headline">¶</a></h3>
+<p>We can generate a json with all the properties and its default values for a given component using the <tt class="docutils literal"><span class="pre">get_template</span></tt> command. See the example bellow to generate the template for <em>folsom.mysql</em>:</p>
+<div class="highlight-python"><pre>$ fabuloso get_template folsom.mysql
+{
+    "drop_schema": null,
+    "cinder_password": "stackops",
+    "keystone_user": "keystone",
+    "cinder_user": "cinder",
+    "automation_password": "stackops",
+    "nova_user": "nova",
+    "port": "",
+    "glance_user": "glance",
+    "quantum_password": "stackops",
+    "portal_user": "portal",
+    "nova_password": "stackops",
+    "schema": "",
+    "username": "",
+    "root_pass": "stackops",
+    "install_database": null,
+    "portal_password": "stackops",
+    "automation_user": "automation",
+    "database_type": "",
+    "host": "",
+    "keystone_password": "stackops",
+    "accounting_password": "stackops",
+    "password": "",
+    "glance_password": "stackops",
+    "quantum_user": "quantum",
+    "accounting_user": "activity"
+}
+$</pre>
+</div>
+<p>The generated template is printed to the <em>stdout</em>, so we can generate a json file, to be used as the value for the <tt class="docutils literal"><span class="pre">--properties</span></tt> option in the <tt class="docutils literal"><span class="pre">execute_service</span></tt> command, by redirecting the <em>stdout</em> to a file:</p>
+<div class="highlight-python"><pre>$ fabuloso get_template folsom.mysql &gt; mysql-properties.json
+$</pre>
+</div>
+</div>
 </div>
 <div class="section" id="services">
 <h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
@@ -206,8 +245,8 @@ $</pre>
 </div>
 <div class="section" id="executing-a-service">
 <h3>Executing a service<a class="headerlink" href="#executing-a-service" title="Permalink to this headline">¶</a></h3>
-<p>Run:</p>
-<div class="highlight-python"><pre>$ fabuloso execute_service folsom.mysql install
+<p>We are going to execute the <tt class="docutils literal"><span class="pre">install</span></tt> service of the <em>folsom.mysql</em> component using the properties file generated in the previous step. The service will be executed in the <tt class="docutils literal"><span class="pre">localhost</span></tt> default <em>FABuloso</em> environment. So, let&#8217;s run:</p>
+<div class="highlight-python"><pre>$ fabuloso execute_service --properties=mysql-properties.json --environment=localhost folsom.mysql install
 [localhost] sudo: echo mysql-server-5.5 mysql-server/root_password password stackops | debconf-set-selections
 [localhost] sudo: echo mysql-server-5.5 mysql-server/root_password_again password stackops | debconf-set-selections
 [localhost] sudo: echo mysql-server-5.5 mysql-server/start_on_boot boolean true | debconf-set-selections
@@ -376,6 +415,7 @@ $</pre>
 </li>
 <li><a class="reference internal" href="#components">Components</a><ul>
 <li><a class="reference internal" href="#listing-components">Listing components</a></li>
+<li><a class="reference internal" href="#component-template">Component template</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#services">Services</a><ul>

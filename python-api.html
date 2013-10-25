@@ -136,6 +136,44 @@
 <span class="go">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
+<p>The <tt class="docutils literal"><span class="pre">properties_dict</span></tt> argument passed to the <tt class="docutils literal"><span class="pre">init_component</span></tt> method above should be a <em>dict</em> containing all the properties for the given component. This could be the generated with the <tt class="docutils literal"><span class="pre">get_template</span></tt> method explained below.</p>
+</div>
+<div class="section" id="component-template">
+<h3>Component template<a class="headerlink" href="#component-template" title="Permalink to this headline">¶</a></h3>
+<p>To generate a template dict with the all component properties and its default values we can call the <tt class="docutils literal"><span class="pre">get_template</span></tt> method with the component name as the first positional argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FAB</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;folsom.nova&#39;</span><span class="p">)</span>
+<span class="go">{&#39;admin_token&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;auth_host&#39;: &#39;127.0.0.1&#39;,</span>
+<span class="go"> &#39;auth_port&#39;: &#39;35357&#39;,</span>
+<span class="go"> &#39;auth_protocol&#39;: &#39;http&#39;,</span>
+<span class="go"> &#39;cluster&#39;: False,</span>
+<span class="go"> &#39;database_type&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;drop_schema&#39;: None,</span>
+<span class="go"> &#39;endpoint&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;host&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;install_database&#39;: None,</span>
+<span class="go"> &#39;management_ip&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;mysql_host&#39;: &#39;127.0.0.1&#39;,</span>
+<span class="go"> &#39;mysql_password&#39;: &#39;stackops&#39;,</span>
+<span class="go"> &#39;mysql_port&#39;: &#39;3306&#39;,</span>
+<span class="go"> &#39;mysql_schema&#39;: &#39;nova&#39;,</span>
+<span class="go"> &#39;mysql_username&#39;: &#39;nova&#39;,</span>
+<span class="go"> &#39;password&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;port&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;props&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;rpassword&#39;: None,</span>
+<span class="go"> &#39;rport&#39;: None,</span>
+<span class="go"> &#39;ruser&#39;: None,</span>
+<span class="go"> &#39;schema&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;service_type&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;tenant&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;user&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;username&#39;: &#39;&#39;,</span>
+<span class="go"> &#39;virtual_host&#39;: None}</span>
+<span class="go"> &gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>The returned dict can be stored, modified and finally used to <em>initialize a component</em> and then run some of its services.</p>
 </div>
 </div>
 <div class="section" id="services">
@@ -241,6 +279,7 @@
 <li><a class="reference internal" href="#components">Components</a><ul>
 <li><a class="reference internal" href="#listing-components">Listing components</a></li>
 <li><a class="reference internal" href="#initializing-a-component">Initializing a component</a></li>
+<li><a class="reference internal" href="#component-template">Component template</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#services">Services</a><ul>

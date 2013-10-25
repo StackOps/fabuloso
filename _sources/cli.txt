@@ -21,6 +21,7 @@ First of all, run ``fabuloso`` without arguments to see all available commands:
         fabuloso [--debug] execute_service [--environment=<name>]
                                            [--properties=<file>]...
                                            <component> <service>
+        fabuloso [--debug] get_template <component>
         fabuloso [--debug] list_environments
         fabuloso [--debug] show_environment <name>
         fabuloso [--debug] add_environment <name> <username> <host> <port> <key>
@@ -143,6 +144,46 @@ We also can filter components by catalog **name** as follows::
     +-------------------------+
     $
 
+Component template
+^^^^^^^^^^^^^^^^^^
+
+We can generate a json with all the properties and its default values for a given component using the ``get_template`` command. See the example bellow to generate the template for *folsom.mysql*::
+
+    $ fabuloso get_template folsom.mysql
+    {
+        "drop_schema": null,
+        "cinder_password": "stackops",
+        "keystone_user": "keystone",
+        "cinder_user": "cinder",
+        "automation_password": "stackops",
+        "nova_user": "nova",
+        "port": "",
+        "glance_user": "glance",
+        "quantum_password": "stackops",
+        "portal_user": "portal",
+        "nova_password": "stackops",
+        "schema": "",
+        "username": "",
+        "root_pass": "stackops",
+        "install_database": null,
+        "portal_password": "stackops",
+        "automation_user": "automation",
+        "database_type": "",
+        "host": "",
+        "keystone_password": "stackops",
+        "accounting_password": "stackops",
+        "password": "",
+        "glance_password": "stackops",
+        "quantum_user": "quantum",
+        "accounting_user": "activity"
+    }
+    $
+
+The generated template is printed to the *stdout*, so we can generate a json file, to be used as the value for the ``--properties`` option in the ``execute_service`` command, by redirecting the *stdout* to a file::
+
+    $ fabuloso get_template folsom.mysql > mysql-properties.json
+    $
+
 
 Services
 --------
@@ -175,9 +216,9 @@ Well, let's execute some of these services.
 Executing a service
 ^^^^^^^^^^^^^^^^^^^
 
-Run::
+We are going to execute the ``install`` service of the *folsom.mysql* component using the properties file generated in the previous step. The service will be executed in the ``localhost`` default *FABuloso* environment. So, let's run::
 
-    $ fabuloso execute_service folsom.mysql install
+    $ fabuloso execute_service --properties=mysql-properties.json --environment=localhost folsom.mysql install
     [localhost] sudo: echo mysql-server-5.5 mysql-server/root_password password stackops | debconf-set-selections
     [localhost] sudo: echo mysql-server-5.5 mysql-server/root_password_again password stackops | debconf-set-selections
     [localhost] sudo: echo mysql-server-5.5 mysql-server/start_on_boot boolean true | debconf-set-selections
