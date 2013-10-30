@@ -4,7 +4,7 @@
  *
  * Sphinx stylesheet -- nature theme.
  *
- * :copyright: Copyright 2007-2011 by the Sphinx team, see AUTHORS.
+ * :copyright: Copyright 2007-2013 by the Sphinx team, see AUTHORS.
  * :license: BSD, see LICENSE for details.
  *
  */
@@ -60,7 +60,7 @@ div.footer a {
 }
  
 div.related {
-    background-color: #6BA81E;
+    background-color: #b02929;
     line-height: 32px;
     color: #fff;
     text-shadow: 0px 1px 0 #444;
@@ -68,7 +68,7 @@ div.related {
 }
  
 div.related a {
-    color: #E2F3CC;
+    color: #ffffff;
 }
  
 div.sphinxsidebar {
@@ -171,7 +171,7 @@ a.headerlink {
 }
  
 a.headerlink:hover {
-    background-color: #c60f0f;
+    background-color: #b02929;
     color: white;
 }
  
