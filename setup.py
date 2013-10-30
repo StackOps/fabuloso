@@ -29,7 +29,7 @@ elif sys.version_info < (2, 6):
 
 setup(
     name='fabuloso',
-    version='0.1',
+    version='1.0',
     author='StackOps',
     author_email='developers@stackops.com',
     description='StackOps remote executor',
@@ -53,10 +53,11 @@ setup(
     ],
     license='Apache License 2.0',
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
+        "Intended Audience :: System Administrators",
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
