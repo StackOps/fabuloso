@@ -22,6 +22,16 @@ And now you can run ``update`` and install *python-fabuloso*:
     sudo apt-get install python-fabuloso
 
 
+From PyPI
+---------
+
+To install *FABuloso* from the public Python Package index just run:
+
+.. code-block:: bash
+
+    $ pip install fabuloso
+
+
 From Github
 -----------
 
@@ -33,7 +43,7 @@ We recommend to install *FABuloso* into a *virtualenv*:
     $ source .venv/bin/activate
     (.venv)$
 
-You can install the latest `FABuloso` from the `github repo <https://github.com/StackOps/fabuloso>`_ using pip:
+You can install the latest *FABuloso* from the `github repo <https://github.com/StackOps/fabuloso>`_ using pip:
 
 .. code-block:: bash
 
