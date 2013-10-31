@@ -64,14 +64,23 @@
 </pre></div>
 </div>
 <p>And now you can run <tt class="docutils literal"><span class="pre">update</span></tt> and install <em>python-fabuloso</em>:</p>
-<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get update
-sudo apt-get install python-fabuloso
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
+<span class="nv">$ </span>sudo apt-get install python-fabuloso
 </pre></div>
 </div>
 </div>
 <div class="section" id="from-pypi">
 <h2>From PyPI<a class="headerlink" href="#from-pypi" title="Permalink to this headline">¶</a></h2>
-<p>To install <em>FABuloso</em> from the public Python Package index just run:</p>
+<p>Before install <em>FABuloso</em> from PyPI you need to meet some requirements in your system.</p>
+<p>First you need the latest <a class="reference external" href="https://pypi.python.org/pypi/distribute/">distribute</a> version installed. To do so you can use <em>pip</em> as follows:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install --upgrade distribute
+</pre></div>
+</div>
+<p>Once the latest <em>distribute</em> version is installed in your system you should install the <strong>mysql-client</strong> development files, <strong>python development headers</strong> and <strong>git</strong> (here you can use your favorite package manager). For example, to install those requirements in ubuntu you can run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install -y libmysqlclient-dev python-dev git
+</pre></div>
+</div>
+<p>And finally you can install <em>FABuloso</em> using <em>pip</em> or <em>easy_install</em>:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install fabuloso
 </pre></div>
 </div>

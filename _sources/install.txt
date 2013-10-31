@@ -18,14 +18,28 @@ And now you can run ``update`` and install *python-fabuloso*:
 
 .. code-block:: bash
 
-    sudo apt-get update
-    sudo apt-get install python-fabuloso
+    $ sudo apt-get update
+    $ sudo apt-get install python-fabuloso
 
 
 From PyPI
 ---------
 
-To install *FABuloso* from the public Python Package index just run:
+Before install *FABuloso* from PyPI you need to meet some requirements in your system.
+
+First you need the latest `distribute <https://pypi.python.org/pypi/distribute/>`_ version installed. To do so you can use *pip* as follows:
+
+.. code-block:: bash
+
+    $ pip install --upgrade distribute
+
+Once the latest *distribute* version is installed in your system you should install the **mysql-client** development files, **python development headers** and **git** (here you can use your favorite package manager). For example, to install those requirements in ubuntu you can run:
+
+.. code-block:: bash
+
+    $ sudo apt-get install -y libmysqlclient-dev python-dev git
+
+And finally you can install *FABuloso* using *pip* or *easy_install*:
 
 .. code-block:: bash
 
