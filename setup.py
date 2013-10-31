@@ -18,21 +18,24 @@ import os
 import sys
 from setuptools import setup
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
-
 if sys.version_info < (2, 7):
     requirements.append('argparse')
 elif sys.version_info < (2, 6):
     raise 'Must use python 2.6 or greater'
 
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
+
+with open('README.rst') as f:
+    long_description = f.read()
 
 setup(
     name='fabuloso',
     version='1.0',
     author='StackOps',
     author_email='developers@stackops.com',
-    description='StackOps remote executor',
+    description='FABuloso is a python tool to easily organize and deploy an OpenStack architecture using Fabric',
+    long_description=long_description,
     url='https://github.com/StackOps/fabuloso',
     install_requires=requirements,
     packages=['fabuloso'],
