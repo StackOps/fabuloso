@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-FABuloso: OpenStack deployments
-===============================
+FABuloso: OpenStack deployments (Built by StackOps)
+===================================================
 
 **FABuloso** is a python tool to easily organize and deploy an `OpenStack <http://www.openstack.org>`_ architecture using `Fabric <http://docs.fabfile.org/>`_. *FABuloso* manages configuration with **components** within **catalogs** (take a look at the :ref:`overview <overview>` for more info about the different parts of *FABuloso*).
 
@@ -15,7 +15,33 @@ FABuloso: OpenStack deployments
 Why another deployment tool for OpenStack?
 ------------------------------------------
 
-We know there are really cool tools out there, but we think we have to focus on doing things **simpler** and **easier**. That's because we started developing *FABuloso* to deploy OpenStack clouds at *StackOps*. We think the OpenStack community suffers of the 'Golden Hammer' syndrome about all these nice deployment tools. FABuloso only does what it does, and it does it very well.
+We know there are really cool tools out there, but we think we have to focus on doing things **simpler** and **easier**. That's the reason why we started developing *FABuloso* to deploy OpenStack clouds at *StackOps*. We think the OpenStack community suffers of the 'Golden Hammer' syndrome about all these nice deployment tools. FABuloso only does what it does, and it does it very well.
+
+About StackOps
+--------------
+
+The **OpenStack™** open source platform offers cloud computing solutions for companies of all sizes and industries. Thanks to contributions from developers from around the world, **its technology improves every day**. For this reason, StackOps has always trusted it to provide service to our customers.
+
+However, many of our potential customers found **the platform difficult to use**.
+
+For this reason, in 2010 StackOps created **StackOps Community Distro©**, inception of all the suite of StackOps products, the distribution package that makes it **easy to deploy clouds with OpenStack™ and eliminates the technological barrier** for the end user.
+
+And it worked.
+
+The appearance of StackOps© caused such a storm that StackOps achieved `extensive media coverage <http://www.eweek.com/c/a/Cloud-Computing/StackOps-Distribution-Offers-an-Introduction-to-OpenStack-Cloud-679865/>`_, blogs, `books <http://shop.oreilly.com/product/0636920021674.do>`_ and of course **thousands of downloads**. This product offered real value to people. And since then there have been new users every day. For this reason, the product improved in 2013; **StackOps 360©**, a solution for **managing your own clouds and those of third parties effortlessly with OpenStack™**.
+
+STACKOPS 360: Effortless OpenStack™
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**StackOps 360®** is a package of four products bundled on top of our popular StackOps distro built on *FABuloso*, enabling easy management, of both public and private clouds, with complete functionality:
+
+    * Create computing clouds
+    * Automate your processes
+    * Control resource usage
+    * Offer your customers a pay‐per-use solution
+    * Provide the best user experience
+
+So when you are ready to get your *FABuloso* flavored OpenStack deployment to an enterprise-grade, fully supported solution, `download StackOps360 <http://stackops.com/products-services>`_ and don’t forget to `contact us <http://stackops.com/contact>`_.
 
 Why Fabric?
 -----------
