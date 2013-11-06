@@ -6,6 +6,7 @@ Usage:
     fabuloso [--debug] list_repositories
     fabuloso [--debug] show_repository <name>
     fabuloso [--debug] add_repository [--key=<key>]
+                                      [--branch=<branch>]
                                       <name> <url>
     fabuloso [--debug] del_repository <name>
     fabuloso [--debug] list_components [<name>]
@@ -29,6 +30,7 @@ Usage:
         -h --help                   Show this screen
         --debug                     Show debug info
         --key=<key>                 Private key [default: nonsecure]
+        --branch=<branch>           The git branch name [default: master]
         --environment=<name>        Environment [default: localhost]
         --properties=<file>         Properties file in yaml format
 """
@@ -54,7 +56,8 @@ def main():
     FAB = fabuloso.Fabuloso()
 
     if args['list_repositories']:
-        utils.print_list(FAB.list_repositories(), ['Name', 'Type', 'URL'])
+        utils.print_list(FAB.list_repositories(),
+                         ['Name', 'Type', 'URL', 'Branch'])
 
     elif args['show_repository']:
         utils.print_dict(FAB.get_repository(args['<name>']))
@@ -62,6 +65,7 @@ def main():
     elif args['add_repository']:
         utils.print_dict(FAB.add_repository(args['<name>'],
                                             args['<url>'],
+                                            args['--branch'],
                                             args['--key']))
 
     elif args['del_repository']:

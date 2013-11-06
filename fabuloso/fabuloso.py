@@ -36,17 +36,18 @@ class Fabuloso(object):
         """ Init with catalog dir"""
         self._load_catalog()
 
-    def add_repository(self, repo_name, repo_url, auth_keys='nonsecure'):
+    def add_repository(self, repo_name, repo_url, branch='master',
+                       auth_keys='nonsecure'):
 
         try:
-            self._clone_repo(repo_name, repo_url, auth_keys)
+            self._clone_repo(repo_name, repo_url, branch, auth_keys)
         except Exception as e:
             raise exceptions.RepositoryCloneFailed({'url': repo_url,
                                                     'reason': e})
         else:
             self._load_catalog()
 
-        self._config_editor.add_repo(repo_name, repo_url)
+        self._config_editor.add_repo(repo_name, repo_url, branch)
         return self.get_repository(repo_name)
 
     def add_environment(self, name, username, host, port, key_name):
@@ -274,14 +275,14 @@ class Fabuloso(object):
         utils.send_rabbitMQ(service_type, host, port, user, password,
                             virtual_host)
 
-    def _clone_repo(self, name, url, auth_key):
+    def _clone_repo(self, name, url, branch, auth_key):
 
         path = os.path.join(self._config_editor.get_catalog_dir(), name)
         new_env = os.environ.copy()
         new_env["PKEY"] = SshKey.import_key(auth_key).key_file
         new_env["CONFIG_SSH"] = self._config_editor.get_config_ssh_file()
         new_env["GIT_SSH"] = self._config_editor.get_git_ssh_script()
-        git.clone(url, path, _env=new_env)
+        git.clone(url, path, '--branch', branch, _env=new_env)
 
 
 class Environment(UserDict.UserDict):
@@ -297,10 +298,10 @@ class Environment(UserDict.UserDict):
 
 
 class Repository(UserDict.UserDict):
-
     def __repr__(self):
-        return ("<Repository '%(name)s': type=%(type)s, url=%(url)s " %
-                self.data)
+        return ("<Repository '{name}': "
+                "type={type}, url={url}, "
+                "branch={branch}>".format(**self))
 
     @classmethod
     def import_repo(cls, name):

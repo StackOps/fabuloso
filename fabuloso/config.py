@@ -76,13 +76,16 @@ class ConfigureEditor(object):
     def get_git_ssh_script(self):
         return os.path.join(self._keys_dir, 'git_ssh')
 
-    def add_repo(self, name, url):
+    def add_repo(self, name, url, branch):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._repos_cfg)
+
         if not config_parser.has_section(name):
             config_parser.add_section(name)
             config_parser.set(name, 'type', 'git')
             config_parser.set(name, 'url', url)
+            config_parser.set(name, 'branch', branch)
+
             with open(self._repos_cfg, 'w') as index_file:
                 config_parser.write(index_file)
         else:
@@ -209,34 +212,39 @@ class ConfigureEditor(object):
     def get_repo(self, name):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._repos_cfg)
+
         if not config_parser.has_section(name):
             excp_data = {'repo_name': name}
             raise exceptions.RepositoryNotFound(**excp_data)
-        else:
-            repo = {'name': name}
-            for item in config_parser.items(name):
-                repo[item[0]] = item[1]
-            return repo
 
-    def list_envs(self):
-        config_parser = ConfigParser.ConfigParser()
-        config_parser.read(self._environments_cfg)
-
-        list_environments = []
-
-        for section in config_parser.sections():
-            env = {'name': section}
-
-            for item in config_parser.items(section):
-                env[item[0]] = item[1]
-
-            list_environments.append(env)
-
-        return list_environments
+        return self._get_repo(name, config_parser)
 
     def list_repos(self):
         config_parser = ConfigParser.ConfigParser()
         config_parser.read(self._repos_cfg)
+
+        repos = []
+
+        for name in config_parser.sections():
+            repos.append(self._get_repo(name, config_parser))
+
+        return repos
+
+    def _get_repo(self, name, config_parser):
+        repo = {'name': name}
+
+        for item in config_parser.items(name):
+            repo[item[0]] = item[1]
+
+        # For those repos cloned previously to branch clone support
+        # set the branch as 'master'
+        repo.setdefault('branch', 'master')
+
+        return repo
+
+    def list_envs(self):
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._environments_cfg)
 
         list_environments = []
 

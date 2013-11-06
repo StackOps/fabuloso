@@ -299,7 +299,7 @@ class FabulosoShell(cmd.Cmd, object):
         """ Return the list of available repositories. """
 
         utils.print_list(self.fabuloso.list_repositories(),
-                         ['Name', 'Type', 'URL'])
+                         ['Name', 'Type', 'URL', 'Branch'])
 
     def do_show_repository(self, args):
         """ Prints the details of a repo.
@@ -340,10 +340,13 @@ class FabulosoShell(cmd.Cmd, object):
         """
         list_args = args.split()
         if len(list_args) == 2:
+            # Always clone the master branch!
+            list_args.append('master')
             # If there are only two arguments, insert the default key
             list_args.append('nonsecure')
         elif len(list_args) == 3:
-            pass
+            # Always clone the master branch!
+            list_args.insert(2, 'master')
         else:
             print("'add_repository' command needs two or three "
                   "parameters to run. "

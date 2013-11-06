@@ -14,6 +14,7 @@ First of all, run ``fabuloso`` without arguments to see all available commands:
         fabuloso [--debug] list_repositories
         fabuloso [--debug] show_repository <name>
         fabuloso [--debug] add_repository [--key=<key>]
+                                          [--branch=<branch>]
                                           <name> <url>
         fabuloso [--debug] del_repository <name>
         fabuloso [--debug] list_components [<name>]
@@ -56,25 +57,31 @@ Adding a catalog
 We are going to add `<https://github.com/StackOps/fabuloso-catalog.git>`_  as the *folsom* catalog::
 
     $ fabuloso add_repository folsom https://github.com/StackOps/fabuloso-catalog.git
+    +---------+------+--------------------------------------------------+--------+
+    |   Name  | Type |                       URL                        | Branch |
+    +---------+------+--------------------------------------------------+--------+
+    |  folsom | git  | https://github.com/StackOps/fabuloso-catalog.git | master |
+    +---------+------+--------------------------------------------------+--------+
+    $
 
-Now if we *list* our catalogs then we should see the new *folsom*::
+And if you need to register a *catalog* from a specific branch you can pass the ``--branch`` option with the branch name::
 
-    $ fabuloso list_repositories
-    +---------+------+--------------------------------------------------+
-    |   Name  | Type |                       URL                        |
-    +---------+------+--------------------------------------------------+
-    |  folsom | git  | https://github.com/StackOps/fabuloso-catalog.git |
-    +---------+------+--------------------------------------------------+
+    $ fabuloso add_repository --branch my-feature-branch folsom-feature https://github.com/StackOps/fabuloso-catalog.git
+    +-----------------+------+--------------------------------------------------+-------------------+
+    |       Name      | Type |                       URL                        |       Branch      |
+    +-----------------+------+--------------------------------------------------+-------------------+
+    |  folsom-feature | git  | https://github.com/StackOps/fabuloso-catalog.git | my-feature-branch |
+    +-----------------+------+--------------------------------------------------+-------------------+
     $
 
 Also you can add a new *catalog* from a private git repository using one of the *FABuloso* :ref:`stored key pairs <key_pairs>` by passing the ``--key`` option as follows::
 
     $ fabuloso add_repository --key=my-secure-key custom git@github.com/custom/private-custom.git
-    +---------+------+--------------------------------------------------+
-    |   Name  | Type |                       URL                        |
-    +---------+------+--------------------------------------------------+
-    |  custom | git  | git@github.com/custom/private-custom.git         |
-    +---------+------+--------------------------------------------------+
+    +---------+------+--------------------------------------------------+--------+
+    |   Name  | Type |                       URL                        | Branch |
+    +---------+------+--------------------------------------------------+--------+
+    |  custom | git  | git@github.com/custom/private-custom.git         | master |
+    +---------+------+--------------------------------------------------+--------+
     $
 
 Showing a catalog
@@ -89,6 +96,7 @@ Showing a catalog will show us some info about it::
     |   url    | https://github.com/StackOps/fabuloso-catalog.git |
     |   type   |                       git                        |
     |   name   |                      folsom                      |
+    |  branch  |                      master                      |
     +----------+--------------------------------------------------+
     $
 
