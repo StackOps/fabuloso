@@ -59,9 +59,9 @@ We are going to add `<https://github.com/StackOps/fabuloso-catalog.git>`_  as th
     fabuloso > add_repository folsom https://github.com/StackOps/fabuloso-catalog.git
     fabuloso >
 
-.. warning::
+.. note::
 
-    If you want to register a *catalog* from a private repo (using ssh for example) you should be able to clone that repo from the machine where *FABuloso* is installed. In the future secure connections could be made using  the *FABuloso* keypairs, but currently is not supported. Instead you can forward the authentication agent when connecting over SSH to the *FABuloso* machine.
+    You can also register a new *catalog* from a private git repository by passing an optional third argument with the name of one of the *FABuloso* :ref:`key pairs <key_pairs>`.
 
 Now if we *list* our catalogs then we should see the new *folsom*::
 

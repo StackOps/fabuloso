@@ -5,7 +5,8 @@
 Usage:
     fabuloso [--debug] list_repositories
     fabuloso [--debug] show_repository <name>
-    fabuloso [--debug] add_repository <name> <url> [<key>]
+    fabuloso [--debug] add_repository [--key=<key>]
+                                      <name> <url>
     fabuloso [--debug] del_repository <name>
     fabuloso [--debug] list_components [<name>]
     fabuloso [--debug] list_services [--environment=<name>]
@@ -27,6 +28,7 @@ Usage:
     Options:
         -h --help                   Show this screen
         --debug                     Show debug info
+        --key=<key>                 Private key [default: nonsecure]
         --environment=<name>        Environment [default: localhost]
         --properties=<file>         Properties file in yaml format
 """
@@ -58,12 +60,9 @@ def main():
         utils.print_dict(FAB.get_repository(args['<name>']))
 
     elif args['add_repository']:
-        if args['<key>']:
-            utils.print_dict(FAB.add_repository(args['<name>'],
-                                                args['<url>'],
-                                                args['<key>']))
-        else:
-            utils.print_dict(FAB.add_repository(args['<name>'], args['<url>']))
+        utils.print_dict(FAB.add_repository(args['<name>'],
+                                            args['<url>'],
+                                            args['--key']))
 
     elif args['del_repository']:
         FAB.delete_repository(args['<name>'])

@@ -13,7 +13,8 @@ First of all, run ``fabuloso`` without arguments to see all available commands:
     Usage:
         fabuloso [--debug] list_repositories
         fabuloso [--debug] show_repository <name>
-        fabuloso [--debug] add_repository <name> <url>
+        fabuloso [--debug] add_repository [--key=<key>]
+                                          <name> <url>
         fabuloso [--debug] del_repository <name>
         fabuloso [--debug] list_components [<name>]
         fabuloso [--debug] list_services [--environment=<name>]
@@ -63,6 +64,16 @@ Now if we *list* our catalogs then we should see the new *folsom*::
     |   Name  | Type |                       URL                        |
     +---------+------+--------------------------------------------------+
     |  folsom | git  | https://github.com/StackOps/fabuloso-catalog.git |
+    +---------+------+--------------------------------------------------+
+    $
+
+Also you can add a new *catalog* from a private git repository using one of the *FABuloso* :ref:`stored key pairs <key_pairs>` by passing the ``--key`` option as follows::
+
+    $ fabuloso add_repository --key=my-secure-key custom git@github.com/custom/private-custom.git
+    +---------+------+--------------------------------------------------+
+    |   Name  | Type |                       URL                        |
+    +---------+------+--------------------------------------------------+
+    |  custom | git  | git@github.com/custom/private-custom.git         |
     +---------+------+--------------------------------------------------+
     $
 
