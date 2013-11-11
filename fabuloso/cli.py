@@ -8,6 +8,8 @@ Usage:
     fabuloso [--debug] add_repository [--key=<key>]
                                       [--branch=<branch>]
                                       <name> <url>
+    fabuloso [--debug] pull_repository [--key=<key>]
+                                       <name>
     fabuloso [--debug] del_repository <name>
     fabuloso [--debug] list_components [<name>]
     fabuloso [--debug] list_services [--environment=<name>]
@@ -76,6 +78,10 @@ def main():
 
     elif args['del_repository']:
         FAB.delete_repository(args['<name>'])
+
+    elif args['pull_repository']:
+        utils.print_dict(FAB.pull_repository(args['<name>'],
+                                             args['--key']))
 
     elif args['list_components']:
         # TODO(jaimegildesagredo): Components aren't dicts so we need to

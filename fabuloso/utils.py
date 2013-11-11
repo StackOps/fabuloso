@@ -13,9 +13,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+import os
 import uuid
 import shutil
-import os.path
+import contextlib
 import ConfigParser
 
 import pika
@@ -357,3 +358,16 @@ def print_list(objs, fields):
         table.add_row(row)
 
     print table
+
+
+@contextlib.contextmanager
+def cd(path):
+    # TODO(jaimegildesargedo): Add some tests!
+    old_cwd = os.getcwd()
+
+    os.chdir(path)
+
+    try:
+        yield
+    finally:
+        os.chdir(old_cwd)

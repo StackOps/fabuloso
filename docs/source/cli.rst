@@ -16,6 +16,8 @@ First of all, run ``fabuloso`` without arguments to see all available commands:
         fabuloso [--debug] add_repository [--key=<key>]
                                           [--branch=<branch>]
                                           <name> <url>
+        fabuloso [--debug] pull_repository [--key=<key>]
+                                           <name>
         fabuloso [--debug] del_repository <name>
         fabuloso [--debug] list_components [<name>]
         fabuloso [--debug] list_services [--environment=<name>]
@@ -80,6 +82,29 @@ And if you need to register a *catalog* from a specific branch you can pass the 
 Also you can add a new *catalog* from a private git repository using one of the *FABuloso* :ref:`stored key pairs <key_pairs>` by passing the ``--key`` option as follows::
 
     $ fabuloso add_repository --key=my-secure-key custom git@github.com/custom/private-custom.git
+    +---------+------+--------------------------------------------------+--------+
+    |   Name  | Type |                       URL                        | Branch |
+    +---------+------+--------------------------------------------------+--------+
+    |  custom | git  | git@github.com/custom/private-custom.git         | master |
+    +---------+------+--------------------------------------------------+--------+
+    $
+
+Updating a catalog
+^^^^^^^^^^^^^^^^^^
+
+Sometimes, in development or because of a bugfix release, you may want to update an already registered catalog without deleting and re-adding it. To do this you can run the ``pull_repository`` command with the *catalog name* as argument::
+
+    $ fabuloso pull_repository folsom
+    +---------+------+--------------------------------------------------+--------+
+    |   Name  | Type |                       URL                        | Branch |
+    +---------+------+--------------------------------------------------+--------+
+    |  folsom | git  | https://github.com/StackOps/fabuloso-catalog.git | master |
+    +---------+------+--------------------------------------------------+--------+
+    $
+
+If your catalog comes from a private git repository you can also pass the ``--key=<key-name>`` option to perform the pull::
+
+    $ fabuloso add_repository --key=my-secure-key custom
     +---------+------+--------------------------------------------------+--------+
     |   Name  | Type |                       URL                        | Branch |
     +---------+------+--------------------------------------------------+--------+

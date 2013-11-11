@@ -332,6 +332,32 @@ class FabulosoShell(cmd.Cmd, object):
         else:
             utils.print_dict(repo)
 
+    def do_pull_repository(self, args):
+        """Pull repository catalog.
+
+        Usage:
+            pull_repository {repo_name} {ssh_key:optional}
+
+        """
+
+        list_args = args.split()
+
+        if len(list_args) == 1:
+            list_args.append('nonsecure')
+        elif len(list_args) != 2:
+            print("The pull_repository command needs one or two parameters "
+                  "to run. "
+                  "Type 'help pull_repository' for more info")
+
+            return
+
+        try:
+            repo = self.fabuloso.pull_repository(*tuple(list_args))
+        except exceptions.FabulosoError as e:
+            print e.msg
+        else:
+            utils.print_dict(repo)
+
     def do_add_repository(self, args):
         """ Add repository catalog.
             Usage:

@@ -36,19 +36,26 @@ class Fabuloso(object):
         """ Init with catalog dir"""
         self._load_catalog()
 
-    def add_repository(self, repo_name, repo_url, branch='master',
-                       auth_keys='nonsecure'):
+    def add_repository(self, name, url, branch='master', key='nonsecure'):
 
         try:
-            self._clone_repo(repo_name, repo_url, branch, auth_keys)
+            self._clone_repo(name, url, branch, key)
         except Exception as e:
-            raise exceptions.RepositoryCloneFailed({'url': repo_url,
+            raise exceptions.RepositoryCloneFailed({'url': url,
                                                     'reason': e})
         else:
             self._load_catalog()
 
-        self._config_editor.add_repo(repo_name, repo_url, branch)
-        return self.get_repository(repo_name)
+        self._config_editor.add_repo(name, url, branch)
+        return self.get_repository(name)
+
+    def pull_repository(self, name, key='nonsecure'):
+        repo = self.get_repository(name)
+
+        self._pull_repo(repo, key)
+        self._load_catalog()
+
+        return repo
 
     def add_environment(self, name, username, host, port, key_name):
         self.get_key(key_name)
@@ -275,14 +282,25 @@ class Fabuloso(object):
         utils.send_rabbitMQ(service_type, host, port, user, password,
                             virtual_host)
 
-    def _clone_repo(self, name, url, branch, auth_key):
-
+    def _clone_repo(self, name, url, branch, key):
         path = os.path.join(self._config_editor.get_catalog_dir(), name)
-        new_env = os.environ.copy()
-        new_env["PKEY"] = SshKey.import_key(auth_key).key_file
-        new_env["CONFIG_SSH"] = self._config_editor.get_config_ssh_file()
-        new_env["GIT_SSH"] = self._config_editor.get_git_ssh_script()
-        git.clone(url, path, '--branch', branch, _env=new_env)
+        git.clone(url, path, '--branch', branch, _env=self.__git_env(key))
+
+    def _pull_repo(self, repo, key):
+        path = os.path.join(self._config_editor.get_catalog_dir(),
+                            repo['name'])
+
+        with utils.cd(path):
+            git.pull('--force', 'origin', '{0}:{0}'.format(repo['branch']),
+                     _env=self.__git_env(key))
+
+    def __git_env(self, key_name):
+        env = os.environ.copy()
+        env["PKEY"] = SshKey.import_key(key_name).key_file
+        env["CONFIG_SSH"] = self._config_editor.get_config_ssh_file()
+        env["GIT_SSH"] = self._config_editor.get_git_ssh_script()
+
+        return env
 
 
 class Environment(UserDict.UserDict):
