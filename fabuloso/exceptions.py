@@ -88,3 +88,12 @@ class KeyAlreadyExists(FabulosoError):
         self.msg = self.message.format(**data)
 
         super(KeyAlreadyExists, self).__init__(self.msg)
+
+
+class MethodDefinitionNoneOnYml(FabulosoError):
+    message = "Some defined method in some of the services in the " \
+              "component {component} has been defined as empty."
+
+    def __init__(self, data):
+        self.msg = self.message.format(**data)
+        super(MethodDefinitionNoneOnYml, self).__init__(self.msg)

@@ -14,6 +14,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 import inspect
+from . import exceptions
 
 
 class Component(object):
@@ -95,6 +96,9 @@ class Component(object):
         Use introspection to retrieve the list of parameters that
         a method needs
         """
+        if method is None:
+            raise exceptions.MethodDefinitionNoneOnYml(
+                {'component': self._name})
         meth = getattr(self._module, method)
         return inspect.getargspec(meth).args
 
