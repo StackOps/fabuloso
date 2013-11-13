@@ -15,6 +15,7 @@ Usage:
     fabuloso [--debug] execute_service [--environment=<name>]
                                        [--set-env=<key>=<value>]...
                                        [--properties=<file>]...
+                                       [--set-prop=<key>=<value>]...
                                        <component> <service>
     fabuloso [--debug] get_template <component>
     fabuloso [--debug] list_environments
@@ -35,6 +36,7 @@ Usage:
         --environment=<name>        Environment [default: localhost]
         --set-env=<key>=<value>     Override an environment key value
         --properties=<file>         Properties file in yaml format
+        --set-prop=<key>=<value>    Override a property value
 """
 
 import sys
@@ -99,7 +101,7 @@ def main():
 
         log.debug('Environment: {}'.format(environment))
 
-        properties = __load_properties(args)
+        properties = __get_properties(args)
 
         log.debug('Properties: {}'.format(properties))
 
@@ -173,21 +175,25 @@ def __get_logger(args):
     return logger
 
 
-def __load_properties(args):
-    results = {}
+def __get_properties(args):
+    result = {}
 
     for path in args['--properties']:
         with open(path) as f:
-            results.update(yaml.load(f.read()))
+            result.update(yaml.load(f.read()))
 
-    return results
+    for override in args['--set-prop']:
+        key, value = override.split('=')
+        result[key] = value
+
+    return result
 
 
 def __get_environment(fab, args):
-    environment = fab.get_environment(args['--environment'])
+    result = fab.get_environment(args['--environment'])
 
     for override in args['--set-env']:
         key, value = override.split('=')
-        environment[key] = value
+        result[key] = value
 
-    return environment
+    return result
