@@ -13,6 +13,7 @@ Usage:
     fabuloso [--debug] list_services [--environment=<name>]
                                      <component>
     fabuloso [--debug] execute_service [--environment=<name>]
+                                       [--env-host=<hostname>]
                                        [--properties=<file>]...
                                        <component> <service>
     fabuloso [--debug] get_template <component>
@@ -32,6 +33,7 @@ Usage:
         --key=<key>                 Private key [default: nonsecure]
         --branch=<branch>           The git branch name [default: master]
         --environment=<name>        Environment [default: localhost]
+        --env-host=<hostname>       Override the environment hostname
         --properties=<file>         Properties file in yaml format
 """
 
@@ -94,6 +96,11 @@ def main():
 
     elif args['execute_service']:
         environment = FAB.get_environment(args['--environment'])
+
+        if args['--env-host']:
+            environment['host'] = args['--env-host']
+
+        log.debug('Environment: {}'.format(environment))
 
         properties = __load_properties(args)
 
