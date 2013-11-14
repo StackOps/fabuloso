@@ -17,7 +17,8 @@ Usage:
                                        [--properties=<file>]...
                                        [--set-prop=<key>=<value>]...
                                        <component> <service>
-    fabuloso [--debug] get_template <component>
+    fabuloso [--debug] get_template [--extended]
+                                    <component>
     fabuloso [--debug] list_environments
     fabuloso [--debug] show_environment <name>
     fabuloso [--debug] add_environment <name> <username> <host> <port> <key>
@@ -37,6 +38,7 @@ Usage:
         --set-env=<key>=<value>     Override an environment key value
         --properties=<file>         Properties file in yaml format
         --set-prop=<key>=<value>    Override a property value
+        --extended                  Flag used to get a component template in extended format
 """
 
 import sys
@@ -111,7 +113,12 @@ def main():
         component.execute_service(args['<service>'])
 
     elif args['get_template']:
-        print json.dumps(FAB.get_template(args['<component>']), indent=4)
+        if args['--extended']:
+            result = FAB.get_template_extended_data(args['<component>'])
+        else:
+            result = FAB.get_template(args['<component>'])
+
+        print json.dumps(result, indent=4)
 
     elif args['list_environments']:
         utils.print_list(FAB.list_environments(),
