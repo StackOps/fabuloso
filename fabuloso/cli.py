@@ -38,7 +38,7 @@ Usage:
         --set-env=<key>=<value>     Override an environment key value
         --properties=<file>         Properties file in yaml format
         --set-prop=<key>=<value>    Override a property value
-        --extended                  Flag used to get a component template in extended format
+        --extended                  Used to get a template in extended format
 """
 
 import sys
