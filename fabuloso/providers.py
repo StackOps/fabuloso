@@ -41,7 +41,7 @@ class FabricProvider(Provider):
             with settings(host_string=self.env['host'],
                           key_filename=self.env['ssh_key_file'],
                           port=self.env['port'], user=self.env['username'],
-                          keepalive=15):
+                          keepalive=15, disable_known_hosts=True):
                 return method(**kwargs)
         except SystemExit:
             traceback.print_exc()
