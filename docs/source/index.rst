@@ -58,7 +58,7 @@ Currently, we provide support for `Ubuntu 12.04 LTS <http://releases.ubuntu.com/
 Which OpenStack versions are supported?
 ---------------------------------------
 
-Right now `Folsom <http://www.openstack.org/software/folsom/>`_ is actively supported and we are working to also support `Grizzly <http://www.openstack.org/software/grizzly/>`_ and `Havana <http://www.openstack.org/software/havana/>`_ as soon as possible. Future OpenStack versions will be supported as well.
+Right now `Folsom <http://www.openstack.org/software/folsom/>`_ and `Grizzly <http://www.openstack.org/software/grizzly/>`_ are actively supported and we are working to also support `Havana <http://www.openstack.org/software/havana/>`_ as soon as possible. Future OpenStack versions will be supported as well.
 
 Where can I get help?
 ---------------------
