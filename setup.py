@@ -31,7 +31,7 @@ with open('README.rst') as f:
 
 setup(
     name='fabuloso',
-    version='1.2',
+    version='1.3',
     author='StackOps',
     author_email='developers@stackops.com',
     description='FABuloso is a python tool to easily organize and deploy '
