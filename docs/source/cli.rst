@@ -21,9 +21,12 @@ First of all, run ``fabuloso`` without arguments to see all available commands:
         fabuloso [--debug] list_services [--environment=<name>]
                                          <component>
         fabuloso [--debug] execute_service [--environment=<name>]
+                                           [--set-env=<key>=<value>]...
                                            [--properties=<file>]...
+                                           [--set-prop=<key>=<value>]...
                                            <component> <service>
-        fabuloso [--debug] get_template <component>
+        fabuloso [--debug] get_template [--extended]
+                                        <component>
         fabuloso [--debug] list_environments
         fabuloso [--debug] show_environment <name>
         fabuloso [--debug] add_environment <name> <username> <host> <port> <key>
@@ -170,37 +173,99 @@ We can generate a json with all the properties and its default values for a give
 
     $ fabuloso get_template folsom.mysql
     {
-        "drop_schema": null,
-        "cinder_password": "stackops",
+        "root_pass": "stackops",
+        "portal_password": "stackops",
+        "chargeback_user": "chargeback",
         "keystone_user": "keystone",
         "cinder_user": "cinder",
-        "automation_password": "stackops",
-        "nova_user": "nova",
-        "port": "",
-        "glance_user": "glance",
         "quantum_password": "stackops",
-        "portal_user": "portal",
-        "nova_password": "stackops",
-        "schema": "",
-        "username": "",
-        "root_pass": "stackops",
-        "install_database": null,
-        "portal_password": "stackops",
-        "automation_user": "automation",
-        "database_type": "",
-        "host": "",
-        "keystone_password": "stackops",
-        "accounting_password": "stackops",
-        "password": "",
         "glance_password": "stackops",
+        "automation_user": "automation",
         "quantum_user": "quantum",
-        "accounting_user": "activity"
+        "automation_password": "stackops",
+        "accounting_user": "activity",
+        "portal_user": "portal",
+        "accounting_password": "stackops",
+        "keystone_password": "stackops",
+        "cinder_password": "stackops",
+        "glance_user": "glance",
+        "chargeback_password": "stackops",
+        "nova_user": "nova",
+        "nova_password": "stackops"
     }
     $
 
 The generated template is printed to the *stdout*, so we can generate a json file, to be used as the value for the ``--properties`` option in the ``execute_service`` command, by redirecting the *stdout* to a file::
 
     $ fabuloso get_template folsom.mysql > mysql-properties.json
+    $
+
+But you can prefer an *extended* version of the template. And, what is this? Well, an *extended template* is a template but grouped by services. This option could be useful when working with big components that contains a lot of properties. By grouping them by services you can fit only those you're going to use. Let's see the example above but passing the ``--extended`` option::
+
+    $ fabuloso get_template --extended folsom.mysql
+    {
+        "set_quantum": {
+            "root_pass": "stackops",
+            "quantum_password": "stackops",
+            "quantum_user": "quantum"
+        },
+        "set_keystone": {
+            "root_pass": "stackops",
+            "keystone_password": "stackops",
+            "keystone_user": "keystone"
+        },
+        "teardown": {},
+        "set_cinder": {
+            "cinder_user": "cinder",
+            "root_pass": "stackops",
+            "cinder_password": "stackops"
+        },
+        "set_chargeback": {
+            "chargeback_password": "stackops",
+            "root_pass": "stackops",
+            "chargeback_user": "chargeback"
+        },
+        "set_automation": {
+            "automation_password": "stackops",
+            "root_pass": "stackops",
+            "automation_user": "automation"
+        },
+        "set_accounting": {
+            "accounting_user": "activity",
+            "root_pass": "stackops",
+            "accounting_password": "stackops"
+        },
+        "set_nova": {
+            "root_pass": "stackops",
+            "nova_password": "stackops",
+            "nova_user": "nova"
+        },
+        "install": {
+            "root_pass": "stackops",
+            "glance_password": "stackops",
+            "glance_user": "glance",
+            "cinder_user": "cinder",
+            "quantum_password": "stackops",
+            "keystone_user": "keystone",
+            "automation_user": "automation",
+            "quantum_user": "quantum",
+            "automation_password": "stackops",
+            "keystone_password": "stackops",
+            "cinder_password": "stackops",
+            "nova_user": "nova",
+            "nova_password": "stackops"
+        },
+        "set_glance": {
+            "root_pass": "stackops",
+            "glance_password": "stackops",
+            "glance_user": "glance"
+        },
+        "set_portal": {
+            "root_pass": "stackops",
+            "portal_user": "portal",
+            "portal_password": "stackops"
+        }
+    }
     $
 
 
@@ -251,6 +316,24 @@ We are going to execute the ``install`` service of the *folsom.mysql* component 
 
     [localhost] sudo: nohup service mysql stop
 
+    [...]
+
+    $
+
+When executing a service we can overwrite component *properties* and *environment* values with the ``--set-prop=<key>=<value>`` and ``--set-env=<key>=<value>`` options respectively. For example, to execute the previous service with the properties in the *mysql-properties.json* and some overwritten properties we can run::
+
+    $ fabuloso execute_service --properties=mysql-properties.json --set-prop bind_host=0.0.0.0 --environment=localhost folsom.mysql install
+    [localhost] sudo: echo mysql-server-5.5 mysql-server/root_password password stackops | debconf-set-selections
+    [localhost] sudo: echo mysql-server-5.5 mysql-server/root_password_again password stackops | debconf-set-selections
+    [...]
+
+    $
+
+And if you want to override an *environment* value, the target host for example, just run::
+
+    $ fabuloso execute_service --properties=mysql-properties.json --environment=localhost --set-env host=192.168.1.33 folsom.mysql install
+    [192.168.1.33] sudo: echo mysql-server-5.5 mysql-server/root_password password stackops | debconf-set-selections
+    [192.168.1.33] sudo: echo mysql-server-5.5 mysql-server/root_password_again password stackops | debconf-set-selections
     [...]
 
     $

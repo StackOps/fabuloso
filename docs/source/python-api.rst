@@ -37,7 +37,17 @@ Adding a catalog
 
 To add a new *catalog* we can use the ``add_repository`` method, which accepts the repo **name** and **url** as arguments::
 
-    >>> FAB.add_repository('grizzly', 'https://github.com/StackOps/fabuloso-catalog.git')
+    >>> FAB.add_repository('grizzly', 'https://github.com/StackOps/fabuloso-catalog-grizzly.git')
+    >>>
+
+You can also add a new *catalog* from a specific git branch::
+
+    >>> FAB.add_repository('grizzly', 'https://github.com/StackOps/fabuloso-catalog-grizzly.git', branch='development')
+    >>>
+
+Furthermore, you can clone the repository using a FABuloso registered ssh key::
+
+    >>> FAB.add_repository('grizzly', 'https://github.com/StackOps/fabuloso-catalog-grizzly.git', auth_keys='my-secure-key')
     >>>
 
 Removing a catalog
