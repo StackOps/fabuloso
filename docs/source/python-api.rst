@@ -50,6 +50,19 @@ Furthermore, you can clone the repository using a FABuloso registered ssh key::
     >>> FAB.add_repository('grizzly', 'https://github.com/StackOps/fabuloso-catalog-grizzly.git', auth_keys='my-secure-key')
     >>>
 
+Updating a catalog
+^^^^^^^^^^^^^^^^^^
+
+You can update an already registered catalog calling the ``pull_repository`` method with the *catalog name* as the first argument::
+
+    >>> FAB.pull_repository('grizzly')
+    >>>
+
+If you're going to update a private catalog, you can pass an optional second argument with the name of the ssh key used to clone the repo::
+
+    >>> FAB.pull_repository('grizzly', 'my-secure-key')
+    >>>
+
 Removing a catalog
 ^^^^^^^^^^^^^^^^^^
 

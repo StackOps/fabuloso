@@ -17,6 +17,7 @@ This opens the *FABuloso* shell with the ``fabuloso >`` prompt. You can type ``h
     * add_environment
     * add_key
     * add_repository
+    * pull_repository
     * del_environment
     * del_key
     * del_repository
@@ -57,6 +58,14 @@ Adding a catalog
 We are going to add `<https://github.com/StackOps/fabuloso-catalog.git>`_  as the *folsom* catalog::
 
     fabuloso > add_repository folsom https://github.com/StackOps/fabuloso-catalog.git
+    +----------+---------------------------------------------------------+
+    | Property |                          Value                          |
+    +----------+---------------------------------------------------------+
+    |   url    |     https://github.com/StackOps/fabuloso-catalog.git    |
+    |   type   |                           git                           |
+    |   name   |                          folsom                         |
+    |  branch  |                          master                         |
+    +----------+---------------------------------------------------------+
     fabuloso >
 
 .. note::
@@ -71,6 +80,22 @@ Now if we *list* our catalogs then we should see the new *folsom*::
     +---------+------+--------------------------------------------------+
     |  folsom | git  | https://github.com/StackOps/fabuloso-catalog.git |
     +---------+------+--------------------------------------------------+
+    fabuloso >
+
+Updating a catalog
+^^^^^^^^^^^^^^^^^^
+
+To update an already registered catalog you can run the ``pull_repository`` command with the catalog name as argument::
+
+    fabuloso > pull_repository folsom
+    +----------+---------------------------------------------------------+
+    | Property |                          Value                          |
+    +----------+---------------------------------------------------------+
+    |   url    |     https://github.com/StackOps/fabuloso-catalog.git    |
+    |   type   |                           git                           |
+    |   name   |                          folsom                         |
+    |  branch  |                          master                         |
+    +----------+---------------------------------------------------------+
     fabuloso >
 
 Showing a catalog
