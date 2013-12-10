@@ -21,7 +21,7 @@ From the source code you can just run::
 Tests
 -----
 
-Although we have not tests yet, you can execute the ``run_tests.sh`` script in order to check the code with *flake8*::
+Although we have not tests yet, you can execute the ``run_tests.sh`` script in order to check the code::
 
     $ ./run_tests.sh
 
