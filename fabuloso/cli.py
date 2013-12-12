@@ -3,23 +3,31 @@
 """FABuloso: OpenStack deployments
 
 Usage:
-    fabuloso [--debug] list_repositories
-    fabuloso [--debug] show_repository <name>
+    fabuloso [--debug] list_repositories [--catalog-path=<dir>]
+    fabuloso [--debug] show_repository [--catalog-path=<dir>]
+                                       <name>
     fabuloso [--debug] add_repository [--key=<key>]
                                       [--branch=<branch>]
+                                      [--catalog-path=<dir>]
                                       <name> <url>
     fabuloso [--debug] pull_repository [--key=<key>]
+                                       [--catalog-path=<dir>]
                                        <name>
-    fabuloso [--debug] del_repository <name>
-    fabuloso [--debug] list_components [<name>]
+    fabuloso [--debug] del_repository [--catalog-path=<dir>]
+                                      <name>
+    fabuloso [--debug] list_components [--catalog-path=<dir>]
+                                       [<name>]
     fabuloso [--debug] list_services [--environment=<name>]
+                                     [--catalog-path=<dir>]
                                      <component>
     fabuloso [--debug] execute_service [--environment=<name>]
                                        [--set-env=<key>=<value>]...
                                        [--properties=<file>]...
                                        [--set-prop=<key>=<value>]...
+                                       [--catalog-path=<dir>]
                                        <component> <service>
     fabuloso [--debug] get_template [--extended]
+                                    [--catalog-path=<dir>]
                                     <component>
     fabuloso [--debug] list_environments
     fabuloso [--debug] show_environment <name>
@@ -41,6 +49,7 @@ Usage:
         --properties=<file>         Properties file in yaml format
         --set-prop=<key>=<value>    Override a property value
         --extended                  Used to get a template in extended format
+        --catalog-path=<dir>        The catalog root directory
 """
 
 import sys
@@ -61,51 +70,48 @@ def main():
 
     log.debug('Command-line arguments: {}'.format(dict(args)))
 
-    FAB = fabuloso.Fabuloso()
+    fabuloso_instance = fabuloso.Fabuloso(args['--catalog-path'])
 
     if args['list_repositories']:
-        utils.print_list(FAB.list_repositories(),
+        utils.print_list(fabuloso_instance.list_repositories(),
                          ['Name', 'Type', 'URL', 'Branch'])
 
     elif args['show_repository']:
-        utils.print_dict(FAB.get_repository(args['<name>']))
+        utils.print_dict(fabuloso_instance.get_repository(args['<name>']))
 
     elif args['add_repository']:
-        utils.print_dict(FAB.add_repository(args['<name>'],
-                                            args['<url>'],
-                                            args['--branch'],
-                                            args['--key']))
+        utils.print_dict(fabuloso_instance.add_repository(
+            args['<name>'], args['<url>'], args['--branch'],
+            args['--key']))
 
     elif args['del_repository']:
-        FAB.delete_repository(args['<name>'])
+        fabuloso_instance.delete_repository(args['<name>'])
 
     elif args['pull_repository']:
-        utils.print_dict(FAB.pull_repository(args['<name>'],
-                                             args['--key']))
+        utils.print_dict(fabuloso_instance.pull_repository(
+            args['<name>'], args['--key']))
 
     elif args['list_components']:
-        # TODO(jaimegildesagredo): Components aren't dicts so we need to
-        #                          convert them first
-
         utils.print_list(
-            [comp.to_dict() for comp in FAB.list_components(args['<name>'])],
+            # Components aren't dicts so we need to convert them first
+            [comp.to_dict() for comp in
+                fabuloso_instance.list_components(args['<name>'])],
             ['Name'])
 
     elif args['list_services']:
-        environment = FAB.get_environment(args['--environment'])
+        environment = fabuloso_instance.get_environment(args['--environment'])
 
         # Initialize component without properties
-        component = FAB.init_component(args['<component>'], {}, environment)
-
-        # TODO(jaimegildesagredo): Services aren't dicts so we need to
-        #                          convert them first
+        component = fabuloso_instance.init_component(
+            args['<component>'], {}, environment)
 
         utils.print_list(
+            # Services aren't dicts so we need to convert them first
             [{'name': service} for service in component._services],
             ['Name'])
 
     elif args['execute_service']:
-        environment = __get_environment(FAB, args)
+        environment = __get_environment(fabuloso_instance, args)
 
         log.debug('Environment: {}'.format(environment))
 
@@ -113,64 +119,65 @@ def main():
 
         log.debug('Properties: {}'.format(properties))
 
-        component = FAB.init_component(
+        component = fabuloso_instance.init_component(
             args['<component>'], properties, environment)
 
         component.execute_service(args['<service>'])
 
     elif args['get_template']:
         if args['--extended']:
-            result = FAB.get_template_extended_data(args['<component>'])
+            result = fabuloso_instance.get_template_extended_data(
+                args['<component>'])
         else:
-            result = FAB.get_template(args['<component>'])
+            result = fabuloso_instance.get_template(args['<component>'])
 
         print json.dumps(result, indent=4)
 
     elif args['list_environments']:
-        utils.print_list(FAB.list_environments(),
+        utils.print_list(fabuloso_instance.list_environments(),
                          ['Name', 'Username', 'Host', 'Port', 'Key Name'])
 
     elif args['show_environment']:
-        utils.print_dict(FAB.get_environment(args['<name>']))
+        utils.print_dict(fabuloso_instance.get_environment(args['<name>']))
 
     elif args['add_environment']:
-        utils.print_dict(FAB.add_environment(
+        utils.print_dict(fabuloso_instance.add_environment(
             args['<name>'], args['<username>'],
             args['<host>'], args['<port>'],
             args['<key>']))
 
     elif args['del_environment']:
-        FAB.delete_environment(args['<name>'])
+        fabuloso_instance.delete_environment(args['<name>'])
 
     elif args['list_keys']:
         # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
         #                          convert them first
 
         utils.print_list(
-            [key.to_dict() for key in FAB.list_keys()],
+            [key.to_dict() for key in fabuloso_instance.list_keys()],
             ['Name', 'Key file', 'Pub file'])
 
     elif args['show_key']:
         # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
         #                          convert them first
 
-        utils.print_dict(FAB.get_key(args['<name>']).to_dict())
+        utils.print_dict(fabuloso_instance.get_key(args['<name>']).to_dict())
 
     elif args['add_key']:
         # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
         #                          convert them first
 
-        utils.print_dict(FAB.add_key(
+        utils.print_dict(fabuloso_instance.add_key(
             args['<name>'], args['<key_path>'], args['<pub_path>']).to_dict())
 
     elif args['gen_key']:
         # TODO(jaimegildesagredo): SshKeys aren't dicts so we need to
         #                          convert them first
 
-        utils.print_dict(FAB.gen_key(args['<name>']).to_dict())
+        utils.print_dict(fabuloso_instance.gen_key(args['<name>']).to_dict())
 
     elif args['del_key']:
-        FAB.delete_key(args['<name>'])
+        fabuloso_instance.delete_key(args['<name>'])
 
     else:
         sys.exit(1)

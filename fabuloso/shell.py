@@ -14,7 +14,20 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+"""FABuloso Shell: Interactive OpenStack deployments
+
+Usage:
+    fabuloso-shell [--catalog-path=<dir>]
+
+Options:
+    -h --help                  Shows this screen
+    --catalog-path=<dir>       The directory where the catalog is stored
+"""
+
+import sys
 import cmd
+
+from docopt import docopt
 
 import fabuloso
 from . import exceptions, utils
@@ -35,10 +48,10 @@ class FabulosoShell(cmd.Cmd, object):
     HEADER = '\033[95m'
     prompt = OKGREEN + 'fabuloso' + ENDC + ' > '
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, fabuloso_instance, *args, **kwargs):
         super(FabulosoShell, self).__init__(*args, **kwargs)
 
-        self.fabuloso = fabuloso.Fabuloso()
+        self.fabuloso = fabuloso_instance
         self.current_comp = None
 
     def default(self, line):
@@ -233,7 +246,7 @@ class FabulosoShell(cmd.Cmd, object):
             return
 
         try:
-            env = fabuloso.Environment.import_environment(env_name)
+            env = self.fabuloso.get_environment(env_name)
         except exceptions.EnvironmentNotFound as e:
             print(e.msg + " Use 'list_environments' to see available "
                   "environments.")
@@ -440,7 +453,7 @@ class FabulosoShell(cmd.Cmd, object):
             return
 
         try:
-            environment = fabuloso.Environment.import_environment(env_name)
+            environment = self.fabuloso.get_environment(env_name)
         except exceptions.EnvironmentNotFound as e:
             print e.msg
             return
@@ -562,4 +575,12 @@ class FabulosoShell(cmd.Cmd, object):
 
 
 def main():
-    FabulosoShell().cmdloop()
+    args = __parse_args()
+
+    fabuloso_instance = fabuloso.Fabuloso(catalog_path=args['--catalog-path'])
+
+    sys.exit(FabulosoShell(fabuloso_instance).cmdloop())
+
+
+def __parse_args():
+    return docopt(__doc__)

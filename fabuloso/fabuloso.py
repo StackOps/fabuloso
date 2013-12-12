@@ -29,15 +29,19 @@ ssh_keygen = getattr(sh, 'ssh-keygen')
 
 
 class Fabuloso(object):
+    def __init__(self, catalog_path=None):
+        if os.path.exists('/etc/fabuloso'):
+            config_path = '/etc/fabuloso'
+        else:
+            config_path = os.path.expanduser('~/.config/fabuloso')
 
-    def __init__(self):
-        self._config_editor = config.ConfigureEditor()
+        self._config = config.Config(config_path)
+        self._catalog_config = config.CatalogConfig(
+            catalog_path if catalog_path is not None else config_path)
 
-        """ Init with catalog dir"""
         self._load_catalog()
 
     def add_repository(self, name, url, branch='master', key='nonsecure'):
-
         try:
             self._clone_repo(name, url, branch, key)
         except Exception as e:
@@ -46,7 +50,7 @@ class Fabuloso(object):
         else:
             self._load_catalog()
 
-        self._config_editor.add_repo(name, url, branch)
+        self._catalog_config.add_repo(name, url, branch)
         return self.get_repository(name)
 
     def pull_repository(self, name, key='nonsecure'):
@@ -65,7 +69,7 @@ class Fabuloso(object):
                'host': host,
                'port': port,
                'key_name': key_name}
-        self._config_editor.add_env(env)
+        self._config.add_env(env)
         return Environment(env)
 
     def add_key(self, name, key_path, pub_path):
@@ -82,12 +86,12 @@ class Fabuloso(object):
             'pub_file': pub_file
         }
 
-        self._config_editor.add_key(keypair)
+        self._config.add_key(keypair)
 
         return self.get_key(name)
 
     def __store_keypair(self, name, key_path, pub_path):
-        key_file = os.path.join(self._config_editor.get_keys_dir(), name)
+        key_file = os.path.join(self._config.get_keys_dir(), name)
         pub_file = key_file + '.pub'
 
         utils.copy(key_path, key_file)
@@ -96,7 +100,7 @@ class Fabuloso(object):
         return key_file, pub_file
 
     def __gen_keypair(self, name):
-        key_file = os.path.join(self._config_editor.get_keys_dir(), name)
+        key_file = os.path.join(self._config.get_keys_dir(), name)
         pub_file = key_file + '.pub'
 
         ssh_keygen('-b', 2048, '-f', key_file, '-N', '')
@@ -113,14 +117,14 @@ class Fabuloso(object):
         os.remove(keypair.key_file)
         os.remove(keypair.pub_file)
 
-        self._config_editor.del_key(name)
+        self._config.del_key(name)
 
     def delete_environment(self, name):
-        self._config_editor.del_env(name)
+        self._config.del_env(name)
 
     def delete_repository(self, repo_name):
-        self._config_editor.del_repo(repo_name)
-        path = os.path.join(self._config_editor.get_catalog_dir(), repo_name)
+        self._catalog_config.del_repo(repo_name)
+        path = os.path.join(self._catalog_config.catalog_dir, repo_name)
         shutil.rmtree(path)
         self._load_catalog()
 
@@ -190,26 +194,26 @@ class Fabuloso(object):
         return sorted(components, key=lambda comp: comp._name)
 
     def get_repository(self, name):
-        return Repository.import_repo(name)
+        return Repository.import_repo(self._catalog_config, name)
 
     def list_keys(self):
-        return [SshKey(**key) for key in self._config_editor.list_keys()]
+        return [SshKey(**key) for key in self._config.list_keys()]
 
     def get_key(self, name):
-        return SshKey.import_key(name)
+        return SshKey.import_key(self._config, name)
 
     def list_environments(self):
-        envs = self._config_editor.list_envs()
+        envs = self._config.list_envs()
         ret_data = []
         for env in envs:
             ret_data.append(Environment(env))
         return ret_data
 
     def get_environment(self, name):
-        return Environment.import_environment(name)
+        return Environment.import_environment(self._config, name)
 
     def list_repositories(self):
-        repos = self._config_editor.list_repos()
+        repos = self._catalog_config.list_repos()
         ret_data = []
         for repo in repos:
             ret_data.append(Repository(repo))
@@ -217,12 +221,15 @@ class Fabuloso(object):
 
     def _load_catalog(self):
         """Returns a dict that maps the component name with the module."""
-        catalog_dir = self._config_editor.get_catalog_dir()
+
         self._catalog = {}
-        repos = self._get_subdirectories(catalog_dir)
+
+        repos = self._get_subdirectories(self._catalog_config.catalog_dir)
+
         for repo in repos:
             # Walk through all the catalog components
-            repo_dir = os.path.join(catalog_dir, repo)
+            repo_dir = os.path.join(self._catalog_config.catalog_dir, repo)
+
             for dirname, subdirnames, filenames in os.walk(repo_dir):
                 for subdirname in subdirnames:
                     comp_dir = os.path.join(repo_dir, subdirname)
@@ -283,12 +290,11 @@ class Fabuloso(object):
                             virtual_host)
 
     def _clone_repo(self, name, url, branch, key):
-        path = os.path.join(self._config_editor.get_catalog_dir(), name)
+        path = os.path.join(self._catalog_config.catalog_dir, name)
         git.clone(url, path, '--branch', branch, _env=self.__git_env(key))
 
     def _pull_repo(self, repo, key):
-        path = os.path.join(self._config_editor.get_catalog_dir(),
-                            repo['name'])
+        path = os.path.join(self._catalog_config.catalog_dir, repo['name'])
 
         with utils.cd(path):
             git.pull('--force', 'origin', '{0}:{0}'.format(repo['branch']),
@@ -296,9 +302,9 @@ class Fabuloso(object):
 
     def __git_env(self, key_name):
         env = os.environ.copy()
-        env["PKEY"] = SshKey.import_key(key_name).key_file
-        env["CONFIG_SSH"] = self._config_editor.get_config_ssh_file()
-        env["GIT_SSH"] = self._config_editor.get_git_ssh_script()
+        env["PKEY"] = self.get_key(key_name).key_file
+        env["CONFIG_SSH"] = self._config.get_config_ssh_file()
+        env["GIT_SSH"] = self._config.get_git_ssh_script()
 
         return env
 
@@ -310,9 +316,8 @@ class Environment(UserDict.UserDict):
                 "port=%(port)s, key=%(key_name)s>" % self.data)
 
     @classmethod
-    def import_environment(cls, name):
-        config_editor = config.ConfigureEditor()
-        return cls(config_editor.get_env(name))
+    def import_environment(cls, config, name):
+        return cls(config.get_env(name))
 
 
 class Repository(UserDict.UserDict):
@@ -322,9 +327,8 @@ class Repository(UserDict.UserDict):
                 "branch={branch}>".format(**self))
 
     @classmethod
-    def import_repo(cls, name):
-        config_editor = config.ConfigureEditor()
-        return cls(config_editor.get_repo(name))
+    def import_repo(cls, config, name):
+        return cls(config.get_repo(name))
 
 
 class SshKey(object):
@@ -336,11 +340,10 @@ class SshKey(object):
         self.pub_file = pub_file
 
     @classmethod
-    def import_key(cls, name):
+    def import_key(cls, config, name):
         """ Import a ssh key by name"""
-        config_editor = config.ConfigureEditor()
 
-        return cls(**config_editor.get_key(name))
+        return cls(**config.get_key(name))
 
     def __repr__(self):
         return '<SshKey: {}, {}, {}>'.format(self.name, self.key_file,

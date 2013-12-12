@@ -5,29 +5,39 @@ CLI
 
 *FABuloso* comes with a *command-line interface* in addition to the :ref:`interactive shell <fabuloso_shell>` to ease the automation of different *FABuloso* tasks within a *shell script*.
 
-First of all, run ``fabuloso`` without arguments to see all available commands:
+First of all, run ``fabuloso`` with the ``--help`` option to see all available commands and options:
 
 .. code-block:: bash
 
-    $ fabuloso
+    $ fabuloso --help
+    FABuloso: OpenStack deployments
+
     Usage:
-        fabuloso [--debug] list_repositories
-        fabuloso [--debug] show_repository <name>
+        fabuloso [--debug] list_repositories [--catalog-path=<dir>]
+        fabuloso [--debug] show_repository [--catalog-path=<dir>]
+                                           <name>
         fabuloso [--debug] add_repository [--key=<key>]
                                           [--branch=<branch>]
+                                          [--catalog-path=<dir>]
                                           <name> <url>
         fabuloso [--debug] pull_repository [--key=<key>]
+                                           [--catalog-path=<dir>]
                                            <name>
-        fabuloso [--debug] del_repository <name>
-        fabuloso [--debug] list_components [<name>]
+        fabuloso [--debug] del_repository [--catalog-path=<dir>]
+                                          <name>
+        fabuloso [--debug] list_components [--catalog-path=<dir>]
+                                           [<name>]
         fabuloso [--debug] list_services [--environment=<name>]
+                                         [--catalog-path=<dir>]
                                          <component>
         fabuloso [--debug] execute_service [--environment=<name>]
                                            [--set-env=<key>=<value>]...
                                            [--properties=<file>]...
                                            [--set-prop=<key>=<value>]...
+                                           [--catalog-path=<dir>]
                                            <component> <service>
         fabuloso [--debug] get_template [--extended]
+                                        [--catalog-path=<dir>]
                                         <component>
         fabuloso [--debug] list_environments
         fabuloso [--debug] show_environment <name>
@@ -38,6 +48,18 @@ First of all, run ``fabuloso`` without arguments to see all available commands:
         fabuloso [--debug] add_key <name> <key_path> <pub_path>
         fabuloso [--debug] gen_key <name>
         fabuloso [--debug] del_key <name>
+
+        Options:
+            -h --help                   Show this screen
+            --debug                     Show debug info
+            --key=<key>                 Private key [default: nonsecure]
+            --branch=<branch>           The git branch name [default: master]
+            --environment=<name>        Environment [default: localhost]
+            --set-env=<key>=<value>     Override an environment key value
+            --properties=<file>         Properties file in yaml format
+            --set-prop=<key>=<value>    Override a property value
+            --extended                  Used to get a template in extended format
+            --catalog-path=<dir>        The catalog root directory
     $
 
 Now, take a look at the sections bellow to see all these commands in action.
@@ -52,6 +74,11 @@ Listing catalogs
 To list all catalogs run::
 
     $ fabuloso list_repositories
+    $
+
+Here you can pass an optional ``--catalog-path`` argument in order to use a custom catalog directory. This is usefull to create isolated *FABuloso* deploy environments. This argument can also be passed to all commands that depends on catalogs, such as ``add_repository``, ``list_components``, ``execute_service``, ...::
+
+    $ fabuloso list_repositories --catalog-path=/tmp/custom-catalogs
     $
 
 If no catalogs were shown then it's time to add our first catalog.
