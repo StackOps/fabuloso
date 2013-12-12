@@ -15,6 +15,11 @@ The core logic of the *Python API* resides in the ``Fabuloso`` class, so before 
     <fabuloso.Fabuloso object at 0x7feec5abf4d0>
     >>>
 
+Also you can pass an optional ``catalog_path`` argument to the ``Fabuloso`` constructor to specify a custom catalog root directory. By passing a custom ``catalog_path`` you can achieve isolated *FABuloso* environments with different catalogs and component versions. If no ``catalog_path`` is specified then the default configuration path is used::
+
+    >>> FAB = fabuloso.Fabuloso(catalog_path='/tmp/custom-catalogs')
+    >>>
+
 Now we can perform the following operations.
 
 

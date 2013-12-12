@@ -3,13 +3,34 @@
 Interactive shell
 =================
 
-*FABuloso* comes with an *interactive shell* to help working with it. The first step is to start the *shell*:
+*FABuloso* comes with an *interactive shell* to help working with it. Type ``fabuloso-shell --help`` and press Enter to see all available options:
+
+.. code-block:: bash
+
+    $ fabuloso-shell --help
+    FABuloso Shell: Interactive OpenStack deployments
+
+    Usage:
+        fabuloso-shell [--catalog-path=<dir>]
+
+    Options:
+        -h --help                  Shows this screen
+        --catalog-path=<dir>       The directory where the catalog is stored
+    $
+
+Now you can start the *shell* by running:
 
 .. code-block:: bash
 
     $ fabuloso-shell
 
-This opens the *FABuloso* shell with the ``fabuloso >`` prompt. You can type ``help`` to see all the available commands::
+Also you can pass the ``--catalog-path`` option to start the shell within a different catalog directory:
+
+.. code-block:: bash
+
+    $ fabuloso-shell --catalog-path=/tmp/custom-catalogs
+
+That opens the *FABuloso* shell with the ``fabuloso >`` prompt. You can type ``help`` to see all the available commands::
 
     fabuloso > help
     Available methods are:

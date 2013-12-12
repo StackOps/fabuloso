@@ -20,61 +20,25 @@ import ConfigParser
 from . import exceptions
 
 
-class ConfigureEditor(object):
-    """Object that handles the read and write actions
-       over the configuration files"""
+class CatalogConfig(object):
+    def __init__(self, path):
+        self._path = path
 
-    _instance = None
+        self._repos_dir = os.path.join(self._path, 'repos')
 
-    def __new__(cls, *args, **kwargs):
-        """ This class is a singleton. """
-        if not cls._instance:
-            cls._instance = super(ConfigureEditor, cls).__new__(cls, *args,
-                                                                **kwargs)
-
-        return cls._instance
-
-    def __init__(self):
-        if os.path.exists('/etc/fabuloso/'):
-            self._base_dir = '/etc/fabuloso/'
-        else:
-            self._base_dir = os.path.expanduser('~/.config/fabuloso/')
-
-        if not os.path.exists(self._base_dir):
-            os.makedirs(self._base_dir)
-
-        self._keys_dir = os.path.join(self._base_dir, 'keys')
-        if not os.path.exists(self._keys_dir):
-            os.makedirs(self._keys_dir)
-        self._keys_cfg = os.path.join(self._base_dir, 'keys.cfg')
-        if not os.path.exists(self._keys_cfg):
-            open(self._keys_cfg, 'a').close()
-
-        self._repos_dir = os.path.join(self._base_dir, 'repos')
         if not os.path.exists(self._repos_dir):
             os.makedirs(self._repos_dir)
-        self._repos_cfg = os.path.join(self._base_dir, 'repos.cfg')
+
+        self._repos_cfg = os.path.join(self._path, 'repos.cfg')
+
         if not os.path.exists(self._repos_cfg):
             # create empty file
-            open(self._repos_cfg, 'a').close()
+            with open(self._repos_cfg, 'a'):
+                pass
 
-        self._environments_cfg = os.path.join(self._base_dir,
-                                              'environments.cfg')
-
-        if not os.path.exists(self._environments_cfg):
-            open(self._environments_cfg, 'a').close()
-
-    def get_catalog_dir(self):
+    @property
+    def catalog_dir(self):
         return self._repos_dir
-
-    def get_keys_dir(self):
-        return self._keys_dir
-
-    def get_config_ssh_file(self):
-        return os.path.join(self._keys_dir, 'config_ssh')
-
-    def get_git_ssh_script(self):
-        return os.path.join(self._keys_dir, 'git_ssh')
 
     def add_repo(self, name, url, branch):
         config_parser = ConfigParser.ConfigParser()
@@ -104,6 +68,72 @@ class ConfigureEditor(object):
 
         with open(self._repos_cfg, 'w') as index_file:
             config_parser.write(index_file)
+
+    def list_repos(self):
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._repos_cfg)
+
+        repos = []
+
+        for name in config_parser.sections():
+            repos.append(self._get_repo(name, config_parser))
+
+        return repos
+
+    def get_repo(self, name):
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(self._repos_cfg)
+
+        if not config_parser.has_section(name):
+            excp_data = {'repo_name': name}
+            raise exceptions.RepositoryNotFound(**excp_data)
+
+        return self._get_repo(name, config_parser)
+
+    def _get_repo(self, name, config_parser):
+        repo = {'name': name}
+
+        for item in config_parser.items(name):
+            repo[item[0]] = item[1]
+
+        # For those repos cloned previously to branch clone support
+        # set the branch as 'master'
+        repo.setdefault('branch', 'master')
+
+        return repo
+
+
+class Config(object):
+    """Object that handles the read and write actions
+       over the configuration files"""
+
+    def __init__(self, path):
+        self._base_dir = path
+
+        if not os.path.exists(self._base_dir):
+            os.makedirs(self._base_dir)
+
+        self._keys_dir = os.path.join(self._base_dir, 'keys')
+        if not os.path.exists(self._keys_dir):
+            os.makedirs(self._keys_dir)
+        self._keys_cfg = os.path.join(self._base_dir, 'keys.cfg')
+        if not os.path.exists(self._keys_cfg):
+            open(self._keys_cfg, 'a').close()
+
+        self._environments_cfg = os.path.join(self._base_dir,
+                                              'environments.cfg')
+
+        if not os.path.exists(self._environments_cfg):
+            open(self._environments_cfg, 'a').close()
+
+    def get_keys_dir(self):
+        return self._keys_dir
+
+    def get_config_ssh_file(self):
+        return os.path.join(self._keys_dir, 'config_ssh')
+
+    def get_git_ssh_script(self):
+        return os.path.join(self._keys_dir, 'git_ssh')
 
     def get_key(self, name):
         config_parser = ConfigParser.ConfigParser()
@@ -208,39 +238,6 @@ class ConfigureEditor(object):
             for item in config_parser.items(name):
                 env[item[0]] = item[1]
             return env
-
-    def get_repo(self, name):
-        config_parser = ConfigParser.ConfigParser()
-        config_parser.read(self._repos_cfg)
-
-        if not config_parser.has_section(name):
-            excp_data = {'repo_name': name}
-            raise exceptions.RepositoryNotFound(**excp_data)
-
-        return self._get_repo(name, config_parser)
-
-    def list_repos(self):
-        config_parser = ConfigParser.ConfigParser()
-        config_parser.read(self._repos_cfg)
-
-        repos = []
-
-        for name in config_parser.sections():
-            repos.append(self._get_repo(name, config_parser))
-
-        return repos
-
-    def _get_repo(self, name, config_parser):
-        repo = {'name': name}
-
-        for item in config_parser.items(name):
-            repo[item[0]] = item[1]
-
-        # For those repos cloned previously to branch clone support
-        # set the branch as 'master'
-        repo.setdefault('branch', 'master')
-
-        return repo
 
     def list_envs(self):
         config_parser = ConfigParser.ConfigParser()
