@@ -1,5 +1,5 @@
 cuisine==0.6.5
-PyYAML==3.10
+PyYAML==5.1
 python-keystoneclient==0.3.2
 MySQL-python==1.2.4
 pika==0.9.13
